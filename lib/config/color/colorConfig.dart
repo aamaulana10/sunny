@@ -23,8 +23,9 @@ class ColorConfig {
   }
 
   static Color navigationBottomColor = Color(0xFF0A214E);
-  static Color darkBackgroundColor = Color(0xFF0A214E);
+  static Color darkBackgroundColor = Color(0XFF000000);
   static Color lightBackgroundColor = Colors.white;
   static Color textColorDark = Colors.black;
   static Color textColorLight = Colors.white;
+  static Color mainColor = Color(0XFFBB86FC);
 }

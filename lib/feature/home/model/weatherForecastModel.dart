@@ -1,4 +1,4 @@
-import 'package:sunny/config/helper/tempHelper.dart';
+import 'package:sunny/config/helper/convertHelper.dart';
 
 class WeatherForecastModel {
   double lat;
@@ -92,14 +92,14 @@ class Current {
     dt = json['dt'];
     sunrise = json['sunrise'];
     sunset = json['sunset'];
-    temp = TempHelper.checkDouble(json['temp']);
-    feelsLike = TempHelper.checkDouble(json['feels_like']);
+    temp = ConvertHelper.checkDouble(json['temp']);
+    feelsLike = ConvertHelper.checkDouble(json['feels_like']);
     pressure = json['pressure'];
     humidity = json['humidity'];
-    dewPoint = TempHelper.checkDouble(json['dew_point']);
+    dewPoint = ConvertHelper.checkDouble(json['dew_point']);
     clouds = json['clouds'];
     visibility = json['visibility'];
-    windSpeed = TempHelper.checkDouble(json['wind_speed']);
+    windSpeed = ConvertHelper.checkDouble(json['wind_speed']);
     windDeg = json['wind_deg'];
     if (json['weather'] != null) {
       weather = new List<Weather>();
@@ -187,16 +187,16 @@ class Hourly {
 
   Hourly.fromJson(Map<String, dynamic> json) {
     dt = json['dt'];
-    temp = TempHelper.checkDouble(json['temp']);
-    feelsLike = TempHelper.checkDouble(json['feels_like']);
+    temp = ConvertHelper.checkDouble(json['temp']);
+    feelsLike = ConvertHelper.checkDouble(json['feels_like']);
     pressure = json['pressure'];
     humidity = json['humidity'];
-    dewPoint = TempHelper.checkDouble(json['dew_point']);
+    dewPoint = ConvertHelper.checkDouble(json['dew_point']);
     clouds = json['clouds'];
     visibility = json['visibility'];
-    windSpeed = TempHelper.checkDouble(json['wind_speed']);
+    windSpeed = ConvertHelper.checkDouble(json['wind_speed']);
     windDeg = json['wind_deg'];
-    windGust = TempHelper.checkDouble(json['wind_gust']);
+    windGust = ConvertHelper.checkDouble(json['wind_gust']);
     if (json['weather'] != null) {
       weather = new List<Weather>();
       json['weather'].forEach((v) {
@@ -216,7 +216,7 @@ class Hourly {
     data['dew_point'] = this.dewPoint;
     data['clouds'] = this.clouds;
     data['visibility'] = this.visibility;
-    data['wind_speed'] = TempHelper.checkDouble(this.windSpeed);
+    data['wind_speed'] = ConvertHelper.checkDouble(this.windSpeed);
     data['wind_deg'] = this.windDeg;
     data['wind_gust'] = this.windGust;
     if (this.weather != null) {
@@ -282,11 +282,11 @@ class Daily {
     sunset = json['sunset'];
     moonrise = json['moonrise'];
     moonset = json['moonset'];
-    moonPhase = TempHelper.checkDouble(json['moon_phase']);
+    moonPhase = ConvertHelper.checkDouble(json['moon_phase']);
     temp = json['temp'] != null ? new DailyTemp.fromJson(json['temp']) : null;
     pressure = json['pressure'];
     humidity = json['humidity'];
-    windSpeed = TempHelper.checkDouble(json['wind_speed']);
+    windSpeed = ConvertHelper.checkDouble(json['wind_speed']);
     if (json['weather'] != null) {
       weather = new List<Weather>();
       json['weather'].forEach((v) {
@@ -294,7 +294,7 @@ class Daily {
       });
     }
     clouds = json['clouds'];
-    rain = TempHelper.checkDouble(json['rain']);
+    rain = ConvertHelper.checkDouble(json['rain']);
   }
 
   Map<String, dynamic> toJson() {
@@ -331,12 +331,12 @@ class DailyTemp {
   DailyTemp({this.day, this.min, this.max, this.night, this.eve, this.morn});
 
   DailyTemp.fromJson(Map<String, dynamic> json) {
-    day = TempHelper.checkDouble(json['day']);
-    min = TempHelper.checkDouble(json['min']);
-    max = TempHelper.checkDouble(json['max']);
-    night = TempHelper.checkDouble(json['night']);
-    eve = TempHelper.checkDouble(json['eve']);
-    morn = TempHelper.checkDouble(json['morn']);
+    day = ConvertHelper.checkDouble(json['day']);
+    min = ConvertHelper.checkDouble(json['min']);
+    max = ConvertHelper.checkDouble(json['max']);
+    night = ConvertHelper.checkDouble(json['night']);
+    eve = ConvertHelper.checkDouble(json['eve']);
+    morn = ConvertHelper.checkDouble(json['morn']);
   }
 
   Map<String, dynamic> toJson() {

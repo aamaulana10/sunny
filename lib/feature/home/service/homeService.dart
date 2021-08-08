@@ -32,7 +32,7 @@ class HomeService {
   Future<WeatherForecastModel> getCurrentWeatherByLatLong(String latitude, String longitude) {
 
     var url = ApiConfig.baseUrl + "onecall?&units=metric&exclude=minutely&appid="
-        + ApiConfig.apiKey + "&lat=" + latitude + "&lon=" + longitude + "&lang=id";
+        + ApiConfig.apiKey + "&lat=" + latitude + "&lon=" + longitude + "&lang=en";
 
     print(url);
 

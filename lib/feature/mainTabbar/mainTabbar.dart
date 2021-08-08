@@ -51,28 +51,28 @@ class _MainTabbarState extends State<MainTabbar> {
         children: screen,
       ),
       bottomNavigationBar : BottomNavigationBar(
-        backgroundColor: ColorConfig.navigationBottomColor,
+        backgroundColor: ColorConfig.darkBackgroundColor,
         elevation: 5,
         type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: 'Beranda',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
-            label: 'Search',
+            label: 'Cari Lokasi',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.wb_sunny_sharp),
-            label: 'Weather',
+            label: 'Cuaca',
           ),
         ],
         currentIndex: crntIndex,
-        unselectedItemColor: Colors.grey,
-        selectedItemColor: Colors.white,
-        showUnselectedLabels: false,
-        showSelectedLabels: false,
+        unselectedItemColor: Colors.white,
+        selectedItemColor: ColorConfig.mainColor,
+        showUnselectedLabels: true,
+        showSelectedLabels: true,
         onTap: (e) => {this._onSelectedTab(e)},
       ),
     );

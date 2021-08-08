@@ -1,4 +1,4 @@
-import 'package:sunny/config/helper/tempHelper.dart';
+import 'package:sunny/config/helper/convertHelper.dart';
 
 class WeatherMainModel {
   Coord coord;
@@ -140,10 +140,10 @@ class Main {
       this.humidity});
 
   Main.fromJson(Map<String, dynamic> json) {
-    temp = TempHelper.checkDouble(json['temp']);
-    feelsLike = TempHelper.checkDouble(json['feels_like']);
-    tempMin = TempHelper.checkDouble(json['temp_min']);
-    tempMax = TempHelper.checkDouble(json['temp_max']);
+    temp = ConvertHelper.checkDouble(json['temp']);
+    feelsLike = ConvertHelper.checkDouble(json['feels_like']);
+    tempMin = ConvertHelper.checkDouble(json['temp_min']);
+    tempMax = ConvertHelper.checkDouble(json['temp_max']);
     pressure = json['pressure'];
     humidity = json['humidity'];
   }
@@ -167,7 +167,7 @@ class Wind {
   Wind({this.speed, this.deg});
 
   Wind.fromJson(Map<String, dynamic> json) {
-    speed = TempHelper.checkDouble(json['speed']);
+    speed = ConvertHelper.checkDouble(json['speed']);
     deg = json['deg'];
   }
 

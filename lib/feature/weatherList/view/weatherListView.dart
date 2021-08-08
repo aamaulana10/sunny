@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart' as geo;
 import 'package:intl/intl.dart';
 import 'package:sunny/config/color/colorConfig.dart';
-import 'package:sunny/config/helper/timeHelper.dart';
+import 'package:sunny/config/helper/conditionHelper.dart';
+import 'package:sunny/config/helper/convertHelper.dart';
 import 'package:sunny/feature/home/model/weatherForecastModel.dart';
 import 'package:sunny/feature/home/service/homeService.dart';
 
@@ -16,16 +19,52 @@ class _WeatherListViewState extends State<WeatherListView> {
   bool isLoading = true;
   WeatherForecastModel weatherForecastModel = WeatherForecastModel();
 
+  var address = "";
+
   void gotoDetail() {
     print("detail view");
   }
 
-  void getForecast() {
+  void getCurrentLocation() async {
+    var position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+
+    var lastPosition = await Geolocator().getLastKnownPosition();
+    print(lastPosition);
+
+    print("$position.latitude, $position.longitude");
+
+    if (position.latitude != null || position.longitude != null) {
+      _getAddressFromLatLng(position.latitude, position.longitude);
+      getForecast(position.latitude.toString(), position.longitude.toString());
+    }
+  }
+
+  _getAddressFromLatLng(double latitude, double longitude) async {
+    try {
+      List<geo.Placemark> placemarks =
+          await geo.placemarkFromCoordinates(latitude, longitude);
+
+      geo.Placemark place = placemarks[0];
+
+      print("${place.locality}, ${place.postalCode}, ${place.country}");
+
+      if (place.locality != "") {
+        setState(() {
+          address = "${place.locality}, ${place.country}";
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void getForecast(String latitude, String longitude) {
     setState(() {
       isLoading = true;
     });
 
-    homeService.getCurrentWeatherByLatLong("-6.1781", "106.63").then((value) {
+    homeService.getCurrentWeatherByLatLong(latitude, longitude).then((value) {
       print(value);
 
       setState(() {
@@ -40,109 +79,175 @@ class _WeatherListViewState extends State<WeatherListView> {
     });
   }
 
+  @override
+  void initState() {
+    getCurrentLocation();
+
+    super.initState();
+  }
+
   Widget header() {
-    var dateFormat = new DateFormat('MMM dd, yyyy');
+    var dateFormat = new DateFormat('EEEE, dd MMMM yyyy');
 
     var currentDate = dateFormat.format(DateTime.now());
 
-    String milisToHour(int milis) {
-      var fixedValue = DateTime.fromMillisecondsSinceEpoch(milis * 1000);
-
-      var dateFormat = new DateFormat('HH.mm');
-
-      var currentDate = dateFormat.format(fixedValue);
-
-      return currentDate;
-    }
-
     return Container(
-      height: 200,
-      margin: EdgeInsets.only(left: 16, right: 16),
+      margin: EdgeInsets.only(left: 8, right: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            margin: EdgeInsets.only(top: 32),
+            height: 160,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("asset/image/weatherHeader.png"),
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: BorderRadius.circular(10)),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "Today",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.only(
+                        left: 8, right: 16, top: 16, bottom: 16),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          child: Text(currentDate,
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 18)),
+                          padding: EdgeInsets.only(left: 12),
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Image(
+                              image: AssetImage(
+                                  "asset/image/fluenttemperaturewhite.png"),
+                              height: 40,
+                              width: 40,
+                            ),
+                            Text(
+                                weatherForecastModel.current != null ? weatherForecastModel.current.temp
+                                        .toStringAsFixed(1) +
+                                    "°C" : "",
+                                style: TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                )),
+                          ],
+                        ),
+                        Padding(
+                          child: Text(
+                            weatherForecastModel.current != null ?
+                              ConditionHelper.getDescription(
+                                  weatherForecastModel) : "",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.normal)),
+                          padding: EdgeInsets.only(left: 12),
+                        )
+                      ],
+                    ),
                   ),
                 ),
-                Text(
-                  currentDate.toString(),
-                  style: TextStyle(color: Colors.white),
-                ),
+                Container(
+                  margin: EdgeInsets.only(left: 8, right: 8),
+                  width: 100,
+                  child: Image(
+                      image: AssetImage(
+                        weatherForecastModel.current != null ?
+                          ConditionHelper.getIcon(weatherForecastModel) : "asset/image/sunny.png")),
+                )
               ],
             ),
           ),
           weatherForecastModel.hourly != null
               ? Container(
-            height: 80,
-            margin: EdgeInsets.only(top: 24, right: 8),
-            child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: weatherForecastModel.hourly.length,
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () => {this.gotoDetail()},
-                    child: Container(
-                      padding: EdgeInsets.only(
-                          left: 8, right: 8, top: 4, bottom: 4),
-                      margin: EdgeInsets.only(left: 8),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.grey.withOpacity(0.1)),
-                      width: 150,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image(
-                            image: NetworkImage(
-                                "https://openweathermap.org/img/wn/" +
-                                    weatherForecastModel
-                                        .hourly[index].weather[0].icon +
-                                    "@2x.png"),
-                            width: 50,
-                            fit: BoxFit.cover,
-                          ),
-                          Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment:
-                              CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                    milisToHour(weatherForecastModel
-                                        .hourly[index].dt),
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.white)),
-                                Text(
-                                    weatherForecastModel
-                                        .hourly[index].temp
-                                        .toStringAsFixed(1) +
-                                        "°",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.white))
-                              ],
+                  height: 180,
+                  margin: EdgeInsets.only(top: 24, right: 8),
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: weatherForecastModel.hourly.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          padding: EdgeInsets.only(
+                              left: 8, right: 8, top: 4, bottom: 4),
+                          margin: EdgeInsets.only(left: 8),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.grey.withOpacity(0.2)),
+                          width: 150,
+                          child: InkWell(
+                            onTap: () => {this.gotoDetail()},
+                            child: Container(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(top: 8),
+                                    height: 80,
+                                    child: Image(
+                                      image: AssetImage(
+                                          ConditionHelper.getIconHourly(
+                                              index, weatherForecastModel)),
+                                      // image: AssetImage(
+                                      //     "asset/image/thunderstorm.png"),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(top: 8),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.access_time_rounded,
+                                          color: ColorConfig.mainColor,
+                                          size: 18,
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 4),
+                                          child: Text(
+                                              ConvertHelper.milisToHour(
+                                                  weatherForecastModel
+                                                      .hourly[index].dt),
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.white)),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(top: 16),
+                                    child: Text(
+                                        weatherForecastModel.hourly[index].temp
+                                                .toStringAsFixed(1) +
+                                            "°C",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 21,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white)),
+                                  )
+                                ],
+                              ),
+                              margin: EdgeInsets.only(left: 8, right: 8),
                             ),
-                            margin: EdgeInsets.only(left: 8, right: 8),
                           ),
-                        ],
-                      ),
-                    ),
-                  );
-                }),
-          )
+                        );
+                      }),
+                )
               : Container()
         ],
       ),
@@ -151,123 +256,153 @@ class _WeatherListViewState extends State<WeatherListView> {
 
   Widget nextForecaseList() {
 
-    return Container(
-        child: Column(
-          children: [
-            Container(
-              margin: EdgeInsets.only(top: 8, right: 16, left: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Next Forecast",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
+    double listHeight = 40 + (weatherForecastModel.daily != null
+        ? weatherForecastModel.daily.length.toDouble() * 100
+        : 1000.toDouble());
+
+    if(weatherForecastModel.daily != null) {
+      return Container(
+          height: listHeight,
+          child: Column(
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 32, right: 16, left: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Perkiraan Cuaca Selanjutnya",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 21,
+                          fontWeight: FontWeight.bold),
                     ),
-                  ),
-                  Icon(
-                    Icons.calendar_today_rounded,
-                    color: Colors.white,
-                  )
-                ],
+                  ],
+                ),
               ),
-            ),
-            weatherForecastModel.daily != null
-                ?
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.only(top: 8, left: 8, right: 8),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    itemCount: weatherForecastModel.daily.length,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () => {this.gotoDetail()},
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8)),
-                          margin: EdgeInsets.only(left: 8, right: 8, bottom: 4),
-                          padding: EdgeInsets.all(8),
-                          child: Row(
-                            children: [
-                              Column(
-                                children: [
-                                  Text(
-                                    TimeHelper.milisToDay(weatherForecastModel.daily[index].dt),
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(top: 8),
-                                    child: Text(
-                                      TimeHelper.milisToDate(weatherForecastModel.daily[index].dt),
-                                      style: TextStyle(color: Colors.white),
+              weatherForecastModel.daily != null
+                  ? Expanded(
+                child: Container(
+                  margin: EdgeInsets.only(top: 8, left: 8, right: 8),
+                  child: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      itemCount: weatherForecastModel.daily.length,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: () => {this.gotoDetail()},
+                          child: Container(
+                            height: 80,
+                            decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8)),
+                            margin:
+                            EdgeInsets.only(left: 8, right: 8, bottom: 4),
+                            padding: EdgeInsets.all(8),
+                            child: Row(
+                              children: [
+                                Column(
+                                  children: [
+                                    Text(
+                                      ConvertHelper.milisToDay(
+                                          weatherForecastModel.daily[index].dt),
+                                      style: TextStyle(color: Colors.white,
+                                          fontWeight: FontWeight.bold),
                                     ),
+                                    Container(
+                                      margin: EdgeInsets.only(top: 8),
+                                      child: Text(
+                                        ConvertHelper.milisToDate(
+                                            weatherForecastModel
+                                                .daily[index].dt),
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                ),
+                                Expanded(
+                                  child: Row(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image(
+                                        image: AssetImage(
+                                            "asset/image/fluenttemperature.png"),
+                                        height: 36,
+                                        width: 36,
+                                      ),
+                                      Text(
+                                          weatherForecastModel
+                                              .daily[index].temp.max
+                                              .toStringAsFixed(1) +
+                                              "°C",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 32,
+                                              color: Colors.white)),
+                                    ],
                                   ),
-                                ],
-                              ),
-                              Expanded(
-                                child: Text(
-                                    weatherForecastModel.daily[index].temp.max
-                                        .toStringAsFixed(1) +
-                                        "°",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontSize: 32, color: Colors.white)),
-                              ),
-                              Image(
-                                image: NetworkImage(
-                                    "https://openweathermap.org/img/wn/" +
-                                        weatherForecastModel
-                                            .daily[index].weather[0].icon +
-                                        "@2x.png"),
-                                width: 50,
-                                fit: BoxFit.cover,
-                              ),
-                            ],
+                                ),
+                                Image(
+                                  image: AssetImage(
+                                      ConditionHelper.getIconDaily(
+                                          index, weatherForecastModel)),
+                                  width: 50,
+                                  fit: BoxFit.cover,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    }),
-              ),
-            )
-                : Container()
-          ],
-        ));
-  }
+                        );
+                      }),
+                ),
+              )
+                  : Expanded(child: Container())
+            ],
+          ));
+    } else {
 
-  @override
-  void initState() {
-
-    getForecast();
-
-    super.initState();
+      return Container(
+        height: 200,
+        child: Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(ColorConfig.mainColor),
+          ),
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: ColorConfig.navigationBottomColor,
+          backgroundColor: ColorConfig.darkBackgroundColor,
           centerTitle: true,
-          title: Text("Forecast Report", style: TextStyle(
-              color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+          title: Text(
+            "Forecast Report",
+            style: TextStyle(
+                color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
           ),
         ),
-        backgroundColor: Color(0xFF0A214E),
+        backgroundColor: ColorConfig.darkBackgroundColor,
         body: Container(
           child: RefreshIndicator(
             onRefresh: () {
               return Future.delayed(Duration(seconds: 1), () {
-                getForecast();
+                getCurrentLocation();
               });
             },
-            child:  Column(
-                children: [header(), Expanded(child: nextForecaseList())],
-              ),
+            child: SingleChildScrollView(
+              child: Column(
+                  children: [header(), nextForecaseList()],
+                ),
             ),
+          ),
         ));
   }
 }

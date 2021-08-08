@@ -31,4 +31,19 @@ flutter:
     - asset/image/sunny.png
     - asset/image/wind.png
     - asset/image/humidity.png
+    - asset/image/windspeed.png
+    - asset/image/speed.png
+    - asset/image/weatherHeader.png
+    - asset/image/waterpercent.png
     - asset/image/thermometer.png
+    - asset/image/fluenttemperature.png
+    - asset/image/fluenttemperaturewhite.png
+    - asset/image/brokenclouds.png
+    - asset/image/clearsky.png
+    - asset/image/fewclouds.png
+    - asset/image/mist.png
+    - asset/image/rain.png
+    - asset/image/scatteredclouds.png
+    - asset/image/showerrain.png
+    - asset/image/snow.png
+    - asset/image/thunderstorm.png

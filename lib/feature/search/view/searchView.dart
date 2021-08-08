@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sunny/config/color/colorConfig.dart';
-import 'package:sunny/config/helper/timeHelper.dart';
+import 'package:sunny/config/helper/convertHelper.dart';
 import 'package:sunny/feature/home/model/weatherForecastModel.dart';
 import 'package:sunny/feature/home/service/homeService.dart';
 import 'package:geolocator/geolocator.dart';
@@ -455,7 +455,7 @@ class _SearchViewState extends State<SearchView> {
                       Column(
                         children: [
                           Text(
-                            TimeHelper.milisToDay(weatherForecastModel.hourly[index].dt),
+                            ConvertHelper.milisToDay(weatherForecastModel.hourly[index].dt),
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 12
@@ -464,7 +464,7 @@ class _SearchViewState extends State<SearchView> {
                           Container(
                             margin: EdgeInsets.only(top: 8),
                             child: Text(
-                              TimeHelper.milisToDate(weatherForecastModel.hourly[index].dt),
+                              ConvertHelper.milisToDate(weatherForecastModel.hourly[index].dt),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 12
@@ -510,13 +510,13 @@ class _SearchViewState extends State<SearchView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: ColorConfig.navigationBottomColor,
+        backgroundColor: ColorConfig.darkBackgroundColor,
         centerTitle: true,
         title: Text("Pick Location", style: TextStyle(
             color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
         ),
       ),
-      backgroundColor: Color(0xFF0A214E),
+      backgroundColor: ColorConfig.darkBackgroundColor,
       body: Container(
         margin: EdgeInsets.only(top: 16),
         child: Column(
