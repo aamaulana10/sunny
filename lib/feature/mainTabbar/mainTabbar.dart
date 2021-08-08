@@ -69,7 +69,7 @@ class _MainTabbarState extends State<MainTabbar> {
           ),
         ],
         currentIndex: crntIndex,
-        unselectedItemColor: Colors.white,
+        unselectedItemColor: ColorConfig.textColorLight,
         selectedItemColor: ColorConfig.mainColor,
         showUnselectedLabels: true,
         showSelectedLabels: true,

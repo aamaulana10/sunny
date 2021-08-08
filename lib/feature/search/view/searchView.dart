@@ -102,7 +102,7 @@ class _SearchViewState extends State<SearchView> {
               maxLines: 2,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.white,
+                color: ColorConfig.textColorLight,
                 fontSize: 14,
               ),),
           ),
@@ -117,7 +117,7 @@ class _SearchViewState extends State<SearchView> {
                         height: 40,
                         margin: EdgeInsets.only(right: 8,left: 8),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10), color: Colors.grey.withOpacity(0.1)),
+                            borderRadius: BorderRadius.circular(10), color: ColorConfig.colorWidget),
                         child: TextFormField(
                           onChanged: (e) => {
                             this.setInputLocation(e)
@@ -127,14 +127,14 @@ class _SearchViewState extends State<SearchView> {
                              getCurrentWeather(locationInput)
                           },
                           style: TextStyle(
-                              color: Colors.white
+                              color: ColorConfig.textColorLight
                           ),
                           decoration: InputDecoration(
                               prefixIcon: Icon(Icons.search, color: Colors.white, size: 24,),
                               labelText: "Search",
                               floatingLabelBehavior: FloatingLabelBehavior.never,
                               labelStyle: TextStyle(
-                                color: Colors.white,
+                                color: ColorConfig.textColorLight,
                                 fontSize: 12,
                               ),
                               border: InputBorder.none),
@@ -144,10 +144,10 @@ class _SearchViewState extends State<SearchView> {
                     Container(
                       margin: EdgeInsets.only(left: 8, right: 8),
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10), color: Colors.grey.withOpacity(0.1)),
+                          borderRadius: BorderRadius.circular(10), color: ColorConfig.colorWidget),
                       child: IconButton(
                           iconSize: 24,
-                          color: Colors.white,
+                          color: ColorConfig.textColorLight,
                           icon: Icon(Icons.location_on),
                           onPressed: () => {print("press")}),
                     ),
@@ -172,7 +172,7 @@ class _SearchViewState extends State<SearchView> {
                 child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Colors.grey.withOpacity(0.1)),
+                      color: ColorConfig.colorWidget),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -193,14 +193,14 @@ class _SearchViewState extends State<SearchView> {
                                   Text(weatherForecastColumns.hourly[0].temp
                                       .toStringAsFixed(1) + "°",
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color: ColorConfig.textColorLight,
                                       fontSize: 16,
                                     ),),
                                   Container(
                                     margin: EdgeInsets.only(top: 5),
                                     child: Text(weatherForecastColumns.hourly[0]
                                         .weather[0].main, style: TextStyle(
-                                      color: Colors.white,
+                                      color: ColorConfig.textColorLight,
                                       fontSize: 16,
                                     ),),
                                   ),
@@ -224,7 +224,7 @@ class _SearchViewState extends State<SearchView> {
                       Container(
                         margin: EdgeInsets.only(left: 8, bottom: 8),
                         child: Text("California", style: TextStyle(
-                          color: Colors.white,
+                          color: ColorConfig.textColorLight,
                           fontSize: 16,
                         ),),
                       )
@@ -237,7 +237,7 @@ class _SearchViewState extends State<SearchView> {
                 child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Colors.grey.withOpacity(0.1)),
+                      color: ColorConfig.colorWidget),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -256,13 +256,13 @@ class _SearchViewState extends State<SearchView> {
                               child: Column(
                                 children: [
                                   Text("32°", style: TextStyle(
-                                    color: Colors.white,
+                                    color: ColorConfig.textColorLight,
                                     fontSize: 16,
                                   ),),
                                   Container(
                                     margin: EdgeInsets.only(top: 5),
                                     child: Text("Cloudy", style: TextStyle(
-                                      color: Colors.white,
+                                      color: ColorConfig.textColorLight,
                                       fontSize: 16,
                                     ),),
                                   ),
@@ -286,7 +286,7 @@ class _SearchViewState extends State<SearchView> {
                       Container(
                         margin: EdgeInsets.only(left: 8, bottom: 8),
                         child: Text("California", style: TextStyle(
-                          color: Colors.white,
+                          color: ColorConfig.textColorLight,
                           fontSize: 16,
                         ),),
                       )
@@ -300,7 +300,7 @@ class _SearchViewState extends State<SearchView> {
                 child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Colors.grey.withOpacity(0.1)),
+                      color: ColorConfig.colorWidget),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -319,13 +319,13 @@ class _SearchViewState extends State<SearchView> {
                               child: Column(
                                 children: [
                                   Text("32°", style: TextStyle(
-                                    color: Colors.white,
+                                    color: ColorConfig.textColorLight,
                                     fontSize: 16,
                                   ),),
                                   Container(
                                     margin: EdgeInsets.only(top: 5),
                                     child: Text("Cloudy", style: TextStyle(
-                                      color: Colors.white,
+                                      color: ColorConfig.textColorLight,
                                       fontSize: 16,
                                     ),),
                                   ),
@@ -349,7 +349,7 @@ class _SearchViewState extends State<SearchView> {
                       Container(
                         margin: EdgeInsets.only(left: 8, bottom: 8),
                         child: Text("California", style: TextStyle(
-                          color: Colors.white,
+                          color: ColorConfig.textColorLight,
                           fontSize: 16,
                         ),),
                       )
@@ -363,7 +363,7 @@ class _SearchViewState extends State<SearchView> {
                 child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Colors.grey.withOpacity(0.1)),
+                      color: ColorConfig.colorWidget),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -382,13 +382,13 @@ class _SearchViewState extends State<SearchView> {
                               child: Column(
                                 children: [
                                   Text("32°", style: TextStyle(
-                                    color: Colors.white,
+                                    color: ColorConfig.textColorLight,
                                     fontSize: 16,
                                   ),),
                                   Container(
                                     margin: EdgeInsets.only(top: 5),
                                     child: Text("Cloudy", style: TextStyle(
-                                      color: Colors.white,
+                                      color: ColorConfig.textColorLight,
                                       fontSize: 16,
                                     ),),
                                   ),
@@ -412,7 +412,7 @@ class _SearchViewState extends State<SearchView> {
                       Container(
                         margin: EdgeInsets.only(left: 8, bottom: 8),
                         child: Text("California", style: TextStyle(
-                          color: Colors.white,
+                          color: ColorConfig.textColorLight,
                           fontSize: 16,
                         ),),
                       )
@@ -446,7 +446,7 @@ class _SearchViewState extends State<SearchView> {
                 onTap: () => {this.gotoDetail()},
                 child: Container(
                   decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.1),
+                      color: ColorConfig.colorWidget,
                       borderRadius: BorderRadius.circular(8)),
                   margin: EdgeInsets.only(left: 8, right: 8, bottom: 4),
                   padding: EdgeInsets.all(8),
@@ -457,7 +457,7 @@ class _SearchViewState extends State<SearchView> {
                           Text(
                             ConvertHelper.milisToDay(weatherForecastModel.hourly[index].dt),
                             style: TextStyle(
-                                color: Colors.white,
+                                color: ColorConfig.textColorLight,
                                 fontSize: 12
                             ),
                           ),
@@ -466,7 +466,7 @@ class _SearchViewState extends State<SearchView> {
                             child: Text(
                               ConvertHelper.milisToDate(weatherForecastModel.hourly[index].dt),
                               style: TextStyle(
-                                color: Colors.white,
+                                color: ColorConfig.textColorLight,
                                 fontSize: 12
                               ),
                             ),
@@ -480,7 +480,7 @@ class _SearchViewState extends State<SearchView> {
                                 "°",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontSize: 32, color: Colors.white)),
+                                fontSize: 32, color: ColorConfig.textColorLight)),
                       ),
                       Image(
                         image: NetworkImage(
@@ -513,7 +513,9 @@ class _SearchViewState extends State<SearchView> {
         backgroundColor: ColorConfig.darkBackgroundColor,
         centerTitle: true,
         title: Text("Pick Location", style: TextStyle(
-            color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+            color: ColorConfig.textColorLight,
+            fontSize: 24,
+            fontWeight: FontWeight.bold),
         ),
       ),
       backgroundColor: ColorConfig.darkBackgroundColor,

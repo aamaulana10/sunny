@@ -117,7 +117,7 @@ class _WeatherListViewState extends State<WeatherListView> {
                         Padding(
                           child: Text(currentDate,
                               style:
-                                  TextStyle(color: Colors.white, fontSize: 18)),
+                                  TextStyle(color: ColorConfig.textColorLight, fontSize: 18)),
                           padding: EdgeInsets.only(left: 12),
                         ),
                         Row(
@@ -137,7 +137,7 @@ class _WeatherListViewState extends State<WeatherListView> {
                                 style: TextStyle(
                                   fontSize: 32,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                  color: ColorConfig.textColorLight,
                                 )),
                           ],
                         ),
@@ -147,7 +147,7 @@ class _WeatherListViewState extends State<WeatherListView> {
                               ConditionHelper.getDescription(
                                   weatherForecastModel) : "",
                               style: TextStyle(
-                                  color: Colors.white,
+                                  color: ColorConfig.textColorLight,
                                   fontSize: 18,
                                   fontWeight: FontWeight.normal)),
                           padding: EdgeInsets.only(left: 12),
@@ -181,7 +181,7 @@ class _WeatherListViewState extends State<WeatherListView> {
                           margin: EdgeInsets.only(left: 8),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              color: Colors.grey.withOpacity(0.2)),
+                              color: ColorConfig.colorWidget),
                           width: 150,
                           child: InkWell(
                             onTap: () => {this.gotoDetail()},
@@ -223,7 +223,7 @@ class _WeatherListViewState extends State<WeatherListView> {
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                   fontSize: 14,
-                                                  color: Colors.white)),
+                                                  color: ColorConfig.textColorLight)),
                                         ),
                                       ],
                                     ),
@@ -238,7 +238,7 @@ class _WeatherListViewState extends State<WeatherListView> {
                                         style: TextStyle(
                                             fontSize: 21,
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.white)),
+                                            color: ColorConfig.textColorLight)),
                                   )
                                 ],
                               ),
@@ -273,7 +273,7 @@ class _WeatherListViewState extends State<WeatherListView> {
                     Text(
                       "Perkiraan Cuaca Selanjutnya",
                       style: TextStyle(
-                          color: Colors.white,
+                          color: ColorConfig.textColorLight,
                           fontSize: 21,
                           fontWeight: FontWeight.bold),
                     ),
@@ -294,7 +294,7 @@ class _WeatherListViewState extends State<WeatherListView> {
                           child: Container(
                             height: 80,
                             decoration: BoxDecoration(
-                                color: Colors.grey.withOpacity(0.1),
+                                color: ColorConfig.colorWidget,
                                 borderRadius: BorderRadius.circular(8)),
                             margin:
                             EdgeInsets.only(left: 8, right: 8, bottom: 4),
@@ -306,7 +306,7 @@ class _WeatherListViewState extends State<WeatherListView> {
                                     Text(
                                       ConvertHelper.milisToDay(
                                           weatherForecastModel.daily[index].dt),
-                                      style: TextStyle(color: Colors.white,
+                                      style: TextStyle(color: ColorConfig.textColorLight,
                                           fontWeight: FontWeight.bold),
                                     ),
                                     Container(
@@ -315,7 +315,7 @@ class _WeatherListViewState extends State<WeatherListView> {
                                         ConvertHelper.milisToDate(
                                             weatherForecastModel
                                                 .daily[index].dt),
-                                        style: TextStyle(color: Colors.white),
+                                        style: TextStyle(color: ColorConfig.textColorLight),
                                       ),
                                     ),
                                   ],
@@ -343,7 +343,7 @@ class _WeatherListViewState extends State<WeatherListView> {
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 32,
-                                              color: Colors.white)),
+                                              color: ColorConfig.textColorLight)),
                                     ],
                                   ),
                                 ),
@@ -386,7 +386,9 @@ class _WeatherListViewState extends State<WeatherListView> {
           title: Text(
             "Forecast Report",
             style: TextStyle(
-                color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                color: ColorConfig.textColorLight,
+                fontSize: 24,
+                fontWeight: FontWeight.bold),
           ),
         ),
         backgroundColor: ColorConfig.darkBackgroundColor,

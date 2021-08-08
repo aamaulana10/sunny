@@ -120,7 +120,7 @@ class _HomeViewState extends State<HomeView> {
               maxLines: 3,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.white,
+                color: ColorConfig.textColorLight,
                 fontWeight: FontWeight.bold,
                 fontSize: 24,
               ),
@@ -130,7 +130,7 @@ class _HomeViewState extends State<HomeView> {
             margin: EdgeInsets.only(top: 16),
             child: Text(
               currentDate.toString(),
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: ColorConfig.textColorLight),
             ),
           ),
           Container(
@@ -146,7 +146,7 @@ class _HomeViewState extends State<HomeView> {
                     borderRadius: BorderRadius.circular(8),
                     color: isForecast == true
                         ? ColorConfig.mainColor
-                        : Colors.grey.withOpacity(0.1),
+                        : ColorConfig.colorWidget,
                   ),
                   child: FlatButton(
                     minWidth: 100,
@@ -159,7 +159,7 @@ class _HomeViewState extends State<HomeView> {
                     child: Text(
                       "Forecast",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: ColorConfig.textColorLight,
                       ),
                     ),
                   ),
@@ -171,7 +171,7 @@ class _HomeViewState extends State<HomeView> {
                     borderRadius: BorderRadius.circular(8),
                     color: isForecast == false
                         ? ColorConfig.mainColor
-                        : Colors.grey.withOpacity(0.1),
+                        : ColorConfig.colorWidget,
                   ),
                   child: FlatButton(
                     minWidth: 100,
@@ -184,7 +184,7 @@ class _HomeViewState extends State<HomeView> {
                     child: Text(
                       "Air Quality",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: ColorConfig.textColorLight,
                       ),
                     ),
                   ),
@@ -241,7 +241,7 @@ class _HomeViewState extends State<HomeView> {
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: ColorConfig.textColorLight,
                         )),
                   ],
                 ),
@@ -253,7 +253,7 @@ class _HomeViewState extends State<HomeView> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: ColorConfig.textColorLight,
                     )),
               ),
               isForecast == true
@@ -282,7 +282,7 @@ class _HomeViewState extends State<HomeView> {
                                   Padding(
                                     padding: EdgeInsets.only(left: 8),
                                     child: Text(ConvertHelper.milisToDay(weatherForecastModel.daily[0].dt),
-                                        style: TextStyle(color: Colors.white)),
+                                        style: TextStyle(color: ColorConfig.textColorLight)),
                                   ),
                                   Row(
                                     crossAxisAlignment:
@@ -302,7 +302,7 @@ class _HomeViewState extends State<HomeView> {
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.white,
+                                            color: ColorConfig.textColorLight,
                                           )),
                                     ],
                                   )
@@ -335,7 +335,7 @@ class _HomeViewState extends State<HomeView> {
                                   Padding(
                                     padding: EdgeInsets.only(left: 8),
                                     child: Text(ConvertHelper.milisToDay(weatherForecastModel.daily[1].dt),
-                                        style: TextStyle(color: Colors.white)),
+                                        style: TextStyle(color: ColorConfig.textColorLight)),
                                   ),
                                   Row(
                                     crossAxisAlignment:
@@ -355,7 +355,7 @@ class _HomeViewState extends State<HomeView> {
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.white,
+                                            color: ColorConfig.textColorLight,
                                           )),
                                     ],
                                   )
@@ -392,7 +392,7 @@ class _HomeViewState extends State<HomeView> {
                                   Padding(
                                     padding: EdgeInsets.only(left: 4),
                                     child: Text("Kecepatan Angin",
-                                        style: TextStyle(color: Colors.white)),
+                                        style: TextStyle(color: ColorConfig.textColorLight)),
                                   ),
                                   Row(
                                     crossAxisAlignment:
@@ -411,7 +411,7 @@ class _HomeViewState extends State<HomeView> {
                                             style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
-                                              color: Colors.white,
+                                              color: ColorConfig.textColorLight,
                                             )),
                                       ),
                                     ],
@@ -424,7 +424,7 @@ class _HomeViewState extends State<HomeView> {
                             width: 1,
                             margin: EdgeInsets.only(left: 32, right: 32),
                             height: 40,
-                            color: Colors.grey,
+                            color: ColorConfig.colorGrey,
                           ),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -445,7 +445,7 @@ class _HomeViewState extends State<HomeView> {
                                   Padding(
                                     padding: EdgeInsets.only(left: 8),
                                     child: Text("Kelembapan",
-                                        style: TextStyle(color: Colors.white)),
+                                        style: TextStyle(color: ColorConfig.textColorLight)),
                                   ),
                                   Row(
                                     crossAxisAlignment:
@@ -462,7 +462,7 @@ class _HomeViewState extends State<HomeView> {
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.white,
+                                            color: ColorConfig.textColorLight,
                                           )),
                                     ],
                                   )
@@ -495,7 +495,7 @@ class _HomeViewState extends State<HomeView> {
                   "Hari Ini",
                   style: TextStyle(
                       fontSize: 24,
-                      color: Colors.white,
+                      color: ColorConfig.textColorLight,
                       fontWeight: FontWeight.bold),
                 ),
                 TextButton(
@@ -528,7 +528,7 @@ class _HomeViewState extends State<HomeView> {
                           margin: EdgeInsets.only(left: 8),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              color: Colors.grey.withOpacity(0.2)),
+                              color: ColorConfig.colorWidget),
                           width: 150,
                           child: InkWell(
                             onTap: () => {this.gotoDetail()},
@@ -567,7 +567,7 @@ class _HomeViewState extends State<HomeView> {
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                   fontSize: 14,
-                                                  color: Colors.white)),
+                                                  color: ColorConfig.textColorLight)),
                                         ),
                                       ],
                                     ),
@@ -582,7 +582,7 @@ class _HomeViewState extends State<HomeView> {
                                         style: TextStyle(
                                             fontSize: 21,
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.white)),
+                                            color: ColorConfig.textColorLight)),
                                   )
                                 ],
                               ),
