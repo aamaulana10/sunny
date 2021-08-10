@@ -29,5 +29,5 @@ class ColorConfig {
   static Color textColorLight = Colors.white;
   static Color colorGrey = Colors.grey;
   static Color mainColor = Color(0XFFBB86FC);
-  static Color colorWidget = Color(0XFFE1E1E1);
+  static Color colorWidget = Colors.grey.withOpacity(0.1);
 }
