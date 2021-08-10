@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:sunny/config/color/colorConfig.dart';
 import 'package:sunny/config/helper/conditionHelper.dart';
 import 'package:sunny/config/helper/convertHelper.dart';
+import 'package:sunny/feature/detailForecast/view/DetailForecastHourly.dart';
+import 'package:sunny/feature/detailForecast/view/detailForecastDaily.dart';
 import 'package:sunny/feature/home/model/weatherForecastModel.dart';
 import 'package:sunny/feature/home/service/homeService.dart';
 
@@ -21,8 +23,30 @@ class _WeatherListViewState extends State<WeatherListView> {
 
   var address = "";
 
-  void gotoDetail() {
+  void gotoDetailHourly(Hourly weatherHourly) {
+
     print("detail view");
+
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+        DetailForecastHourly(
+          weatherHourly: weatherHourly,
+          address: address,
+        )
+    )
+    );
+  }
+
+  void gotoDetailDaily(Daily weatherDaily) {
+    
+    print("detail view");
+
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+        DetailForecastDaily(
+          weatherDaily: weatherDaily,
+          address: address,
+        )
+    )
+    );
   }
 
   void getCurrentLocation() async {
@@ -92,18 +116,18 @@ class _WeatherListViewState extends State<WeatherListView> {
     var currentDate = dateFormat.format(DateTime.now());
 
     return Container(
-      margin: EdgeInsets.only(left: 8, right: 8),
+      margin: EdgeInsets.only(left: 16, right: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            height: 160,
+            height: 130,
             decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage("asset/image/weatherHeader.png"),
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fill
                 ),
-                borderRadius: BorderRadius.circular(10)),
+                borderRadius: BorderRadius.circular(15)),
             child: Row(
               children: [
                 Expanded(
@@ -118,7 +142,7 @@ class _WeatherListViewState extends State<WeatherListView> {
                           child: Text(currentDate,
                               style:
                                   TextStyle(color: ColorConfig.textColorLight, fontSize: 18)),
-                          padding: EdgeInsets.only(left: 12),
+                          padding: EdgeInsets.only(left: 10),
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -127,8 +151,8 @@ class _WeatherListViewState extends State<WeatherListView> {
                             Image(
                               image: AssetImage(
                                   "asset/image/fluenttemperaturewhite.png"),
-                              height: 40,
-                              width: 40,
+                              height: 33,
+                              width: 33,
                             ),
                             Text(
                                 weatherForecastModel.current != null ? weatherForecastModel.current.temp
@@ -145,10 +169,10 @@ class _WeatherListViewState extends State<WeatherListView> {
                           child: Text(
                             weatherForecastModel.current != null ?
                               ConditionHelper.getDescription(
-                                  weatherForecastModel) : "",
+                                  weatherForecastModel.current) : "",
                               style: TextStyle(
                                   color: ColorConfig.textColorLight,
-                                  fontSize: 18,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.normal)),
                           padding: EdgeInsets.only(left: 12),
                         )
@@ -162,29 +186,29 @@ class _WeatherListViewState extends State<WeatherListView> {
                   child: Image(
                       image: AssetImage(
                         weatherForecastModel.current != null ?
-                          ConditionHelper.getIcon(weatherForecastModel) : "asset/image/sunny.png")),
+                          ConditionHelper.getIcon(weatherForecastModel.current) : "asset/image/sunny.png")),
                 )
               ],
             ),
           ),
           weatherForecastModel.hourly != null
               ? Container(
-                  height: 180,
-                  margin: EdgeInsets.only(top: 24, right: 8),
+                  height: 130,
+                  margin: EdgeInsets.only(top: 16, right: 8),
                   child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: weatherForecastModel.hourly.length,
                       itemBuilder: (context, index) {
                         return Container(
                           padding: EdgeInsets.only(
-                              left: 8, right: 8, top: 4, bottom: 4),
-                          margin: EdgeInsets.only(left: 8),
+                              left: 8, right: 8,bottom: 4),
+                          margin: EdgeInsets.only(left: 4, right: 4),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: ColorConfig.colorWidget),
-                          width: 150,
+                          width: 90,
                           child: InkWell(
-                            onTap: () => {this.gotoDetail()},
+                            onTap: () => {this.gotoDetailHourly(weatherForecastModel.hourly[index])},
                             child: Container(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -192,11 +216,11 @@ class _WeatherListViewState extends State<WeatherListView> {
                                 children: [
                                   Container(
                                     margin: EdgeInsets.only(top: 8),
-                                    height: 80,
+                                    height: 53,
+                                    width: 53,
                                     child: Image(
                                       image: AssetImage(
-                                          ConditionHelper.getIconHourly(
-                                              index, weatherForecastModel)),
+                                          ConditionHelper.getIconHourly(weatherForecastModel.hourly[index])),
                                       // image: AssetImage(
                                       //     "asset/image/thunderstorm.png"),
                                     ),
@@ -212,7 +236,7 @@ class _WeatherListViewState extends State<WeatherListView> {
                                         Icon(
                                           Icons.access_time_rounded,
                                           color: ColorConfig.mainColor,
-                                          size: 18,
+                                          size: 10,
                                         ),
                                         Padding(
                                           padding: EdgeInsets.only(left: 4),
@@ -222,7 +246,7 @@ class _WeatherListViewState extends State<WeatherListView> {
                                                       .hourly[index].dt),
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
-                                                  fontSize: 14,
+                                                  fontSize: 10,
                                                   color: ColorConfig.textColorLight)),
                                         ),
                                       ],
@@ -236,7 +260,7 @@ class _WeatherListViewState extends State<WeatherListView> {
                                             "°C",
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
-                                            fontSize: 21,
+                                            fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                             color: ColorConfig.textColorLight)),
                                   )
@@ -274,7 +298,7 @@ class _WeatherListViewState extends State<WeatherListView> {
                       "Perkiraan Cuaca Selanjutnya",
                       style: TextStyle(
                           color: ColorConfig.textColorLight,
-                          fontSize: 21,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold),
                     ),
                   ],
@@ -283,22 +307,23 @@ class _WeatherListViewState extends State<WeatherListView> {
               weatherForecastModel.daily != null
                   ? Expanded(
                 child: Container(
-                  margin: EdgeInsets.only(top: 8, left: 8, right: 8),
+                  margin: EdgeInsets.only(left: 8, right: 8),
                   child: ListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical,
                       itemCount: weatherForecastModel.daily.length,
                       itemBuilder: (context, index) {
                         return InkWell(
-                          onTap: () => {this.gotoDetail()},
+                          onTap: () => {this.gotoDetailDaily(weatherForecastModel.daily[index])},
                           child: Container(
-                            height: 80,
                             decoration: BoxDecoration(
-                                color: ColorConfig.colorWidget,
-                                borderRadius: BorderRadius.circular(8)),
+                                border: Border(
+                                    bottom: BorderSide(width: 1, color: Color(0XFF313131))
+                                )
+                            ),
                             margin:
-                            EdgeInsets.only(left: 8, right: 8, bottom: 4),
-                            padding: EdgeInsets.all(8),
+                            EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                            padding: EdgeInsets.only(top: 8,bottom: 16),
                             child: Row(
                               children: [
                                 Column(
@@ -307,7 +332,7 @@ class _WeatherListViewState extends State<WeatherListView> {
                                       ConvertHelper.milisToDay(
                                           weatherForecastModel.daily[index].dt),
                                       style: TextStyle(color: ColorConfig.textColorLight,
-                                          fontWeight: FontWeight.bold),
+                                          fontWeight: FontWeight.bold, fontSize: 14),
                                     ),
                                     Container(
                                       margin: EdgeInsets.only(top: 8),
@@ -315,7 +340,7 @@ class _WeatherListViewState extends State<WeatherListView> {
                                         ConvertHelper.milisToDate(
                                             weatherForecastModel
                                                 .daily[index].dt),
-                                        style: TextStyle(color: ColorConfig.textColorLight),
+                                        style: TextStyle(color: ColorConfig.textColorLight, fontSize: 12),
                                       ),
                                     ),
                                   ],
@@ -331,8 +356,8 @@ class _WeatherListViewState extends State<WeatherListView> {
                                       Image(
                                         image: AssetImage(
                                             "asset/image/fluenttemperature.png"),
-                                        height: 36,
-                                        width: 36,
+                                        height: 26,
+                                        width: 26,
                                       ),
                                       Text(
                                           weatherForecastModel
@@ -342,16 +367,16 @@ class _WeatherListViewState extends State<WeatherListView> {
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 32,
+                                              fontSize: 28,
                                               color: ColorConfig.textColorLight)),
                                     ],
                                   ),
                                 ),
                                 Image(
                                   image: AssetImage(
-                                      ConditionHelper.getIconDaily(
-                                          index, weatherForecastModel)),
-                                  width: 50,
+                                      ConditionHelper.getIconDaily(weatherForecastModel.daily[index])),
+                                  width: 53,
+                                  height: 53,
                                   fit: BoxFit.cover,
                                 ),
                               ],
@@ -380,20 +405,11 @@ class _WeatherListViewState extends State<WeatherListView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: ColorConfig.darkBackgroundColor,
-          centerTitle: true,
-          title: Text(
-            "Forecast Report",
-            style: TextStyle(
-                color: ColorConfig.textColorLight,
-                fontSize: 24,
-                fontWeight: FontWeight.bold),
-          ),
-        ),
         backgroundColor: ColorConfig.darkBackgroundColor,
         body: Container(
+          padding: EdgeInsets.only(top: 32),
           child: RefreshIndicator(
+            color: ColorConfig.mainColor,
             onRefresh: () {
               return Future.delayed(Duration(seconds: 1), () {
                 getCurrentLocation();

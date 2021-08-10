@@ -2,10 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sunny/config/color/colorConfig.dart';
+import 'package:sunny/config/helper/conditionHelper.dart';
 import 'package:sunny/config/helper/convertHelper.dart';
+import 'package:sunny/feature/detailForecast/view/DetailForecastHourly.dart';
+import 'package:sunny/feature/detailForecast/view/detailForecastDaily.dart';
 import 'package:sunny/feature/home/model/weatherForecastModel.dart';
 import 'package:sunny/feature/home/service/homeService.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart' as geo;
 
 class SearchView extends StatefulWidget {
 
@@ -17,11 +21,23 @@ class _SearchViewState extends State<SearchView> {
   HomeService homeService = HomeService();
   WeatherForecastModel weatherForecastModel = WeatherForecastModel();
   WeatherForecastModel weatherForecastColumns = WeatherForecastModel();
+
+  var address = "Mendapatkan Lokasimu";
+  var cityFromAddress = "";
   var locationInput = "";
   var isSearch = false;
+  var isLoading = false;
 
-  void gotoDetail() {
+  void gotoDetailDaily(Daily weatherDaily) {
     print("detail view");
+
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+        DetailForecastDaily(
+          weatherDaily: weatherDaily,
+          address: address,
+        )
+    )
+    );
   }
 
   void setInputLocation(String location) {
@@ -46,10 +62,30 @@ class _SearchViewState extends State<SearchView> {
 
     if (position.latitude != null || position.longitude != null) {
 
+      _getAddressFromLatLng(position.latitude, position.longitude);
       getUserForecast(position.latitude.toString(), position.longitude.toString());
     }
   }
 
+  _getAddressFromLatLng(double latitude, double longitude) async {
+    try {
+      List<geo.Placemark> placemarks =
+      await geo.placemarkFromCoordinates(latitude, longitude);
+
+      geo.Placemark place = placemarks[0];
+
+      print("${place.locality}, ${place.postalCode}, ${place.country}");
+
+      if (place.locality != "") {
+        setState(() {
+          address = "${place.locality}, ${place.country}";
+          cityFromAddress = "${place.locality}";
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   // kedua ini
   void getUserForecast(String latitude, String longitude) {
@@ -58,7 +94,7 @@ class _SearchViewState extends State<SearchView> {
       print(value);
 
       setState(() {
-        weatherForecastColumns = value;
+        weatherForecastModel = value;
       });
     });
   }
@@ -69,6 +105,7 @@ class _SearchViewState extends State<SearchView> {
 
     setState(() {
       isSearch = true;
+      isLoading = true;
     });
 
     homeService.getCurrentWeatherByCity(city).then((value) {
@@ -78,14 +115,26 @@ class _SearchViewState extends State<SearchView> {
 
         setState(() {
           weatherForecastModel = forecast;
+          isLoading = false;
         });
 
       });
+    }).onError((error, stackTrace) {
+
+      setState(() {
+        isLoading = false;
+        weatherForecastColumns = null;
+      });
+
+      print("error search");
+      print(error);
     });
   }
 
   @override
   void initState() {
+
+    getCurrentLocation();
 
     super.initState();
   }
@@ -94,18 +143,18 @@ class _SearchViewState extends State<SearchView> {
     return Container(
       margin: EdgeInsets.only(left: 8, right: 8, bottom: 16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            margin: EdgeInsets.only(top: 16, left: 16, right: 16),
-            child: Text("Find the area or city that you want to know the detailed weather info at this time",
-              maxLines: 2,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: ColorConfig.textColorLight,
-                fontSize: 14,
-              ),),
-          ),
+          // Container(
+          //   margin: EdgeInsets.only(top: 16, left: 16, right: 16),
+          //   child: Text("Find the area or city that you want to know the detailed weather info at this time",
+          //     maxLines: 2,
+          //     textAlign: TextAlign.center,
+          //     style: TextStyle(
+          //       color: ColorConfig.textColorLight,
+          //       fontSize: 14,
+          //     ),),
+          // ),
           Container(
               margin: EdgeInsets.only(top: 24),
               child: Row(
@@ -130,8 +179,8 @@ class _SearchViewState extends State<SearchView> {
                               color: ColorConfig.textColorLight
                           ),
                           decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.search, color: Colors.white, size: 24,),
-                              labelText: "Search",
+                              prefixIcon: Icon(Icons.search, color: Colors.white, size: 22,),
+                              labelText: "Cari Lokasi",
                               floatingLabelBehavior: FloatingLabelBehavior.never,
                               labelStyle: TextStyle(
                                 color: ColorConfig.textColorLight,
@@ -140,19 +189,25 @@ class _SearchViewState extends State<SearchView> {
                               border: InputBorder.none),
                         ),
                       ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(left: 8, right: 8),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10), color: ColorConfig.colorWidget),
-                      child: IconButton(
-                          iconSize: 24,
-                          color: ColorConfig.textColorLight,
-                          icon: Icon(Icons.location_on),
-                          onPressed: () => {print("press")}),
-                    ),
+                    )
                   ]
               )),
+          Container(
+            margin: EdgeInsets.only(top: 16, left: 16, right: 16),
+            child: Text("Lokasi Saat ini", style: TextStyle(
+                color: ColorConfig.textColorLight
+            ))
+          ),
+          InkWell(
+            onTap: () => {getCurrentWeather(cityFromAddress)},
+            child: Container(
+                width: MediaQuery.of(context).size.width,
+                margin: EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 16),
+                child: Text(address, style: TextStyle(
+                    color: ColorConfig.textColorLight
+                ))
+            ),
+          ),
         ],
       ),
     );
@@ -435,73 +490,117 @@ class _SearchViewState extends State<SearchView> {
 
     var currentDate = dateFormat.format(DateTime.now());
 
-    if (weatherForecastModel != null && weatherForecastModel.hourly != null) {
+    if(isLoading == true) {
 
       return Container(
-        margin: EdgeInsets.only(top: 0, left: 8, right: 8),
-        child: ListView.builder(
-            itemCount: weatherForecastModel.hourly.length,
-            itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () => {this.gotoDetail()},
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: ColorConfig.colorWidget,
-                      borderRadius: BorderRadius.circular(8)),
-                  margin: EdgeInsets.only(left: 8, right: 8, bottom: 4),
-                  padding: EdgeInsets.all(8),
-                  child: Row(
-                    children: [
-                      Column(
-                        children: [
-                          Text(
-                            ConvertHelper.milisToDay(weatherForecastModel.hourly[index].dt),
-                            style: TextStyle(
-                                color: ColorConfig.textColorLight,
-                                fontSize: 12
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(top: 8),
-                            child: Text(
-                              ConvertHelper.milisToDate(weatherForecastModel.hourly[index].dt),
+        child: Container(
+          height: 200,
+          child: Center(
+            child: CircularProgressIndicator(
+              strokeWidth: 2.0,
+              valueColor: AlwaysStoppedAnimation<Color>(ColorConfig.mainColor),
+            ),
+          ),
+        )
+      );
+    } else {
+      if (weatherForecastModel != null && weatherForecastModel.hourly != null) {
+        return Container(
+          margin: EdgeInsets.only(top: 0, left: 8, right: 8),
+          child: ListView.builder(
+              itemCount: weatherForecastModel.daily.length,
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () =>
+                  {
+                    this.gotoDetailDaily(weatherForecastModel.daily[index])
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                                width: 1, color: Color(0XFF313131))
+                        )
+                    ),
+                    margin:
+                    EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                    padding: EdgeInsets.only(top: 8, bottom: 16),
+                    child: Row(
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                              ConvertHelper.milisToDay(
+                                  weatherForecastModel.daily[index].dt),
                               style: TextStyle(
-                                color: ColorConfig.textColorLight,
-                                fontSize: 12
+                                  color: ColorConfig.textColorLight,
+                                  fontWeight: FontWeight.bold, fontSize: 14),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: 8),
+                              child: Text(
+                                ConvertHelper.milisToDate(
+                                    weatherForecastModel
+                                        .daily[index].dt),
+                                style: TextStyle(
+                                    color: ColorConfig.textColorLight,
+                                    fontSize: 12),
                               ),
                             ),
+                          ],
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                        ),
+                        Expanded(
+                          child: Row(
+                            crossAxisAlignment:
+                            CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image(
+                                image: AssetImage(
+                                    "asset/image/fluenttemperature.png"),
+                                height: 26,
+                                width: 26,
+                              ),
+                              Text(
+                                  weatherForecastModel
+                                      .daily[index].temp.max
+                                      .toStringAsFixed(1) +
+                                      "°C",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 28,
+                                      color: ColorConfig.textColorLight)),
+                            ],
                           ),
-                        ],
-                      ),
-                      Expanded(
-                        child: Text(
-                            weatherForecastModel.hourly[index].temp
-                                .toStringAsFixed(1) +
-                                "°",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 32, color: ColorConfig.textColorLight)),
-                      ),
-                      Image(
-                        image: NetworkImage(
-                            "https://openweathermap.org/img/wn/" +
-                                weatherForecastModel
-                                    .hourly[0].weather[0].icon +
-                                "@2x.png"),
-                        width: 50,
-                        fit: BoxFit.cover,
-                      ),
-                    ],
+                        ),
+                        Image(
+                          image: AssetImage(
+                              ConditionHelper.getIconDaily(weatherForecastModel
+                                  .daily[index])),
+                          width: 53,
+                          height: 53,
+                          fit: BoxFit.cover,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            }),
-      );
-    }
+                );
+              }),
+        );
+      }
 
-    else {
-
-      return Container();
+      else {
+        return Container(
+          child: Center(
+            child: Text("Data tidak ditemukan", style: TextStyle(
+              color: ColorConfig.textLabelColor,
+            )),
+          ),
+        );
+      }
     }
 
   }
@@ -509,15 +608,6 @@ class _SearchViewState extends State<SearchView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: ColorConfig.darkBackgroundColor,
-        centerTitle: true,
-        title: Text("Pick Location", style: TextStyle(
-            color: ColorConfig.textColorLight,
-            fontSize: 24,
-            fontWeight: FontWeight.bold),
-        ),
-      ),
       backgroundColor: ColorConfig.darkBackgroundColor,
       body: Container(
         margin: EdgeInsets.only(top: 16),
@@ -525,7 +615,17 @@ class _SearchViewState extends State<SearchView> {
             children: [
               header(),
               isSearch == false ?
-                Container() :
+                Expanded(
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.only(left: 32, right: 32),
+                    child: Text("Masukkan atau pilih Lokasi kamu saat ini untuk melihat perkiraan cuaca", style: TextStyle(
+                      color: ColorConfig.textLabelColor,
+                    ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ) :
                   Expanded(child: nextForecaseList())
             ],
           ),

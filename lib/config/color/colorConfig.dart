@@ -27,7 +27,9 @@ class ColorConfig {
   static Color lightBackgroundColor = Colors.white;
   static Color textColorDark = Colors.black;
   static Color textColorLight = Colors.white;
+  static Color textLabelColor = Color(0XFFA0A0A0);
+  static Color textLabelDark = Color(0XFFE1E1E1);
   static Color colorGrey = Colors.grey;
   static Color mainColor = Color(0XFFBB86FC);
-  static Color colorWidget = Colors.grey.withOpacity(0.1);
+  static Color colorWidget = Color(0XFF1E1E1E);
 }

@@ -256,10 +256,12 @@ class Daily {
   DailyTemp temp;
   int pressure;
   int humidity;
+  int visibility;
   double windSpeed;
+  int windDeg;
+  double windGust;
   List<Weather> weather;
   int clouds;
-  double rain;
 
   Daily(
       {this.dt,
@@ -271,10 +273,12 @@ class Daily {
         this.temp,
         this.pressure,
         this.humidity,
+        this.visibility,
         this.windSpeed,
+        this.windDeg,
+        this.windGust,
         this.weather,
-        this.clouds,
-        this.rain});
+        this.clouds});
 
   Daily.fromJson(Map<String, dynamic> json) {
     dt = json['dt'];
@@ -286,7 +290,10 @@ class Daily {
     temp = json['temp'] != null ? new DailyTemp.fromJson(json['temp']) : null;
     pressure = json['pressure'];
     humidity = json['humidity'];
+    visibility = json['visibility'];
     windSpeed = ConvertHelper.checkDouble(json['wind_speed']);
+    windDeg = json['wind_deg'];
+    windGust = ConvertHelper.checkDouble(json['wind_gust']);
     if (json['weather'] != null) {
       weather = new List<Weather>();
       json['weather'].forEach((v) {
@@ -294,7 +301,6 @@ class Daily {
       });
     }
     clouds = json['clouds'];
-    rain = ConvertHelper.checkDouble(json['rain']);
   }
 
   Map<String, dynamic> toJson() {
@@ -310,12 +316,14 @@ class Daily {
     }
     data['pressure'] = this.pressure;
     data['humidity'] = this.humidity;
+    data['visibility'] = this.visibility;
     data['wind_speed'] = this.windSpeed;
+    data['wind_deg'] = this.windDeg;
+    data['wind_gust'] = this.windGust;
     if (this.weather != null) {
       data['weather'] = this.weather.map((v) => v.toJson()).toList();
     }
     data['clouds'] = this.clouds;
-    data['rain'] = this.rain;
     return data;
   }
 }

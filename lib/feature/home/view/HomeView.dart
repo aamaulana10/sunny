@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:sunny/config/color/colorConfig.dart';
 import 'package:sunny/config/helper/conditionHelper.dart';
 import 'package:sunny/config/helper/convertHelper.dart';
+import 'package:sunny/feature/detailForecast/view/detailForecastHourly.dart';
 import 'package:sunny/feature/home/model/weatherForecastModel.dart';
 import 'package:sunny/feature/home/service/homeService.dart';
 import 'package:sunny/feature/mainTabbar/mainTabbar.dart';
@@ -24,11 +25,19 @@ class _HomeViewState extends State<HomeView> {
   WeatherForecastModel weatherForecastModel = WeatherForecastModel();
   bool isLoading = true;
 
-  var address = "";
+  var address = "Mendapatkan Lokasimu";
   var isForecast = true;
 
-  void gotoDetail() {
+  void gotoDetail(Hourly weatherHourly) {
     print("detail view");
+
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+        DetailForecastHourly(
+          weatherHourly: weatherHourly,
+          address: address,
+        )
+      )
+    );
   }
 
   void getCurrentLocation() async {
@@ -120,9 +129,9 @@ class _HomeViewState extends State<HomeView> {
               maxLines: 3,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: ColorConfig.textColorLight,
+                color: ColorConfig.textLabelDark,
                 fontWeight: FontWeight.bold,
-                fontSize: 24,
+                fontSize: 18,
               ),
             ),
           ),
@@ -130,18 +139,18 @@ class _HomeViewState extends State<HomeView> {
             margin: EdgeInsets.only(top: 16),
             child: Text(
               currentDate.toString(),
-              style: TextStyle(color: ColorConfig.textColorLight),
+              style: TextStyle(color: ColorConfig.textLabelDark, fontSize: 12),
             ),
           ),
           Container(
-            margin: EdgeInsets.only(left: 8, right: 8, top: 32),
+            margin: EdgeInsets.only(left: 8, right: 8, top: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
                   margin: EdgeInsets.only(right: 8),
-                  height: 40,
+                  height: 35,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                     color: isForecast == true
@@ -150,14 +159,13 @@ class _HomeViewState extends State<HomeView> {
                   ),
                   child: FlatButton(
                     minWidth: 100,
-                    height: 40,
                     onPressed: () {
                       setState(() {
                         isForecast = true;
                       });
                     },
                     child: Text(
-                      "Forecast",
+                      "Cuaca",
                       style: TextStyle(
                         color: ColorConfig.textColorLight,
                       ),
@@ -166,7 +174,7 @@ class _HomeViewState extends State<HomeView> {
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 8),
-                  height: 40,
+                  height: 35,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                     color: isForecast == false
@@ -175,14 +183,13 @@ class _HomeViewState extends State<HomeView> {
                   ),
                   child: FlatButton(
                     minWidth: 100,
-                    height: 40,
                     onPressed: () {
                       setState(() {
                         isForecast = false;
                       });
                     },
                     child: Text(
-                      "Air Quality",
+                      "Kualitas Udara",
                       style: TextStyle(
                         color: ColorConfig.textColorLight,
                       ),
@@ -203,6 +210,7 @@ class _HomeViewState extends State<HomeView> {
         height: 200,
         child: Center(
           child: CircularProgressIndicator(
+            strokeWidth: 2.0,
             valueColor: AlwaysStoppedAnimation<Color>(ColorConfig.mainColor),
           ),
         ),
@@ -211,7 +219,7 @@ class _HomeViewState extends State<HomeView> {
       if (weatherForecastModel != null) {
         var temp = weatherForecastModel.current.temp;
 
-        var wind = ConvertHelper.milToKmPerHour(weatherForecastModel.current.windSpeed);
+        var wind = ConvertHelper.mToKmPerHour(weatherForecastModel.current.windSpeed);
 
         var humidity = weatherForecastModel.current.humidity;
 
@@ -219,21 +227,24 @@ class _HomeViewState extends State<HomeView> {
           child: Column(
             children: [
               Container(
-                height: MediaQuery.of(context).size.height / 3,
+                margin: EdgeInsets.only(top: 16),
+                height: 140,
+                width: 140,
                 child: Image(
-                    image: AssetImage(ConditionHelper.getIcon(weatherForecastModel))),
+                    image: AssetImage(ConditionHelper.getIcon(weatherForecastModel.current))),
+                    // image: AssetImage("asset/image/thunderstorm.png")),
               ),
               Container(
                 alignment: Alignment.center,
-                margin: EdgeInsets.only(left: 16, right: 16, top: 16),
+                margin: EdgeInsets.only(left: 16, right: 16, top: 8),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image(
                       image: AssetImage("asset/image/fluenttemperature.png"),
-                      height: 40,
-                      width: 40,
+                      height: 36,
+                      width: 36,
                     ),
                     Text(
                         weatherForecastModel.current.temp.toStringAsFixed(1) +
@@ -247,18 +258,18 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(left: 16, right: 16, top: 16),
+                margin: EdgeInsets.only(left: 16, right: 16, top: 8),
                 child: Text(
-                    ConditionHelper.getDescription(weatherForecastModel),
+                    ConditionHelper.getDescription(weatherForecastModel.current),
                     style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
                       color: ColorConfig.textColorLight,
                     )),
               ),
               isForecast == true
                   ? Container(
-                      margin: EdgeInsets.only(left: 16, right: 16, top: 32),
+                      margin: EdgeInsets.only(left: 16, right: 16, top: 16),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -270,7 +281,7 @@ class _HomeViewState extends State<HomeView> {
                               Container(
                                 margin: EdgeInsets.only(right: 8),
                                 child: Image(
-                                  image: AssetImage(ConditionHelper.getIconDaily(0, weatherForecastModel)),
+                                  image: AssetImage(ConditionHelper.getIconDaily(weatherForecastModel.daily[0])),
                                   height: 40,
                                   width: 40,
                                 ),
@@ -280,9 +291,9 @@ class _HomeViewState extends State<HomeView> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.only(left: 8),
+                                    padding: EdgeInsets.only(left: 6),
                                     child: Text(ConvertHelper.milisToDay(weatherForecastModel.daily[0].dt),
-                                        style: TextStyle(color: ColorConfig.textColorLight)),
+                                        style: TextStyle(color: ColorConfig.textColorLight, fontSize: 12)),
                                   ),
                                   Row(
                                     crossAxisAlignment:
@@ -292,15 +303,15 @@ class _HomeViewState extends State<HomeView> {
                                       Image(
                                         image: AssetImage(
                                             "asset/image/fluenttemperature.png"),
-                                        height: 24,
-                                        width: 24,
+                                        height: 20,
+                                        width: 20,
                                       ),
                                       Text(
                                           weatherForecastModel.daily[0].temp.day
                                                   .toStringAsFixed(1) +
                                               "°C",
                                           style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                             color: ColorConfig.textColorLight,
                                           )),
@@ -323,7 +334,7 @@ class _HomeViewState extends State<HomeView> {
                               Container(
                                 margin: EdgeInsets.only(right: 8),
                                 child: Image(
-                                  image: AssetImage(ConditionHelper.getIconDaily(1, weatherForecastModel)),
+                                  image: AssetImage(ConditionHelper.getIconDaily(weatherForecastModel.daily[1])),
                                   height: 40,
                                   width: 40,
                                 ),
@@ -333,9 +344,9 @@ class _HomeViewState extends State<HomeView> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.only(left: 8),
+                                    padding: EdgeInsets.only(left: 6),
                                     child: Text(ConvertHelper.milisToDay(weatherForecastModel.daily[1].dt),
-                                        style: TextStyle(color: ColorConfig.textColorLight)),
+                                        style: TextStyle(color: ColorConfig.textColorLight, fontSize: 12)),
                                   ),
                                   Row(
                                     crossAxisAlignment:
@@ -345,15 +356,15 @@ class _HomeViewState extends State<HomeView> {
                                       Image(
                                         image: AssetImage(
                                             "asset/image/fluenttemperature.png"),
-                                        height: 24,
-                                        width: 24,
+                                        height: 20,
+                                        width: 20,
                                       ),
                                       Text(
                                           weatherForecastModel.daily[1].temp.day
                                                   .toStringAsFixed(1) +
                                               "°C",
                                           style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                             color: ColorConfig.textColorLight,
                                           )),
@@ -367,7 +378,7 @@ class _HomeViewState extends State<HomeView> {
                       ),
                     )
                   : Container(
-                      margin: EdgeInsets.only(left: 8, right: 8, top: 32),
+                      margin: EdgeInsets.only(left: 8, right: 8, top: 16),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -390,9 +401,9 @@ class _HomeViewState extends State<HomeView> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.only(left: 4),
+                                    padding: EdgeInsets.only(left: 2),
                                     child: Text("Kecepatan Angin",
-                                        style: TextStyle(color: ColorConfig.textColorLight)),
+                                        style: TextStyle(color: ColorConfig.textColorLight, fontSize: 12)),
                                   ),
                                   Row(
                                     crossAxisAlignment:
@@ -402,14 +413,14 @@ class _HomeViewState extends State<HomeView> {
                                       Image(
                                         image:
                                             AssetImage("asset/image/speed.png"),
-                                        height: 24,
-                                        width: 24,
+                                        height: 20,
+                                        width: 20,
                                       ),
                                       Padding(
                                         padding: EdgeInsets.only(left: 4),
                                         child: Text(wind + " km/j",
                                             style: TextStyle(
-                                              fontSize: 16,
+                                              fontSize: 14,
                                               fontWeight: FontWeight.bold,
                                               color: ColorConfig.textColorLight,
                                             )),
@@ -422,7 +433,7 @@ class _HomeViewState extends State<HomeView> {
                           ),
                           Container(
                             width: 1,
-                            margin: EdgeInsets.only(left: 32, right: 32),
+                            margin: EdgeInsets.only(left: 16, right: 16),
                             height: 40,
                             color: ColorConfig.colorGrey,
                           ),
@@ -443,9 +454,9 @@ class _HomeViewState extends State<HomeView> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.only(left: 8),
+                                    padding: EdgeInsets.only(left: 6),
                                     child: Text("Kelembapan",
-                                        style: TextStyle(color: ColorConfig.textColorLight)),
+                                        style: TextStyle(color: ColorConfig.textColorLight, fontSize: 12)),
                                   ),
                                   Row(
                                     crossAxisAlignment:
@@ -455,12 +466,12 @@ class _HomeViewState extends State<HomeView> {
                                       Image(
                                         image: AssetImage(
                                             "asset/image/waterpercent.png"),
-                                        height: 24,
-                                        width: 24,
+                                        height: 20,
+                                        width: 20,
                                       ),
-                                      Text(humidity.toStringAsFixed(1) + " %",
+                                      Text(humidity.toStringAsFixed(0) + " %",
                                           style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                             color: ColorConfig.textColorLight,
                                           )),
@@ -487,14 +498,14 @@ class _HomeViewState extends State<HomeView> {
       child: Column(
         children: [
           Container(
-            margin: EdgeInsets.only(top: 32, right: 8, left: 8),
+            margin: EdgeInsets.only(top: 8, right: 16, left: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "Hari Ini",
                   style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 16,
                       color: ColorConfig.textColorLight,
                       fontWeight: FontWeight.bold),
                 ),
@@ -508,7 +519,7 @@ class _HomeViewState extends State<HomeView> {
                   child: Text('Lihat Laporan',
                       style: TextStyle(
                           color: ColorConfig.mainColor,
-                          fontSize: 14,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold)),
                 ),
               ],
@@ -516,22 +527,22 @@ class _HomeViewState extends State<HomeView> {
           ),
           weatherForecastModel.hourly != null
               ? Container(
-                  height: 180,
-                  margin: EdgeInsets.only(top: 8, bottom: 8),
+                  height: 130,
+                  margin: EdgeInsets.only(top: 4, bottom: 8, left: 8, right: 8),
                   child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: 4,
+                      itemCount: 5,
                       itemBuilder: (context, index) {
                         return Container(
                           padding: EdgeInsets.only(
-                              left: 8, right: 8, top: 4, bottom: 4),
-                          margin: EdgeInsets.only(left: 8),
+                              left: 8, right: 8,bottom: 4),
+                          margin: EdgeInsets.only(left: 4, right: 4),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: ColorConfig.colorWidget),
-                          width: 150,
+                          width: 90,
                           child: InkWell(
-                            onTap: () => {this.gotoDetail()},
+                            onTap: () => {this.gotoDetail(weatherForecastModel.hourly[index])},
                             child: Container(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -539,9 +550,10 @@ class _HomeViewState extends State<HomeView> {
                                 children: [
                                   Container(
                                     margin: EdgeInsets.only(top: 8),
-                                    height: 80,
+                                    height: 53,
+                                    width: 53,
                                     child: Image(
-                                      image: AssetImage(ConditionHelper.getIconHourly(index, weatherForecastModel)),
+                                      image: AssetImage(ConditionHelper.getIconHourly(weatherForecastModel.hourly[index])),
                                       // image: AssetImage(
                                       //     "asset/image/thunderstorm.png"),
                                     ),
@@ -557,7 +569,7 @@ class _HomeViewState extends State<HomeView> {
                                         Icon(
                                           Icons.access_time_rounded,
                                           color: ColorConfig.mainColor,
-                                          size: 18,
+                                          size: 10,
                                         ),
                                         Padding(
                                           padding: EdgeInsets.only(left: 4),
@@ -566,7 +578,7 @@ class _HomeViewState extends State<HomeView> {
                                                   .hourly[index].dt),
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
-                                                  fontSize: 14,
+                                                  fontSize: 10,
                                                   color: ColorConfig.textColorLight)),
                                         ),
                                       ],
@@ -580,7 +592,7 @@ class _HomeViewState extends State<HomeView> {
                                             "°C",
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
-                                            fontSize: 21,
+                                            fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                             color: ColorConfig.textColorLight)),
                                   )
@@ -604,6 +616,7 @@ class _HomeViewState extends State<HomeView> {
         backgroundColor: ColorConfig.darkBackgroundColor,
         body: Container(
           child: RefreshIndicator(
+            color: ColorConfig.mainColor,
             onRefresh: () {
               return Future.delayed(Duration(milliseconds: 500), () {
                 getCurrentLocation();

@@ -45,11 +45,31 @@ class ConvertHelper {
     return currentDate;
   }
 
-  static String milToKmPerHour(double wind) {
-    if (wind != null) {
-      var fixedValue = wind * 1.609;
+  static String milToKmPerHour(double value) {
+    if (value != null) {
+      var fixedValue = value * 1.609;
 
       return fixedValue.toStringAsFixed(1);
+    } else {
+      return "0";
+    }
+  }
+
+  static String mToKmPerHour(double value) {
+    if (value != null) {
+      var fixedValue = value * 3.6;
+
+      return fixedValue.toStringAsFixed(1);
+    } else {
+      return "0";
+    }
+  }
+
+  static String mToKm(int value) {
+    if (value != null) {
+      var fixedValue = value / 1000;
+
+      return fixedValue.toStringAsFixed(0);
     } else {
       return "0";
     }

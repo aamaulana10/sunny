@@ -141,33 +141,33 @@ class ConditionHelper {
       return HashMap.from(data);
     }
 
-    static String getDescription(WeatherForecastModel weatherForecastModel) {
+    static String getDescription(Current weatherForecastCurrent) {
 
-      return getCondition(weatherForecastModel.current.weather[0].icon)["description"];
+      return getCondition(weatherForecastCurrent.weather[0].icon)["description"];
     }
 
-    static String getDescriptionHourly(int index, WeatherForecastModel weatherForecastModel) {
+    static String getDescriptionHourly(Hourly weatherForecastHourly) {
 
-      return getCondition(weatherForecastModel.hourly[index].weather[0].icon)["description"];
+      return getCondition(weatherForecastHourly.weather[0].icon)["description"];
     }
 
-    static String getDescriptionDaily(int index, WeatherForecastModel weatherForecastModel) {
+    static String getDescriptionDaily(Daily weatherForecastDaily) {
 
-      return getCondition(weatherForecastModel.daily[index].weather[0].icon)["description"];
+      return getCondition(weatherForecastDaily.weather[0].icon)["description"];
     }
 
-    static String getIcon(WeatherForecastModel weatherForecastModel) {
+    static String getIcon(Current weatherForecastCurrent) {
 
-      return getCondition(weatherForecastModel.current.weather[0].icon)["icon"];
+      return getCondition(weatherForecastCurrent.weather[0].icon)["icon"];
     }
 
-    static String getIconHourly(int index, WeatherForecastModel weatherForecastModel) {
+    static String getIconHourly(Hourly weatherForecastHourly) {
 
-      return getCondition(weatherForecastModel.hourly[index].weather[0].icon)["icon"];
+      return getCondition(weatherForecastHourly.weather[0].icon)["icon"];
     }
 
-    static String getIconDaily(int index, WeatherForecastModel weatherForecastModel) {
+    static String getIconDaily(Daily weatherForecastDaily) {
 
-      return getCondition(weatherForecastModel.daily[index].weather[0].icon)["icon"];
+      return getCondition(weatherForecastDaily.weather[0].icon)["icon"];
     }
 }

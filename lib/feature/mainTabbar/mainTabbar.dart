@@ -1,3 +1,4 @@
+import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sunny/config/color/colorConfig.dart';
@@ -50,31 +51,77 @@ class _MainTabbarState extends State<MainTabbar> {
         index: crntIndex,
         children: screen,
       ),
-      bottomNavigationBar : BottomNavigationBar(
+      bottomNavigationBar: BubbleBottomBar(
+        hasNotch: true,
         backgroundColor: ColorConfig.darkBackgroundColor,
-        elevation: 5,
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Beranda',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Cari Lokasi',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.wb_sunny_sharp),
-            label: 'Cuaca',
-          ),
-        ],
+        opacity: .2,
         currentIndex: crntIndex,
-        unselectedItemColor: ColorConfig.textColorLight,
-        selectedItemColor: ColorConfig.mainColor,
-        showUnselectedLabels: true,
-        showSelectedLabels: true,
-        onTap: (e) => {this._onSelectedTab(e)},
+        onTap: (e) => {_onSelectedTab(e)},
+        borderRadius: BorderRadius.vertical(
+            top: Radius.circular(
+                16)), //border radius doesn't work when the notch is enabled.
+        elevation: 8,
+        items: <BubbleBottomBarItem>[
+          BubbleBottomBarItem(
+              backgroundColor: ColorConfig.mainColor,
+              icon: Icon(
+                Icons.home,
+                color: Colors.white,
+              ),
+              activeIcon: Icon(
+                Icons.home,
+                color: ColorConfig.mainColor,
+              ),
+              title: Text("Beranda")),
+          BubbleBottomBarItem(
+              backgroundColor: ColorConfig.mainColor,
+              icon: Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
+              activeIcon: Icon(
+                Icons.search,
+                color: ColorConfig.mainColor,
+              ),
+              title: Text("Cari Lokasi")),
+          BubbleBottomBarItem(
+              backgroundColor: ColorConfig.mainColor,
+              icon: Icon(
+                Icons.wb_sunny_sharp,
+                color: Colors.white,
+              ),
+              activeIcon: Icon(
+                Icons.wb_sunny_sharp,
+                color: ColorConfig.mainColor,
+              ),
+              title: Text("Cuaca")),
+        ],
       ),
+      // bottomNavigationBar : BottomNavigationBar(
+      //   backgroundColor: ColorConfig.darkBackgroundColor,
+      //   elevation: 5,
+      //   type: BottomNavigationBarType.fixed,
+      //   items: [
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.home),
+      //       label: 'Beranda',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.search),
+      //       label: 'Cari Lokasi',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.wb_sunny_sharp),
+      //       label: 'Cuaca',
+      //     ),
+      //   ],
+      //   currentIndex: crntIndex,
+      //   unselectedItemColor: ColorConfig.textColorLight,
+      //   selectedItemColor: ColorConfig.mainColor,
+      //   showUnselectedLabels: true,
+      //   showSelectedLabels: true,
+      //   onTap: (e) => {this._onSelectedTab(e)},
+      // ),
     );
   }
 }
