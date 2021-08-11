@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:sunny/config/color/colorConfig.dart';
 import 'package:sunny/config/helper/conditionHelper.dart';
@@ -17,6 +18,14 @@ class DetailForecastHourly extends StatefulWidget {
 }
 
 class _DetailForecastHourlyState extends State<DetailForecastHourly> {
+
+  @override
+  void initState() {
+
+    initializeDateFormatting();
+
+    super.initState();
+  }
 
   Widget itemList(String category, String content) {
 
@@ -51,9 +60,9 @@ class _DetailForecastHourlyState extends State<DetailForecastHourly> {
   @override
   Widget build(BuildContext context) {
 
-    var dateFormat = new DateFormat('EEEE, dd MMMM yyyy');
+    var dateFormat = new DateFormat('EEEE, dd MMMM yyyy', "id_ID");
 
-    var currentDate = dateFormat.format(DateTime.now().toLocal());
+    var currentDate = dateFormat.format(DateTime.now());
 
     return Scaffold(
       appBar: AppBar(

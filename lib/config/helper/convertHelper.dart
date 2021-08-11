@@ -17,7 +17,7 @@ class ConvertHelper {
 
     var dateTime = DateTime.fromMillisecondsSinceEpoch(milis * 1000);
 
-    var day = DateFormat("EEEE").format(dateTime);
+    var day = DateFormat("EEEE", "id_ID").format(dateTime);
 
     print(day);
 
@@ -28,7 +28,7 @@ class ConvertHelper {
 
     var dateTime = DateTime.fromMillisecondsSinceEpoch(milis * 1000);
 
-    var date = DateFormat("dd MMMM yyyy").format(dateTime);
+    var date = DateFormat("dd MMMM yyyy", "id_ID").format(dateTime);
 
     print(date);
 

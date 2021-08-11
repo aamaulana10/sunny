@@ -31,13 +31,17 @@ class _SearchViewState extends State<SearchView> {
   void gotoDetailDaily(Daily weatherDaily) {
     print("detail view");
 
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-        DetailForecastDaily(
-          weatherDaily: weatherDaily,
-          address: address,
-        )
-    )
-    );
+    Future.delayed(Duration(milliseconds: 500)).then((value) {
+
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+          DetailForecastDaily(
+            weatherDaily: weatherDaily,
+            address: address,
+          )
+      )
+      );
+    });
+
   }
 
   void setInputLocation(String location) {
@@ -183,7 +187,7 @@ class _SearchViewState extends State<SearchView> {
                               labelText: "Cari Lokasi",
                               floatingLabelBehavior: FloatingLabelBehavior.never,
                               labelStyle: TextStyle(
-                                color: ColorConfig.textColorLight,
+                                color: ColorConfig.textLabelDark,
                                 fontSize: 12,
                               ),
                               border: InputBorder.none),
@@ -195,7 +199,8 @@ class _SearchViewState extends State<SearchView> {
           Container(
             margin: EdgeInsets.only(top: 16, left: 16, right: 16),
             child: Text("Lokasi Saat ini", style: TextStyle(
-                color: ColorConfig.textColorLight
+                color: ColorConfig.textLabelDark,
+              fontWeight: FontWeight.w700
             ))
           ),
           InkWell(
@@ -204,7 +209,8 @@ class _SearchViewState extends State<SearchView> {
                 width: MediaQuery.of(context).size.width,
                 margin: EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 16),
                 child: Text(address, style: TextStyle(
-                    color: ColorConfig.textColorLight
+                    color: ColorConfig.textLabelDark,
+                    fontWeight: FontWeight.w700
                 ))
             ),
           ),
@@ -510,81 +516,77 @@ class _SearchViewState extends State<SearchView> {
           child: ListView.builder(
               itemCount: weatherForecastModel.daily.length,
               itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () =>
-                  {
-                    this.gotoDetailDaily(weatherForecastModel.daily[index])
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        border: Border(
-                            bottom: BorderSide(
-                                width: 1, color: Color(0XFF313131))
-                        )
-                    ),
-                    margin:
-                    EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                    padding: EdgeInsets.only(top: 8, bottom: 16),
-                    child: Row(
-                      children: [
-                        Column(
-                          children: [
-                            Text(
-                              ConvertHelper.milisToDay(
-                                  weatherForecastModel.daily[index].dt),
-                              style: TextStyle(
-                                  color: ColorConfig.textColorLight,
-                                  fontWeight: FontWeight.bold, fontSize: 14),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 8),
-                              child: Text(
-                                ConvertHelper.milisToDate(
-                                    weatherForecastModel
-                                        .daily[index].dt),
-                                style: TextStyle(
-                                    color: ColorConfig.textColorLight,
-                                    fontSize: 12),
-                              ),
-                            ),
-                          ],
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                        ),
-                        Expanded(
-                          child: Row(
-                            crossAxisAlignment:
-                            CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
+                return Container(
+                  decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(width: 1, color: Color(0XFF313131))
+                      )
+                  ),
+                  margin:
+                  EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                  child: InkWell(
+                    onTap: () => {this.gotoDetailDaily(weatherForecastModel.daily[index])},
+                    highlightColor: ColorConfig.mainColor.withOpacity(.2),
+                    splashColor: ColorConfig.mainColor.withOpacity(.2),
+                    child: Container(
+                      padding: EdgeInsets.only(top: 8,bottom: 16),
+                      child: Row(
+                        children: [
+                          Column(
                             children: [
-                              Image(
-                                image: AssetImage(
-                                    "asset/image/fluenttemperature.png"),
-                                height: 26,
-                                width: 26,
-                              ),
                               Text(
-                                  weatherForecastModel
-                                      .daily[index].temp.max
-                                      .toStringAsFixed(1) +
-                                      "°C",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 28,
-                                      color: ColorConfig.textColorLight)),
+                                ConvertHelper.milisToDay(
+                                    weatherForecastModel.daily[index].dt),
+                                style: TextStyle(color: ColorConfig.textColorLight,
+                                    fontWeight: FontWeight.bold, fontSize: 14),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(top: 8),
+                                child: Text(
+                                  ConvertHelper.milisToDate(
+                                      weatherForecastModel
+                                          .daily[index].dt),
+                                  style: TextStyle(color: ColorConfig.textColorLight, fontSize: 12),
+                                ),
+                              ),
                             ],
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
                           ),
-                        ),
-                        Image(
-                          image: AssetImage(
-                              ConditionHelper.getIconDaily(weatherForecastModel
-                                  .daily[index])),
-                          width: 53,
-                          height: 53,
-                          fit: BoxFit.cover,
-                        ),
-                      ],
+                          Expanded(
+                            child: Row(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image(
+                                  image: AssetImage(
+                                      "asset/image/fluenttemperature.png"),
+                                  height: 26,
+                                  width: 26,
+                                ),
+                                Text(
+                                    weatherForecastModel
+                                        .daily[index].temp.max
+                                        .toStringAsFixed(1) +
+                                        "°C",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 28,
+                                        color: ColorConfig.textColorLight)),
+                              ],
+                            ),
+                          ),
+                          Image(
+                            image: AssetImage(
+                                ConditionHelper.getIconDaily(weatherForecastModel.daily[index])),
+                            width: 53,
+                            height: 53,
+                            fit: BoxFit.cover,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );

@@ -12,7 +12,7 @@ import 'package:sunny/feature/detailForecast/view/detailForecastHourly.dart';
 import 'package:sunny/feature/home/model/weatherForecastModel.dart';
 import 'package:sunny/feature/home/service/homeService.dart';
 import 'package:sunny/feature/mainTabbar/mainTabbar.dart';
-import 'package:sunny/feature/weatherList/view/weatherListView.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -31,13 +31,19 @@ class _HomeViewState extends State<HomeView> {
   void gotoDetail(Hourly weatherHourly) {
     print("detail view");
 
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-        DetailForecastHourly(
-          weatherHourly: weatherHourly,
-          address: address,
-        )
+    /// pong ini biar inkwell nya ga terlalu cepet , jadi animasi ke teken dulu ,
+    /// baru eksekusi pindah halaman
+    Future.delayed(Duration(milliseconds: 500)).then((value) {
+
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+          DetailForecastHourly(
+            weatherHourly: weatherHourly,
+            address: address,
+          )
       )
-    );
+      );
+    });
+
   }
 
   void getCurrentLocation() async {
@@ -108,13 +114,15 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     getCurrentLocation();
 
+    initializeDateFormatting();
+
     super.initState();
   }
 
   Widget header() {
-    var dateFormat = new DateFormat('EEEE, dd MMMM yyyy');
+    var dateFormat = new DateFormat('EEEE, dd MMMM yyyy', "id_ID");
 
-    var currentDate = dateFormat.format(DateTime.now().toLocal());
+    var currentDate = dateFormat.format(DateTime.now());
 
     return Container(
       margin: EdgeInsets.only(left: 8, right: 8, top: 30),
@@ -252,7 +260,7 @@ class _HomeViewState extends State<HomeView> {
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
-                          color: ColorConfig.textColorLight,
+                          color: ColorConfig.textLabelDark,
                         )),
                   ],
                 ),
@@ -264,7 +272,7 @@ class _HomeViewState extends State<HomeView> {
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.normal,
-                      color: ColorConfig.textColorLight,
+                      color: ColorConfig.textLabelDark,
                     )),
               ),
               isForecast == true
@@ -506,7 +514,7 @@ class _HomeViewState extends State<HomeView> {
                   "Hari Ini",
                   style: TextStyle(
                       fontSize: 16,
-                      color: ColorConfig.textColorLight,
+                      color: ColorConfig.textLabelDark,
                       fontWeight: FontWeight.bold),
                 ),
                 TextButton(
@@ -534,71 +542,76 @@ class _HomeViewState extends State<HomeView> {
                       itemCount: 5,
                       itemBuilder: (context, index) {
                         return Container(
-                          padding: EdgeInsets.only(
-                              left: 8, right: 8,bottom: 4),
                           margin: EdgeInsets.only(left: 4, right: 4),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: ColorConfig.colorWidget),
                           width: 90,
-                          child: InkWell(
-                            onTap: () => {this.gotoDetail(weatherForecastModel.hourly[index])},
-                            child: Container(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.only(top: 8),
-                                    height: 53,
-                                    width: 53,
-                                    child: Image(
-                                      image: AssetImage(ConditionHelper.getIconHourly(weatherForecastModel.hourly[index])),
-                                      // image: AssetImage(
-                                      //     "asset/image/thunderstorm.png"),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              highlightColor: ColorConfig.mainColor.withOpacity(.2),
+                              splashColor: ColorConfig.mainColor.withOpacity(.2),
+                              onTap: () => {this.gotoDetail(weatherForecastModel.hourly[index])},
+                              child: Container(
+                                padding: EdgeInsets.only(
+                                    left: 8, right: 8,bottom: 4),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(top: 8),
+                                      height: 53,
+                                      width: 53,
+                                      child: Image(
+                                        image: AssetImage(ConditionHelper.getIconHourly(weatherForecastModel.hourly[index])),
+                                        // image: AssetImage(
+                                        //     "asset/image/thunderstorm.png"),
+                                      ),
                                     ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(top: 8),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.access_time_rounded,
-                                          color: ColorConfig.mainColor,
-                                          size: 10,
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 4),
-                                          child: Text(
-                                              ConvertHelper.milisToHour(weatherForecastModel
-                                                  .hourly[index].dt),
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontSize: 10,
-                                                  color: ColorConfig.textColorLight)),
-                                        ),
-                                      ],
+                                    Container(
+                                      margin: EdgeInsets.only(top: 8),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.access_time_rounded,
+                                            color: ColorConfig.mainColor,
+                                            size: 10,
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 4),
+                                            child: Text(
+                                                ConvertHelper.milisToHour(weatherForecastModel
+                                                    .hourly[index].dt),
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontSize: 10,
+                                                    color: ColorConfig.textColorLight)),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(top: 16),
-                                    child: Text(
-                                        weatherForecastModel.hourly[index].temp
-                                                .toStringAsFixed(1) +
-                                            "°C",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                            color: ColorConfig.textColorLight)),
-                                  )
-                                ],
+                                    Container(
+                                      margin: EdgeInsets.only(top: 16),
+                                      child: Text(
+                                          weatherForecastModel.hourly[index].temp
+                                                  .toStringAsFixed(1) +
+                                              "°C",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: ColorConfig.textColorLight)),
+                                    )
+                                  ],
+                                ),
+                                margin: EdgeInsets.only(left: 8, right: 8),
                               ),
-                              margin: EdgeInsets.only(left: 8, right: 8),
                             ),
                           ),
                         );
