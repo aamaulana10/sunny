@@ -10,7 +10,7 @@
 
     <application
         android:icon="@mipmap/ic_launcher"
-        android:label="sunny">
+        android:label="Sunny">
 
         <activity
             android:name=".MainActivity"

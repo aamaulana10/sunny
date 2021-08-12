@@ -171,7 +171,7 @@ class _DetailForecastHourlyState extends State<DetailForecastHourly> {
               itemList("Keadaan Mendung", widget.weatherHourly.clouds.toString() + "%"),
               itemList("Tekanan Udara", widget.weatherHourly.pressure.toString() + " hPa"),
               itemList("Jarak Pandang", widget.weatherHourly.visibility == null ? "Tidak diketahui" :
-              ConvertHelper.mToKm(widget.weatherHourly.visibility) + " Km"),
+              ConvertHelper.mToKm(widget.weatherHourly.visibility) + " km"),
             ],
           ),
       ),

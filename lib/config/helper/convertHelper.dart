@@ -35,6 +35,17 @@ class ConvertHelper {
     return date;
   }
 
+  static String milisToFullDate(int milis) {
+
+    var dateTime = DateTime.fromMillisecondsSinceEpoch(milis * 1000);
+
+    var date = DateFormat("EEEE, dd MMMM yyyy", "id_ID").format(dateTime);
+
+    print(date);
+
+    return date;
+  }
+
   static String milisToHour(int milis) {
     var fixedValue = DateTime.fromMillisecondsSinceEpoch(milis * 1000);
 

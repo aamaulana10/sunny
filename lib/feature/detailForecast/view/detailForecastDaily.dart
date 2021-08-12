@@ -64,9 +64,8 @@ class _DetailForecastDailyState extends State<DetailForecastDaily> {
   @override
   Widget build(BuildContext context) {
 
-    var dateFormat = new DateFormat('EEEE, dd MMMM yyyy', "id_ID");
 
-    var currentDate = dateFormat.format(DateTime.now());
+    var dailyTime = ConvertHelper.milisToFullDate(widget.weatherDaily.dt);
 
     return Scaffold(
       appBar: AppBar(
@@ -95,7 +94,7 @@ class _DetailForecastDailyState extends State<DetailForecastDaily> {
                       bottom: BorderSide(width: 1, color: Color(0XFF313131))
                   )
               ),
-              child: Text(currentDate, style: TextStyle(
+              child: Text(dailyTime, style: TextStyle(
                   color: ColorConfig.textColorLight,
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
