@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:sunny/config/color/colorConfig.dart';
 import 'package:sunny/config/helper/conditionHelper.dart';
 import 'package:sunny/config/helper/convertHelper.dart';
+import 'package:sunny/config/notification/notificationManager.dart';
 import 'package:sunny/feature/detailForecast/view/detailForecastHourly.dart';
 import 'package:sunny/feature/home/model/weatherForecastModel.dart';
 import 'package:sunny/feature/home/service/homeService.dart';
@@ -23,6 +24,7 @@ class _HomeViewState extends State<HomeView> {
   HomeService homeService = HomeService();
 
   WeatherForecastModel weatherForecastModel = WeatherForecastModel();
+  NotificationManager notificationManager = NotificationManager();
   bool isLoading = true;
 
   var address = "Mendapatkan Lokasimu";
@@ -94,6 +96,22 @@ class _HomeViewState extends State<HomeView> {
         weatherForecastModel = value;
         isLoading = false;
       });
+
+      notificationManager.showScheduleNotification(
+          id: "0",
+          title: "Cuaca hari ini " + ConditionHelper.getDescription(weatherForecastModel.current),
+          body: "Temperatur nya " + weatherForecastModel.current.temp.toStringAsFixed(1) +
+              "°C",
+          hour: 10
+      );
+
+      notificationManager.showScheduleNotification(
+          id: "1",
+          title: "Cuaca hari ini " + ConditionHelper.getDescription(weatherForecastModel.current),
+          body: "Temperatur nya " + weatherForecastModel.current.temp.toStringAsFixed(1) +
+              "°C",
+          hour: 16
+      );
     });
   }
 
@@ -112,6 +130,7 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   void initState() {
+
     getCurrentLocation();
 
     initializeDateFormatting();
