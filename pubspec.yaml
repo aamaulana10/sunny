@@ -51,3 +51,48 @@ flutter:
     - asset/image/showerrain.png
     - asset/image/snow.png
     - asset/image/thunderstorm.png
+    - asset/image/backgroundSunny.png
+
+  fonts:
+    - family: NunitoBlack
+      fonts:
+           - asset: asset/fonts/Nunito/Nunito-Black.ttf
+    - family: NunitoBlackItalic
+      fonts:
+            - asset: asset/fonts/Nunito/Nunito-BlackItalic.ttf
+    - family: NunitoBold
+      fonts:
+            - asset: asset/fonts/Nunito/Nunito-Bold.ttf
+    - family: NunitoBoldItalic
+      fonts:
+            - asset: asset/fonts/Nunito/Nunito-BoldItalic.ttf
+    - family: NunitoExtraBold
+      fonts:
+            - asset: asset/fonts/Nunito/Nunito-ExtraBold.ttf
+    - family: NunitoExtraBoldItalic
+      fonts:
+            - asset: asset/fonts/Nunito/Nunito-ExtraBoldItalic.ttf
+    - family: NunitoExtraLight
+      fonts:
+            - asset: asset/fonts/Nunito/Nunito-ExtraLight.ttf
+    - family: NunitoExtraLightItalic
+      fonts:
+            - asset: asset/fonts/Nunito/Nunito-ExtraLightItalic.ttf
+    - family: NunitoItalic
+      fonts:
+            - asset: asset/fonts/Nunito/Nunito-Italic.ttf
+    - family: NunitoLight
+      fonts:
+            - asset: asset/fonts/Nunito/Nunito-Light.ttf
+    - family: NunitoLightItalic
+      fonts:
+            - asset: asset/fonts/Nunito/Nunito-lightItalic.ttf
+    - family: NunitoRegular
+      fonts:
+            - asset: asset/fonts/Nunito/Nunito-Regular.ttf
+    - family: NunitoSemiBold
+      fonts:
+            - asset: asset/fonts/Nunito/Nunito-Semibold.ttf
+    - family: NunitoSemiBoldItalic
+      fonts:
+            - asset: asset/fonts/Nunito/Nunito-SemiBoldItalic.ttf

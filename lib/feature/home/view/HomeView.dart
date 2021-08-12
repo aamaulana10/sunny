@@ -158,6 +158,7 @@ class _HomeViewState extends State<HomeView> {
               style: TextStyle(
                 color: ColorConfig.textLabelDark,
                 fontWeight: FontWeight.bold,
+                fontFamily: 'NunitoSemiBold',
                 fontSize: 18,
               ),
             ),
@@ -166,7 +167,11 @@ class _HomeViewState extends State<HomeView> {
             margin: EdgeInsets.only(top: 16),
             child: Text(
               currentDate.toString(),
-              style: TextStyle(color: ColorConfig.textLabelDark, fontSize: 12),
+              style: TextStyle(
+                  color: ColorConfig.textLabelDark,
+                  fontSize: 12,
+                  fontFamily: 'NunitoRegular',
+              ),
             ),
           ),
           Container(
@@ -195,6 +200,7 @@ class _HomeViewState extends State<HomeView> {
                       "Cuaca",
                       style: TextStyle(
                         color: ColorConfig.textColorLight,
+                        fontFamily: 'NunitoSemiBold',
                       ),
                     ),
                   ),
@@ -219,6 +225,7 @@ class _HomeViewState extends State<HomeView> {
                       "Kualitas Udara",
                       style: TextStyle(
                         color: ColorConfig.textColorLight,
+                        fontFamily: 'NunitoSemiBold',
                       ),
                     ),
                   ),
@@ -280,6 +287,7 @@ class _HomeViewState extends State<HomeView> {
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
                           color: ColorConfig.textLabelDark,
+                          fontFamily: 'NunitoBold',
                         )),
                   ],
                 ),
@@ -292,6 +300,7 @@ class _HomeViewState extends State<HomeView> {
                       fontSize: 14,
                       fontWeight: FontWeight.normal,
                       color: ColorConfig.textLabelDark,
+                      fontFamily: 'NunitoSemiBold',
                     )),
               ),
               isForecast == true
@@ -320,7 +329,11 @@ class _HomeViewState extends State<HomeView> {
                                   Padding(
                                     padding: EdgeInsets.only(left: 6),
                                     child: Text(ConvertHelper.milisToDay(weatherForecastModel.daily[0].dt),
-                                        style: TextStyle(color: ColorConfig.textColorLight, fontSize: 12)),
+                                        style: TextStyle(
+                                            color: ColorConfig.textColorLight,
+                                            fontSize: 12,
+                                            fontFamily: 'NunitoRegular',
+                                        )),
                                   ),
                                   Row(
                                     crossAxisAlignment:
@@ -341,6 +354,7 @@ class _HomeViewState extends State<HomeView> {
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                             color: ColorConfig.textColorLight,
+                                            fontFamily: 'NunitoBold',
                                           )),
                                     ],
                                   )
@@ -373,7 +387,11 @@ class _HomeViewState extends State<HomeView> {
                                   Padding(
                                     padding: EdgeInsets.only(left: 6),
                                     child: Text(ConvertHelper.milisToDay(weatherForecastModel.daily[1].dt),
-                                        style: TextStyle(color: ColorConfig.textColorLight, fontSize: 12)),
+                                        style: TextStyle(
+                                            color: ColorConfig.textColorLight,
+                                            fontSize: 12,
+                                            fontFamily: 'NunitoRegular',
+                                        )),
                                   ),
                                   Row(
                                     crossAxisAlignment:
@@ -394,6 +412,7 @@ class _HomeViewState extends State<HomeView> {
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                             color: ColorConfig.textColorLight,
+                                            fontFamily: 'NunitoBold',
                                           )),
                                     ],
                                   )
@@ -430,7 +449,11 @@ class _HomeViewState extends State<HomeView> {
                                   Padding(
                                     padding: EdgeInsets.only(left: 2),
                                     child: Text("Kecepatan Angin",
-                                        style: TextStyle(color: ColorConfig.textColorLight, fontSize: 12)),
+                                        style: TextStyle(
+                                            color: ColorConfig.textColorLight,
+                                            fontSize: 12,
+                                            fontFamily: 'NunitoRegular',
+                                        )),
                                   ),
                                   Row(
                                     crossAxisAlignment:
@@ -450,6 +473,7 @@ class _HomeViewState extends State<HomeView> {
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold,
                                               color: ColorConfig.textColorLight,
+                                              fontFamily: 'NunitoBold',
                                             )),
                                       ),
                                     ],
@@ -483,7 +507,11 @@ class _HomeViewState extends State<HomeView> {
                                   Padding(
                                     padding: EdgeInsets.only(left: 6),
                                     child: Text("Kelembapan",
-                                        style: TextStyle(color: ColorConfig.textColorLight, fontSize: 12)),
+                                        style: TextStyle(
+                                            color: ColorConfig.textColorLight,
+                                            fontSize: 12,
+                                            fontFamily: 'NunitoRegular',
+                                        )),
                                   ),
                                   Row(
                                     crossAxisAlignment:
@@ -501,6 +529,7 @@ class _HomeViewState extends State<HomeView> {
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                             color: ColorConfig.textColorLight,
+                                            fontFamily: 'NunitoBold',
                                           )),
                                     ],
                                   )
@@ -534,11 +563,15 @@ class _HomeViewState extends State<HomeView> {
                   style: TextStyle(
                       fontSize: 16,
                       color: ColorConfig.textLabelDark,
-                      fontWeight: FontWeight.bold),
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'NunitoBold',
+                  ),
                 ),
                 TextButton(
                   style: TextButton.styleFrom(
-                    textStyle: const TextStyle(fontSize: 12),
+                    textStyle: const TextStyle(
+                      fontSize: 12,
+                      fontFamily: 'NunitoBold',),
                   ),
                   onPressed: () {
                     this.gotoFullReport();
@@ -547,7 +580,9 @@ class _HomeViewState extends State<HomeView> {
                       style: TextStyle(
                           color: ColorConfig.mainColor,
                           fontSize: 12,
-                          fontWeight: FontWeight.bold)),
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'NunitoBold',
+                      )),
                 ),
               ],
             ),
@@ -610,7 +645,9 @@ class _HomeViewState extends State<HomeView> {
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                     fontSize: 10,
-                                                    color: ColorConfig.textColorLight)),
+                                                    color: ColorConfig.textColorLight,
+                                                    fontFamily: 'NunitoRegular',
+                                                )),
                                           ),
                                         ],
                                       ),
@@ -625,7 +662,9 @@ class _HomeViewState extends State<HomeView> {
                                           style: TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold,
-                                              color: ColorConfig.textColorLight)),
+                                              color: ColorConfig.textColorLight,
+                                              fontFamily: 'NunitoBold',
+                                          )),
                                     )
                                   ],
                                 ),
@@ -645,7 +684,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: ColorConfig.darkBackgroundColor,
+      backgroundColor: ColorConfig.darkBackgroundColor,
         body: Container(
           child: RefreshIndicator(
             color: ColorConfig.mainColor,

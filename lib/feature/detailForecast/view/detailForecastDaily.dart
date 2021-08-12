@@ -46,13 +46,15 @@ class _DetailForecastDailyState extends State<DetailForecastDaily> {
               child: Text(category, style: TextStyle(
                   color: ColorConfig.textLabelColor,
                   fontSize: 14,
-                  fontWeight: FontWeight.normal
+                  fontWeight: FontWeight.normal,
+                  fontFamily: 'NunitoRegular'
               )),
             ),
             Text(content, style: TextStyle(
                 color: ColorConfig.textColorLight,
                 fontSize: 14,
-                fontWeight: FontWeight.bold
+                fontWeight: FontWeight.bold,
+                fontFamily: 'NunitoBold'
             ))
           ]
       ),
@@ -72,7 +74,7 @@ class _DetailForecastDailyState extends State<DetailForecastDaily> {
         title: Text(widget.address, style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.white
+                color: ColorConfig.textColorLight
             )
         ),
       ),
@@ -96,7 +98,8 @@ class _DetailForecastDailyState extends State<DetailForecastDaily> {
               child: Text(currentDate, style: TextStyle(
                   color: ColorConfig.textColorLight,
                   fontSize: 14,
-                  fontWeight: FontWeight.bold
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'NunitoBold'
               )),
             ),
             Container(
@@ -132,6 +135,7 @@ class _DetailForecastDailyState extends State<DetailForecastDaily> {
                               "Siang",
                               style: TextStyle(
                                 color: ColorConfig.textColorLight,
+                                  fontFamily: 'NunitoSemiBold'
                               ),
                             ),
                           ),
@@ -159,6 +163,7 @@ class _DetailForecastDailyState extends State<DetailForecastDaily> {
                               "Malam",
                               style: TextStyle(
                                 color: ColorConfig.textColorLight,
+                                  fontFamily: 'NunitoSemiBold'
                               ),
                             ),
                           ),
@@ -199,6 +204,7 @@ class _DetailForecastDailyState extends State<DetailForecastDaily> {
                                       fontSize: 32,
                                       fontWeight: FontWeight.bold,
                                       color: ColorConfig.textLabelDark,
+                                      fontFamily: 'NunitoBold'
                                     )),
                               ],
                             ),
@@ -206,9 +212,10 @@ class _DetailForecastDailyState extends State<DetailForecastDaily> {
                           Container(
                             margin: EdgeInsets.only(top: 8),
                             child: Text(ConditionHelper.getDescriptionDaily(widget.weatherDaily), style: TextStyle(
-                                color: Colors.white,
+                                color: ColorConfig.textColorLight,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 14
+                                fontSize: 14,
+                                fontFamily: 'NunitoBold'
                             )),
                           )
                         ],
@@ -232,7 +239,7 @@ class _DetailForecastDailyState extends State<DetailForecastDaily> {
             itemList("Keadaan Mendung", widget.weatherDaily.clouds.toString() + "%"),
             itemList("Tekanan Udara", widget.weatherDaily.pressure.toString() + " hPa"),
             itemList("Jarak Pandang", widget.weatherDaily.visibility == null ? "Tidak diketahui" :
-            ConvertHelper.mToKm(widget.weatherDaily.visibility) + " meter"),
+            ConvertHelper.mToKm(widget.weatherDaily.visibility) + " Km"),
           ],
         ),
       ),

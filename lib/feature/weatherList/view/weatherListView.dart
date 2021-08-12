@@ -153,7 +153,11 @@ class _WeatherListViewState extends State<WeatherListView> {
                         Padding(
                           child: Text(currentDate,
                               style:
-                                  TextStyle(color: ColorConfig.textColorLight, fontSize: 16)),
+                                  TextStyle(
+                                      color: ColorConfig.textColorLight,
+                                      fontSize: 16,
+                                      fontFamily: 'NunitoSemiBold'
+                                  )),
                           padding: EdgeInsets.only(left: 10),
                         ),
                         Row(
@@ -174,6 +178,7 @@ class _WeatherListViewState extends State<WeatherListView> {
                                   fontSize: 32,
                                   fontWeight: FontWeight.bold,
                                   color: ColorConfig.textColorLight,
+                                  fontFamily: 'NunitoBold'
                                 )),
                           ],
                         ),
@@ -185,7 +190,9 @@ class _WeatherListViewState extends State<WeatherListView> {
                               style: TextStyle(
                                   color: ColorConfig.textColorLight,
                                   fontSize: 14,
-                                  fontWeight: FontWeight.normal)),
+                                  fontWeight: FontWeight.normal,
+                                  fontFamily: 'NunitoSemiBold'
+                              )),
                           padding: EdgeInsets.only(left: 12),
                         )
                       ],
@@ -261,7 +268,9 @@ class _WeatherListViewState extends State<WeatherListView> {
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                     fontSize: 10,
-                                                    color: ColorConfig.textColorLight)),
+                                                    color: ColorConfig.textColorLight,
+                                                    fontFamily: 'NunitoRegular'
+                                                )),
                                           ),
                                         ],
                                       ),
@@ -276,7 +285,9 @@ class _WeatherListViewState extends State<WeatherListView> {
                                           style: TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold,
-                                              color: ColorConfig.textColorLight)),
+                                              color: ColorConfig.textColorLight,
+                                              fontFamily: 'NunitoBold'
+                                          )),
                                     )
                                   ],
                                 ),
@@ -314,7 +325,9 @@ class _WeatherListViewState extends State<WeatherListView> {
                       style: TextStyle(
                           color: ColorConfig.textLabelDark,
                           fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'NunitoBold'
+                      ),
                     ),
                   ],
                 ),
@@ -350,7 +363,9 @@ class _WeatherListViewState extends State<WeatherListView> {
                                           ConvertHelper.milisToDay(
                                               weatherForecastModel.daily[index].dt),
                                           style: TextStyle(color: ColorConfig.textLabelDark,
-                                              fontWeight: FontWeight.bold, fontSize: 14),
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14,
+                                              fontFamily: 'NunitoBold'),
                                         ),
                                         Container(
                                           margin: EdgeInsets.only(top: 8),
@@ -358,7 +373,10 @@ class _WeatherListViewState extends State<WeatherListView> {
                                             ConvertHelper.milisToDate(
                                                 weatherForecastModel
                                                     .daily[index].dt),
-                                            style: TextStyle(color: ColorConfig.textColorLight, fontSize: 12),
+                                            style: TextStyle(color: ColorConfig.textColorLight,
+                                                fontSize: 12,
+                                                fontFamily: 'NunitoRegular'
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -386,7 +404,9 @@ class _WeatherListViewState extends State<WeatherListView> {
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 28,
-                                                  color: ColorConfig.textLabelDark)),
+                                                  color: ColorConfig.textLabelDark,
+                                                  fontFamily: 'NunitoBold'
+                                              )),
                                         ],
                                       ),
                                     ),

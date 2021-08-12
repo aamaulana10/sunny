@@ -180,7 +180,8 @@ class _SearchViewState extends State<SearchView> {
                              getCurrentWeather(locationInput)
                           },
                           style: TextStyle(
-                              color: ColorConfig.textColorLight
+                              color: ColorConfig.textColorLight,
+                              fontFamily: 'NunitoRegular'
                           ),
                           decoration: InputDecoration(
                               prefixIcon: Icon(Icons.search, color: Colors.white, size: 22,),
@@ -189,6 +190,7 @@ class _SearchViewState extends State<SearchView> {
                               labelStyle: TextStyle(
                                 color: ColorConfig.textLabelDark,
                                 fontSize: 12,
+                                  fontFamily: 'NunitoRegular'
                               ),
                               border: InputBorder.none),
                         ),
@@ -200,7 +202,8 @@ class _SearchViewState extends State<SearchView> {
             margin: EdgeInsets.only(top: 16, left: 16, right: 16),
             child: Text("Lokasi Saat ini", style: TextStyle(
                 color: ColorConfig.textLabelDark,
-              fontWeight: FontWeight.w700
+              fontWeight: FontWeight.w700,
+                fontFamily: 'NunitoBold'
             ))
           ),
           InkWell(
@@ -210,7 +213,8 @@ class _SearchViewState extends State<SearchView> {
                 margin: EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 16),
                 child: Text(address, style: TextStyle(
                     color: ColorConfig.textLabelDark,
-                    fontWeight: FontWeight.w700
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'NunitoRegular'
                 ))
             ),
           ),
@@ -256,6 +260,7 @@ class _SearchViewState extends State<SearchView> {
                                     style: TextStyle(
                                       color: ColorConfig.textColorLight,
                                       fontSize: 16,
+                                      fontFamily: 'NunitoBold'
                                     ),),
                                   Container(
                                     margin: EdgeInsets.only(top: 5),
@@ -263,6 +268,7 @@ class _SearchViewState extends State<SearchView> {
                                         .weather[0].main, style: TextStyle(
                                       color: ColorConfig.textColorLight,
                                       fontSize: 16,
+                                        fontFamily: 'NunitoRegular'
                                     ),),
                                   ),
                                 ],
@@ -287,6 +293,7 @@ class _SearchViewState extends State<SearchView> {
                         child: Text("California", style: TextStyle(
                           color: ColorConfig.textColorLight,
                           fontSize: 16,
+                            fontFamily: 'NunitoRegular'
                         ),),
                       )
                     ],
@@ -319,12 +326,14 @@ class _SearchViewState extends State<SearchView> {
                                   Text("32°", style: TextStyle(
                                     color: ColorConfig.textColorLight,
                                     fontSize: 16,
+                                      fontFamily: 'NunitoBold'
                                   ),),
                                   Container(
                                     margin: EdgeInsets.only(top: 5),
                                     child: Text("Cloudy", style: TextStyle(
                                       color: ColorConfig.textColorLight,
                                       fontSize: 16,
+                                        fontFamily: 'NunitoBold'
                                     ),),
                                   ),
                                 ],
@@ -349,6 +358,7 @@ class _SearchViewState extends State<SearchView> {
                         child: Text("California", style: TextStyle(
                           color: ColorConfig.textColorLight,
                           fontSize: 16,
+                            fontFamily: 'NunitoRegular'
                         ),),
                       )
                     ],
@@ -382,12 +392,14 @@ class _SearchViewState extends State<SearchView> {
                                   Text("32°", style: TextStyle(
                                     color: ColorConfig.textColorLight,
                                     fontSize: 16,
+                                      fontFamily: 'NunitoBold'
                                   ),),
                                   Container(
                                     margin: EdgeInsets.only(top: 5),
                                     child: Text("Cloudy", style: TextStyle(
                                       color: ColorConfig.textColorLight,
                                       fontSize: 16,
+                                        fontFamily: 'NunitoBold'
                                     ),),
                                   ),
                                 ],
@@ -412,6 +424,7 @@ class _SearchViewState extends State<SearchView> {
                         child: Text("California", style: TextStyle(
                           color: ColorConfig.textColorLight,
                           fontSize: 16,
+                            fontFamily: 'NunitoRegular'
                         ),),
                       )
                     ],
@@ -445,12 +458,14 @@ class _SearchViewState extends State<SearchView> {
                                   Text("32°", style: TextStyle(
                                     color: ColorConfig.textColorLight,
                                     fontSize: 16,
+                                      fontFamily: 'NunitoBold'
                                   ),),
                                   Container(
                                     margin: EdgeInsets.only(top: 5),
                                     child: Text("Cloudy", style: TextStyle(
                                       color: ColorConfig.textColorLight,
                                       fontSize: 16,
+                                        fontFamily: 'NunitoBold'
                                     ),),
                                   ),
                                 ],
@@ -475,6 +490,7 @@ class _SearchViewState extends State<SearchView> {
                         child: Text("California", style: TextStyle(
                           color: ColorConfig.textColorLight,
                           fontSize: 16,
+                            fontFamily: 'NunitoRegular'
                         ),),
                       )
                     ],
@@ -538,7 +554,9 @@ class _SearchViewState extends State<SearchView> {
                                 ConvertHelper.milisToDay(
                                     weatherForecastModel.daily[index].dt),
                                 style: TextStyle(color: ColorConfig.textColorLight,
-                                    fontWeight: FontWeight.bold, fontSize: 14),
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'NunitoBold',
+                                    fontSize: 14),
                               ),
                               Container(
                                 margin: EdgeInsets.only(top: 8),
@@ -546,7 +564,11 @@ class _SearchViewState extends State<SearchView> {
                                   ConvertHelper.milisToDate(
                                       weatherForecastModel
                                           .daily[index].dt),
-                                  style: TextStyle(color: ColorConfig.textColorLight, fontSize: 12),
+                                  style: TextStyle(
+                                      color: ColorConfig.textColorLight,
+                                      fontSize: 12,
+                                      fontFamily: 'NunitoRegular'
+                                  ),
                                 ),
                               ),
                             ],
@@ -574,7 +596,9 @@ class _SearchViewState extends State<SearchView> {
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 28,
-                                        color: ColorConfig.textColorLight)),
+                                        color: ColorConfig.textColorLight,
+                                        fontFamily: 'NunitoBold'
+                                    )),
                               ],
                             ),
                           ),
@@ -599,6 +623,7 @@ class _SearchViewState extends State<SearchView> {
           child: Center(
             child: Text("Data tidak ditemukan", style: TextStyle(
               color: ColorConfig.textLabelColor,
+                fontFamily: 'NunitoRegular'
             )),
           ),
         );

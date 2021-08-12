@@ -66,35 +66,47 @@ class _MainTabbarState extends State<MainTabbar> {
               backgroundColor: ColorConfig.mainColor,
               icon: Icon(
                 Icons.home,
-                color: Colors.white,
+                color: ColorConfig.textColorLight,
               ),
               activeIcon: Icon(
                 Icons.home,
                 color: ColorConfig.mainColor,
               ),
-              title: Text("Beranda")),
+              title: Text("Beranda",style: TextStyle(
+                color: ColorConfig.mainColor,
+                fontFamily: 'NunitoRegular',
+                fontSize: 12,
+              ),)),
           BubbleBottomBarItem(
               backgroundColor: ColorConfig.mainColor,
               icon: Icon(
                 Icons.search,
-                color: Colors.white,
+                color: ColorConfig.textColorLight,
               ),
               activeIcon: Icon(
                 Icons.search,
                 color: ColorConfig.mainColor,
               ),
-              title: Text("Cari Lokasi")),
+              title: Text("Cari Lokasi",style: TextStyle(
+                color: ColorConfig.mainColor,
+                fontFamily: 'NunitoRegular',
+                fontSize: 12,
+              ),)),
           BubbleBottomBarItem(
               backgroundColor: ColorConfig.mainColor,
               icon: Icon(
                 Icons.wb_sunny_sharp,
-                color: Colors.white,
+                color: ColorConfig.textColorLight,
               ),
               activeIcon: Icon(
                 Icons.wb_sunny_sharp,
                 color: ColorConfig.mainColor,
               ),
-              title: Text("Cuaca")),
+              title: Text("Cuaca",style: TextStyle(
+                color: ColorConfig.mainColor,
+                fontFamily: 'NunitoRegular',
+                fontSize: 12,
+              ),)),
         ],
       ),
       // bottomNavigationBar : BottomNavigationBar(

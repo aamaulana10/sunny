@@ -44,13 +44,15 @@ class _DetailForecastHourlyState extends State<DetailForecastHourly> {
             child: Text(category, style: TextStyle(
                 color: ColorConfig.textLabelColor,
                 fontSize: 14,
-                fontWeight: FontWeight.normal
+                fontWeight: FontWeight.normal,
+                fontFamily: 'NunitoRegular'
             )),
           ),
           Text(content, style: TextStyle(
               color: ColorConfig.textColorLight,
               fontSize: 14,
-              fontWeight: FontWeight.bold
+              fontWeight: FontWeight.bold,
+              fontFamily: 'NunitoBold'
           ))
         ]
       ),
@@ -73,12 +75,14 @@ class _DetailForecastHourlyState extends State<DetailForecastHourly> {
             Text(widget.address, style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Colors.white
+              color: ColorConfig.textColorLight,
+                fontFamily: 'NunitoBold'
             )),
             Padding(
               padding: EdgeInsets.only(top: 8),
               child: Text(currentDate, style: TextStyle(
-                  fontSize: 12
+                  fontSize: 12,
+                  fontFamily: 'NunitoRegular'
               )),
             )
           ],
@@ -104,7 +108,8 @@ class _DetailForecastHourlyState extends State<DetailForecastHourly> {
                 child: Text("Jam " + ConvertHelper.milisToHour(widget.weatherHourly.dt), style: TextStyle(
                   color: ColorConfig.textColorLight,
                   fontSize: 14,
-                  fontWeight: FontWeight.bold
+                  fontWeight: FontWeight.bold,
+                    fontFamily: 'NunitoBold'
                 )),
               ),
               Container(
@@ -139,6 +144,7 @@ class _DetailForecastHourlyState extends State<DetailForecastHourly> {
                                     fontSize: 32,
                                     fontWeight: FontWeight.bold,
                                     color: ColorConfig.textColorLight,
+                                      fontFamily: 'NunitoBold'
                                   )),
                             ],
                           ),
@@ -148,7 +154,8 @@ class _DetailForecastHourlyState extends State<DetailForecastHourly> {
                           child: Text(ConditionHelper.getDescriptionHourly(widget.weatherHourly), style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
-                            fontSize: 14
+                            fontSize: 14,
+                              fontFamily: 'NunitoBold'
                           )),
                         )
                       ],
@@ -164,7 +171,7 @@ class _DetailForecastHourlyState extends State<DetailForecastHourly> {
               itemList("Keadaan Mendung", widget.weatherHourly.clouds.toString() + "%"),
               itemList("Tekanan Udara", widget.weatherHourly.pressure.toString() + " hPa"),
               itemList("Jarak Pandang", widget.weatherHourly.visibility == null ? "Tidak diketahui" :
-              ConvertHelper.mToKm(widget.weatherHourly.visibility) + " meter"),
+              ConvertHelper.mToKm(widget.weatherHourly.visibility) + " Km"),
             ],
           ),
       ),
