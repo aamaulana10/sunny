@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sunny/config/color/colorConfig.dart';
-import 'package:sunny/config/helper/conditionHelper.dart';
-import 'package:sunny/config/helper/convertHelper.dart';
-import 'package:sunny/feature/home/model/weatherForecastModel.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:sunny/core/config/color/colorConfig.dart';
+import 'package:sunny/core/config/helper/conditionHelper.dart';
+import 'package:sunny/core/config/helper/convertHelper.dart';
+import 'package:sunny/core/model/weatherForecastModel.dart';
 
 class DetailForecastDaily extends StatefulWidget {
 

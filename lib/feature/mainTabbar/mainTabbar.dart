@@ -1,7 +1,7 @@
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sunny/config/color/colorConfig.dart';
+import 'package:sunny/core/config/color/colorConfig.dart';
 import 'package:sunny/feature/home/view/HomeView.dart';
 import 'package:sunny/feature/search/view/searchView.dart';
 import 'package:sunny/feature/weatherList/view/weatherListView.dart';
@@ -47,10 +47,7 @@ class _MainTabbarState extends State<MainTabbar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: crntIndex,
-        children: screen,
-      ),
+      body: screen[crntIndex],
       bottomNavigationBar: BubbleBottomBar(
         hasNotch: true,
         backgroundColor: ColorConfig.darkBackgroundColor,

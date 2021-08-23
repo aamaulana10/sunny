@@ -1,4 +1,5 @@
-import 'package:sunny/config/helper/convertHelper.dart';
+
+import 'package:sunny/core/config/helper/convertHelper.dart';
 
 class WeatherForecastModel {
   double lat;
@@ -19,8 +20,8 @@ class WeatherForecastModel {
       this.daily});
 
   WeatherForecastModel.fromJson(Map<String, dynamic> json) {
-    lat = json['lat'];
-    lon = json['lon'];
+    lat = ConvertHelper.checkDouble(json['lat']);
+    lon = ConvertHelper.checkDouble(json['lon']);
     timezone = json['timezone'];
     timezoneOffset = json['timezone_offset'];
     current =
@@ -236,7 +237,7 @@ class Rain {
   Rain({this.d1h});
 
   Rain.fromJson(Map<String, dynamic> json) {
-    d1h = json['1h'];
+    d1h = ConvertHelper.checkDouble(json['1h']);
   }
 
   Map<String, dynamic> toJson() {

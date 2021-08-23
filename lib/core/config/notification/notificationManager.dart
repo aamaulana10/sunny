@@ -25,7 +25,7 @@ class NotificationManager {
 
     if (!_initialized) {
 
-      var androidSettings = AndroidInitializationSettings("playstore");
+      var androidSettings = AndroidInitializationSettings("ic_notif_icon");
 
       var initSetttings = InitializationSettings(android: androidSettings);
 
@@ -83,24 +83,37 @@ class NotificationManager {
         payload: body);
   }
 
-  Future<void> showScheduleNotification({String id, String title, String body, int hour}) async {
-    var time = Time(01, 55, 10);
-    var androidChannelSpecifics = AndroidNotificationDetails(
-      "sunny_id",
-      "sunny ",
-      "sunny notification",
-      importance: Importance.max,
-      priority: Priority.high,
+  Future<void> showScheduleNotification({int id, String title, String body, int hour,
+    String imagePath, String imageDescription}) async {
+    // var androidChannelSpecifics = AndroidNotificationDetails(
+    //   "sunny_id",
+    //   "sunny ",
+    //   "sunny notification",
+    //   importance: Importance.max,
+    //   priority: Priority.high,
+    // );
+
+    var attachmentPicturePath = await _downloadAndSaveFileImageNotification(imagePath, imageDescription);
+
+    var bigPictureStyleInformation = BigPictureStyleInformation(
+      FilePathAndroidBitmap(attachmentPicturePath),
+      contentTitle: '<b>$imageDescription</b>',
+      htmlFormatContentTitle: true,
+      summaryText: title,
+      htmlFormatSummaryText: true,
     );
 
-    var platformChannelSpecifics =
-    NotificationDetails(android: androidChannelSpecifics);
+    var androidDetails = AndroidNotificationDetails("sunny_id", "sunny ", "sunny notification",
+        priority: Priority.high, importance: Importance.max, styleInformation: bigPictureStyleInformation);
+
+    var platformDetails = new NotificationDetails(android: androidDetails);
+
     await flutterLocalNotificationsPlugin.zonedSchedule(
-      0,
+      id,
       title,
       body, //null
       _nextInstanceOfTenAM(hour),
-        platformChannelSpecifics,
+        platformDetails,
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
         UILocalNotificationDateInterpretation.absoluteTime,

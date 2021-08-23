@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sunny/config/color/colorConfig.dart';
+import 'package:sunny/core/config/color/colorConfig.dart';
 
 class SettingView extends StatefulWidget {
   @override

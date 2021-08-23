@@ -4,13 +4,13 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart' as geo;
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'package:sunny/config/color/colorConfig.dart';
-import 'package:sunny/config/helper/conditionHelper.dart';
-import 'package:sunny/config/helper/convertHelper.dart';
+import 'package:sunny/core/config/color/colorConfig.dart';
+import 'package:sunny/core/config/helper/conditionHelper.dart';
+import 'package:sunny/core/config/helper/convertHelper.dart';
+import 'package:sunny/core/model/weatherForecastModel.dart';
+import 'package:sunny/core/service/weatherService.dart';
 import 'package:sunny/feature/detailForecast/view/DetailForecastHourly.dart';
 import 'package:sunny/feature/detailForecast/view/detailForecastDaily.dart';
-import 'package:sunny/feature/home/model/weatherForecastModel.dart';
-import 'package:sunny/feature/home/service/homeService.dart';
 
 class WeatherListView extends StatefulWidget {
   @override
@@ -70,6 +70,9 @@ class _WeatherListViewState extends State<WeatherListView> {
     if (position.latitude != null || position.longitude != null) {
       _getAddressFromLatLng(position.latitude, position.longitude);
       getForecast(position.latitude.toString(), position.longitude.toString());
+    } else {
+
+      getCurrentLocation();
     }
   }
 

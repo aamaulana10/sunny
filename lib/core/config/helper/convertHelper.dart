@@ -19,8 +19,6 @@ class ConvertHelper {
 
     var day = DateFormat("EEEE", "id_ID").format(dateTime);
 
-    print(day);
-
     return day;
   }
 
@@ -30,8 +28,6 @@ class ConvertHelper {
 
     var date = DateFormat("dd MMMM yyyy", "id_ID").format(dateTime);
 
-    print(date);
-
     return date;
   }
 
@@ -40,8 +36,6 @@ class ConvertHelper {
     var dateTime = DateTime.fromMillisecondsSinceEpoch(milis * 1000);
 
     var date = DateFormat("EEEE, dd MMMM yyyy", "id_ID").format(dateTime);
-
-    print(date);
 
     return date;
   }

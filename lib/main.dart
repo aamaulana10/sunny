@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sunny/config/notification/notificationManager.dart';
 import 'package:sunny/feature/mainTabbar/mainTabbar.dart';
+
+import 'core/config/notification/notificationManager.dart';
 
 void main() async{
 

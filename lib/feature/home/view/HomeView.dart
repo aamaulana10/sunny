@@ -1,19 +1,23 @@
 import 'dart:ffi';
 
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart' as geo;
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
-import 'package:sunny/config/color/colorConfig.dart';
-import 'package:sunny/config/helper/conditionHelper.dart';
-import 'package:sunny/config/helper/convertHelper.dart';
-import 'package:sunny/config/notification/notificationManager.dart';
+import 'package:sunny/core/config/color/colorConfig.dart';
+import 'package:sunny/core/config/helper/conditionHelper.dart';
+import 'package:sunny/core/config/helper/convertHelper.dart';
+import 'package:sunny/core/config/notification/notificationManager.dart';
+import 'package:sunny/core/model/weatherForecastModel.dart';
+import 'package:sunny/core/service/weatherService.dart';
 import 'package:sunny/feature/detailForecast/view/detailForecastHourly.dart';
-import 'package:sunny/feature/home/model/weatherForecastModel.dart';
-import 'package:sunny/feature/home/service/homeService.dart';
+import 'package:sunny/feature/detailNews/view/detailNewsView.dart';
+import 'package:sunny/feature/listNews/view/listNewsView.dart';
 import 'package:sunny/feature/mainTabbar/mainTabbar.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:webfeed/domain/rss_feed.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -46,6 +50,21 @@ class _HomeViewState extends State<HomeView> {
       );
     });
 
+  }
+
+  void gotoDetailNews(String url) {
+
+    Future.delayed(Duration(milliseconds: 500)).then((value) {
+
+      Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => DetailNewsView(url: url)));
+
+    });
+
+  }
+
+  void gotoListNews() {
+
+    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => ListNewsView()));
   }
 
   void getCurrentLocation() async {
@@ -90,7 +109,6 @@ class _HomeViewState extends State<HomeView> {
     }
 
     homeService.getCurrentWeatherByLatLong(latitude, longitude).then((value) {
-      print(value);
 
       setState(() {
         weatherForecastModel = value;
@@ -98,26 +116,41 @@ class _HomeViewState extends State<HomeView> {
       });
 
       notificationManager.showScheduleNotification(
-          id: "0",
+          id: 0,
           title: "Cuaca hari ini " + ConditionHelper.getDescription(weatherForecastModel.current),
           body: "Temperatur nya " + weatherForecastModel.current.temp.toStringAsFixed(1) +
               "°C",
-          hour: 10
+          hour: 10,
+          imagePath: ConditionHelper.getImageNotifFromCondition(weatherForecastModel.current.weather[0].icon)["icon"],
+          imageDescription: ConditionHelper.getDescription(weatherForecastModel.current)
       );
 
       notificationManager.showScheduleNotification(
-          id: "1",
-          title: "Cuaca hari ini " + ConditionHelper.getDescription(weatherForecastModel.current),
-          body: "Temperatur nya " + weatherForecastModel.current.temp.toStringAsFixed(1) +
-              "°C",
-          hour: 16
+          id: 1,
+          title: "Cuaca besok " + ConditionHelper.getDescriptionDaily(weatherForecastModel.daily[1]),
+      body: "Temperatur nya " + weatherForecastModel.current.temp.toStringAsFixed(1) +
+      "°C",
+      hour: 20,
+      imagePath:  ConditionHelper.getImageNotifFromCondition(weatherForecastModel.daily[1].weather[0].icon)["icon"],
+      imageDescription: ConditionHelper.getDescriptionDaily(weatherForecastModel.daily[1])
       );
     });
   }
 
+  void getNews() {
+
+    homeService.getNewsFromRss().then((value) {
+
+      print(value.items[0].title);
+
+    });
+  }
+
   void gotoFullReport() {
-    Navigator.of(context).pushReplacement(
+
+    Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => MainTabbar(selectedIndex: 2)));
+
   }
 
   @override
@@ -132,6 +165,7 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
 
     getCurrentLocation();
+    getNews();
 
     initializeDateFormatting();
 
@@ -262,11 +296,19 @@ class _HomeViewState extends State<HomeView> {
             children: [
               Container(
                 margin: EdgeInsets.only(top: 16),
-                height: 140,
-                width: 140,
-                child: Image(
-                    image: AssetImage(ConditionHelper.getIcon(weatherForecastModel.current))),
-                    // image: AssetImage("asset/image/thunderstorm.png")),
+                child: AvatarGlow(
+                  glowColor: ColorConfig.mainColor,
+                  endRadius: 140.0,
+                  duration: Duration(milliseconds: 3000),
+                  repeat: true,
+                  showTwoGlows: true,
+                  repeatPauseDuration: Duration(milliseconds: 500),
+                  child: Image(
+                      height: 200,
+                      width: 200,
+                      image: AssetImage("asset/image/thunderstorm.png")
+                  ),
+                ),
               ),
               Container(
                 alignment: Alignment.center,
@@ -681,6 +723,142 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
+  Widget newsContainer() {
+
+    return Container(
+      padding: EdgeInsets.only(left: 16, right: 16, bottom: 32, top: 8),
+      child: StreamBuilder(
+        stream: homeService.getNewsFromRss().asStream(),
+        builder: (contex, AsyncSnapshot<RssFeed> snapshot) {
+          if(snapshot.hasData) {
+
+              var itemsList = snapshot.data.items.where((i) => i.description.toLowerCase().contains("cuaca")).toList();
+
+            print("item list");
+            print(itemsList.first);
+            print(itemsList.first.enclosure.url);
+            print(itemsList.first.link);
+
+            return Container(
+              height: 140,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Berita Cuaca", style: TextStyle(
+                          fontSize: 16,
+                          color: ColorConfig.textLabelDark,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'NunitoBold',
+                        )),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            textStyle: const TextStyle(
+                              fontSize: 12,
+                              fontFamily: 'NunitoBold',),
+                          ),
+                          onPressed: () {
+                            this.gotoListNews();
+                          },
+                          child: Text('Lihat Semua',
+                              style: TextStyle(
+                                color: ColorConfig.mainColor,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'NunitoBold',
+                              )),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                      height: 100,
+                      child: ListView.builder(
+                        itemCount: itemsList.length != null ? 3 : itemsList.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (ctx, idx) {
+
+                          var items = itemsList[idx];
+                          var dateFormat = new DateFormat('EEEE, dd MMMM yyyy', "id_ID");
+                          var fixedDate = dateFormat.format(items.pubDate);
+
+                          return Container(
+                            width: 300,
+                            margin: EdgeInsets.only(right: 8),
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                highlightColor: ColorConfig.mainColor.withOpacity(.2),
+                                splashColor: ColorConfig.mainColor.withOpacity(.2),
+                                onTap: () => {this.gotoDetailNews(items.link)},
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ClipRRect(
+                                      child: Image(
+                                        width: 100,
+                                        image: NetworkImage(items.enclosure.url),
+                                        fit: BoxFit.fill,
+                                      ),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        padding: EdgeInsets.only(left: 8, right: 8),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text(items.title, style: TextStyle(
+                                                fontSize: 12,
+                                                color: ColorConfig.textColorLight,
+                                                fontFamily: 'NunitoBold'
+                                            ),
+                                              maxLines: 2,
+                                            ),
+                                            Padding(
+                                              child: Text(fixedDate, style: TextStyle(
+                                                  fontSize: 11,
+                                                  color: ColorConfig.textLabelDark,
+                                                  fontFamily: 'NunitoRegular'
+                                              ),
+                                                maxLines: 1,
+                                              ),
+                                              padding: EdgeInsets.only(top: 8),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    )
+                ],
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text(snapshot.error.toString(), style: TextStyle(
+                  color: Colors.white
+              )),
+            );
+          }
+
+          return Container();
+        },
+      )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -700,6 +878,7 @@ class _HomeViewState extends State<HomeView> {
                   header(),
                   weather(),
                   todayContainer(),
+                  newsContainer()
                 ],
               ),
             ),

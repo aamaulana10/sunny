@@ -1,4 +1,5 @@
-import 'package:sunny/config/helper/convertHelper.dart';
+
+import 'package:sunny/core/config/helper/convertHelper.dart';
 
 class WeatherMainModel {
   Coord coord;

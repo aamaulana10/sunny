@@ -1,9 +1,10 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:sunny/config/network/apiConfig.dart';
-import 'package:sunny/feature/home/model/weatherForecastModel.dart';
-import 'package:sunny/feature/home/model/weatherModel.dart';
+import 'package:sunny/core/config/network/apiConfig.dart';
+import 'package:sunny/core/model/weatherForecastModel.dart';
+import 'package:sunny/core/model/weatherModel.dart';
+import 'package:webfeed/domain/rss_feed.dart';
 
 class HomeService {
 
@@ -41,8 +42,6 @@ class HomeService {
 
       final data = json.decode(response.body) ;
 
-      print(data);
-
       var forecast = new WeatherForecastModel();
 
       forecast = WeatherForecastModel.fromJson(data);
@@ -50,6 +49,20 @@ class HomeService {
       return forecast;
 
     });
+  }
+
+  Future<RssFeed> getNewsFromRss() async{
+
+      var response = await http.get("https://www.antaranews.com/rss/warta-bumi.xml");
+
+      if(response.body != null) {
+
+          return RssFeed.parse(response.body);
+
+      }else {
+
+        throw Exception("error parse rss");
+      }
   }
 
 }

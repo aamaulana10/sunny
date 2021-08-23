@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sunny/config/color/colorConfig.dart';
-import 'package:sunny/config/helper/conditionHelper.dart';
-import 'package:sunny/config/helper/convertHelper.dart';
-import 'package:sunny/feature/detailForecast/view/DetailForecastHourly.dart';
+import 'package:sunny/core/config/color/colorConfig.dart';
+import 'package:sunny/core/config/helper/conditionHelper.dart';
+import 'package:sunny/core/config/helper/convertHelper.dart';
+import 'package:sunny/core/model/weatherForecastModel.dart';
+import 'package:sunny/core/service/weatherService.dart';
 import 'package:sunny/feature/detailForecast/view/detailForecastDaily.dart';
-import 'package:sunny/feature/home/model/weatherForecastModel.dart';
-import 'package:sunny/feature/home/service/homeService.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart' as geo;
 
@@ -37,6 +36,22 @@ class _SearchViewState extends State<SearchView> {
           DetailForecastDaily(
             weatherDaily: weatherDaily,
             address: address,
+          )
+      )
+      );
+    });
+
+  }
+
+  void gotoDetailDailyFromList(Daily weatherDaily) {
+    print("detail view");
+
+    Future.delayed(Duration(milliseconds: 500)).then((value) {
+
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+          DetailForecastDaily(
+            weatherDaily: weatherDaily,
+            address: locationInput,
           )
       )
       );
@@ -95,7 +110,6 @@ class _SearchViewState extends State<SearchView> {
   void getUserForecast(String latitude, String longitude) {
 
     homeService.getCurrentWeatherByLatLong(latitude, longitude).then((value) {
-      print(value);
 
       setState(() {
         weatherForecastModel = value;
@@ -123,6 +137,7 @@ class _SearchViewState extends State<SearchView> {
         });
 
       });
+
     }).onError((error, stackTrace) {
 
       setState(() {
@@ -501,8 +516,6 @@ class _SearchViewState extends State<SearchView> {
       );
     } else {
 
-      print("kesini ga ?");
-
       return Container();
     }
   }
@@ -541,7 +554,7 @@ class _SearchViewState extends State<SearchView> {
                   margin:
                   EdgeInsets.only(left: 8, right: 8, bottom: 8),
                   child: InkWell(
-                    onTap: () => {this.gotoDetailDaily(weatherForecastModel.daily[index])},
+                    onTap: () => {this.gotoDetailDailyFromList(weatherForecastModel.daily[index])},
                     highlightColor: ColorConfig.mainColor.withOpacity(.2),
                     splashColor: ColorConfig.mainColor.withOpacity(.2),
                     child: Container(
