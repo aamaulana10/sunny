@@ -15,14 +15,12 @@ class HomeService {
 
     print(url);
 
-      return http.get(url)
+      return http.get(Uri.parse(url))
           .then((response) {
 
         final data = json.decode(response.body) ;
 
-        var weather = new WeatherMainModel();
-
-        weather = WeatherMainModel.fromJson(data);
+        var weather = WeatherMainModel.fromJson(data);
 
         return weather;
 
@@ -37,7 +35,7 @@ class HomeService {
 
     print(url);
 
-    return http.get(url)
+    return http.get(Uri.parse(url))
         .then((response) {
 
       final data = json.decode(response.body) ;
@@ -53,9 +51,9 @@ class HomeService {
 
   Future<RssFeed> getNewsFromRss() async{
 
-      var response = await http.get("https://www.antaranews.com/rss/warta-bumi.xml");
+      var response = await http.get(Uri.parse("https://www.antaranews.com/rss/warta-bumi.xml"));
 
-      if(response.body != null) {
+      if(response.body.isNotEmpty) {
 
           return RssFeed.parse(response.body);
 

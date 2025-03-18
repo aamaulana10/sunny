@@ -8,7 +8,6 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 
 class NotificationManager {
-
   NotificationManager._();
 
   factory NotificationManager() => _instance;
@@ -20,51 +19,41 @@ class NotificationManager {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   Future<void> init() async {
-
     print("NotificationManager call init function");
 
     if (!_initialized) {
-
       var androidSettings = AndroidInitializationSettings("ic_notif_icon");
 
       var initSetttings = InitializationSettings(android: androidSettings);
 
-      await flutterLocalNotificationsPlugin.initialize(
-          initSetttings, onSelectNotification: onClickNotification);
+      await flutterLocalNotificationsPlugin.initialize(initSetttings, onSelectNotification: onClickNotification);
     }
 
     _configureLocalTimeZone();
 
-      _initialized = true;
-
-    }
+    _initialized = true;
+  }
 
   void requestPermissions() {
     flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()?.requestPermissions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+          alert: true,
+          badge: true,
+          sound: true,
+        );
   }
 
-  Future onClickNotification(String payload) {
-    print("payload " + payload);
+  Future<void> onClickNotification(String? payload) async{
+    print("payload " + payload!);
   }
 
-  showSimpleNotification({String id, String title, String body}) async {
-
-    var androidDetails = AndroidNotificationDetails("sunny_id", "sunny ", "sunny notification",
-        priority: Priority.high, importance: Importance.max,
-        styleInformation: DefaultStyleInformation(true, true));
+  showSimpleNotification({required String id, required String title, required String body}) async {
+    var androidDetails =
+        AndroidNotificationDetails("sunny_id", "sunny ", "sunny notification", priority: Priority.high, importance: Importance.max, styleInformation: DefaultStyleInformation(true, true));
     var platformDetails = new NotificationDetails(android: androidDetails);
-    await flutterLocalNotificationsPlugin.show(0, title,
-        body, platformDetails,
-        payload: body);
+    await flutterLocalNotificationsPlugin.show(0, title, body, platformDetails, payload: body);
   }
 
-  showNotificationWithAttachment({String id, String title, String body,
-      String imagePath, String imageDescription}) async {
-
+  showNotificationWithAttachment({required String id, required String title, required String body, required String imagePath, required String imageDescription}) async {
     var attachmentPicturePath = await _downloadAndSaveFileImageNotification(imagePath, imageDescription);
 
     var bigPictureStyleInformation = BigPictureStyleInformation(
@@ -75,16 +64,12 @@ class NotificationManager {
       htmlFormatSummaryText: true,
     );
 
-    var androidDetails = AndroidNotificationDetails("sunny_id", "sunny ", "sunny notification",
-    priority: Priority.high, importance: Importance.max, styleInformation: bigPictureStyleInformation);
+    var androidDetails = AndroidNotificationDetails("sunny_id", "sunny ", "sunny notification", priority: Priority.high, importance: Importance.max, styleInformation: bigPictureStyleInformation);
     var platformDetails = new NotificationDetails(android: androidDetails);
-    await flutterLocalNotificationsPlugin.show(0, title,
-        body, platformDetails,
-        payload: body);
+    await flutterLocalNotificationsPlugin.show(0, title, body, platformDetails, payload: body);
   }
 
-  Future<void> showScheduleNotification({int id, String title, String body, int hour,
-    String imagePath, String imageDescription}) async {
+  Future<void> showScheduleNotification({required int id, required String title, required String body, required int hour, required String imagePath, required String imageDescription}) async {
     // var androidChannelSpecifics = AndroidNotificationDetails(
     //   "sunny_id",
     //   "sunny ",
@@ -103,30 +88,26 @@ class NotificationManager {
       htmlFormatSummaryText: true,
     );
 
-    var androidDetails = AndroidNotificationDetails("sunny_id", "sunny ", "sunny notification",
-        priority: Priority.high, importance: Importance.max, styleInformation: bigPictureStyleInformation);
+    var androidDetails = AndroidNotificationDetails("sunny_id", "sunny ", "sunny notification", priority: Priority.high, importance: Importance.max, styleInformation: bigPictureStyleInformation);
 
     var platformDetails = new NotificationDetails(android: androidDetails);
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
-      id,
-      title,
-      body, //null
-      _nextInstanceOfTenAM(hour),
+        id,
+        title,
+        body, //null
+        _nextInstanceOfTenAM(hour),
         platformDetails,
         androidAllowWhileIdle: true,
-        uiLocalNotificationDateInterpretation:
-        UILocalNotificationDateInterpretation.absoluteTime,
-        matchDateTimeComponents: DateTimeComponents.time
-    );
+        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        matchDateTimeComponents: DateTimeComponents.time);
 
     print("schedule set at ${_nextInstanceOfTenAM(hour).hour}:${_nextInstanceOfTenAM(hour).minute}.${_nextInstanceOfTenAM(hour).second}");
   }
 
   tz.TZDateTime _nextInstanceOfTenAM(int hour) {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
-    tz.TZDateTime scheduledDate =
-    tz.TZDateTime(tz.local, now.year, now.month, now.hour, hour, 00);
+    tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, now.year, now.month, now.hour, hour, 00);
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
@@ -144,14 +125,13 @@ class NotificationManager {
   _downloadAndSaveFileImageNotification(String url, String fileName) async {
     var directory = await getApplicationDocumentsDirectory();
     var filePath = '${directory.path}/$fileName';
-    var response = await http.get(url);
+    var response = await http.get(Uri.parse(url));
     var file = File(filePath);
     await file.writeAsBytes(response.bodyBytes);
     return filePath;
   }
 
-    _getImageFileFromAssets(String path) async {
-
+  _getImageFileFromAssets(String path) async {
     final byteData = await rootBundle.load(path);
 
     final file = File('${(await getTemporaryDirectory()).path}/$path');
@@ -159,6 +139,5 @@ class NotificationManager {
     await file.writeAsBytes(byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
 
     return file;
-
   }
 }

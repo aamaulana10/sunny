@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:sunny/core/config/color/colorConfig.dart';
 import 'package:sunny/core/config/helper/conditionHelper.dart';
@@ -8,10 +7,10 @@ import 'package:sunny/core/model/weatherForecastModel.dart';
 
 class DetailForecastDaily extends StatefulWidget {
 
-  Daily weatherDaily;
-  String address;
+  final Daily weatherDaily;
+  final String address;
 
-  DetailForecastDaily({this.weatherDaily, this.address});
+  DetailForecastDaily({required this.weatherDaily, required this.address});
 
   @override
   _DetailForecastDailyState createState() => _DetailForecastDailyState();
@@ -123,8 +122,7 @@ class _DetailForecastDailyState extends State<DetailForecastDaily> {
                                   ? Border.all(color: ColorConfig.colorWidget, width: 1)
                                   : Border.all(color: ColorConfig.textLabelDark, width: 1)
                           ),
-                          child: FlatButton(
-                            minWidth: 100,
+                          child: TextButton(
                             onPressed: () {
                               setState(() {
                                 isDay = true;
@@ -151,8 +149,7 @@ class _DetailForecastDailyState extends State<DetailForecastDaily> {
                                 ? Border.all(color: ColorConfig.colorWidget, width: 1)
                                 : Border.all(color: ColorConfig.textLabelDark, width: 1)
                           ),
-                          child: FlatButton(
-                            minWidth: 100,
+                          child: TextButton(
                             onPressed: () {
                               setState(() {
                                 isDay = false;
@@ -174,7 +171,7 @@ class _DetailForecastDailyState extends State<DetailForecastDaily> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image(image: AssetImage(ConditionHelper.getIconDaily(widget.weatherDaily)),
+                      Image(image: AssetImage(ConditionHelper.getIconDaily(widget.weatherDaily) ?? ''),
                         height: 90,
                         width: 90,
                       ),
@@ -195,9 +192,9 @@ class _DetailForecastDailyState extends State<DetailForecastDaily> {
                                 ),
                                 Text(
                                     isDay == true
-                                    ? widget.weatherDaily.temp.day.toStringAsFixed(1) +
+                                    ? widget.weatherDaily.temp!.day!.toStringAsFixed(1) +
                                         "°C"
-                                    :widget.weatherDaily.temp.night.toStringAsFixed(1) +
+                                    :widget.weatherDaily.temp!.night!.toStringAsFixed(1) +
                                         "°C",
                                     style: TextStyle(
                                       fontSize: 32,
@@ -210,7 +207,7 @@ class _DetailForecastDailyState extends State<DetailForecastDaily> {
                           ),
                           Container(
                             margin: EdgeInsets.only(top: 8),
-                            child: Text(ConditionHelper.getDescriptionDaily(widget.weatherDaily), style: TextStyle(
+                            child: Text(ConditionHelper.getDescriptionDaily(widget.weatherDaily) ?? '', style: TextStyle(
                                 color: ColorConfig.textColorLight,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,
@@ -224,21 +221,21 @@ class _DetailForecastDailyState extends State<DetailForecastDaily> {
                 ],
               ),
             ),
-            itemList("Matahari Terbit", ConvertHelper.milisToHour(widget.weatherDaily.sunrise)),
-            itemList("Matahari Terbenam", ConvertHelper.milisToHour(widget.weatherDaily.sunset)),
+            itemList("Matahari Terbit", ConvertHelper.milisToHour(widget.weatherDaily.sunrise!)),
+            itemList("Matahari Terbenam", ConvertHelper.milisToHour(widget.weatherDaily.sunset!)),
             itemList("Temperatur", isDay == true
-                ? widget.weatherDaily.temp.day.toStringAsFixed(1) +
+                ? widget.weatherDaily.temp!.day!.toStringAsFixed(1) +
                 "°C"
-                :widget.weatherDaily.temp.night.toStringAsFixed(1) +
+                :widget.weatherDaily.temp!.night!.toStringAsFixed(1) +
                 "°C",),
-            itemList("Kelembapan", widget.weatherDaily.humidity.toStringAsFixed(0) + "%"),
+            itemList("Kelembapan", widget.weatherDaily.humidity!.toStringAsFixed(0) + "%"),
             itemList("Arah Angin", widget.weatherDaily.windDeg.toString() + "°"),
-            itemList("Kecepatan Angin", ConvertHelper.mToKmPerHour(widget.weatherDaily.windSpeed) + " km/j"),
-            itemList("Hembusan Angin", ConvertHelper.mToKmPerHour(widget.weatherDaily.windGust) + " km/j"),
+            itemList("Kecepatan Angin", ConvertHelper.mToKmPerHour(widget.weatherDaily.windSpeed!) + " km/j"),
+            itemList("Hembusan Angin", ConvertHelper.mToKmPerHour(widget.weatherDaily.windGust!) + " km/j"),
             itemList("Keadaan Mendung", widget.weatherDaily.clouds.toString() + "%"),
             itemList("Tekanan Udara", widget.weatherDaily.pressure.toString() + " hPa"),
             itemList("Jarak Pandang", widget.weatherDaily.visibility == null ? "Tidak diketahui" :
-            ConvertHelper.mToKm(widget.weatherDaily.visibility) + " Km"),
+            ConvertHelper.mToKm(widget.weatherDaily.visibility!) + " Km"),
           ],
         ),
       ),

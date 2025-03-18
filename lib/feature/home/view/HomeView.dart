@@ -1,7 +1,4 @@
-import 'dart:ffi';
-
 import 'package:avatar_glow/avatar_glow.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart' as geo;
 import 'package:geolocator/geolocator.dart';
@@ -68,10 +65,9 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void getCurrentLocation() async {
-    var position = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    var position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
-    var lastPosition = await Geolocator().getLastKnownPosition();
+    var lastPosition = await Geolocator.getLastKnownPosition();
     print(lastPosition);
 
     print("$position.latitude, $position.longitude");
@@ -117,17 +113,17 @@ class _HomeViewState extends State<HomeView> {
 
       notificationManager.showScheduleNotification(
           id: 0,
-          title: "Cuaca hari ini " + ConditionHelper.getDescription(weatherForecastModel.current),
-          body: "Temperatur nya " + weatherForecastModel.current.temp.toStringAsFixed(1) +
+          title: "Cuaca hari ini " + (ConditionHelper.getDescription(weatherForecastModel.current!) ?? ''),
+          body: "Temperatur nya " + weatherForecastModel.current!.temp!.toStringAsFixed(1) +
               "°C",
           hour: 10,
-          imagePath: ConditionHelper.getImageNotifFromCondition(weatherForecastModel.current.weather[0].icon)["icon"],
-          imageDescription: ConditionHelper.getDescription(weatherForecastModel.current)
+          imagePath: (ConditionHelper.getImageNotifFromCondition(weatherForecastModel.current!.weather![0].icon!)["icon"] ?? ''),
+          imageDescription: ConditionHelper.getDescription(weatherForecastModel.current!)!
       );
 
       notificationManager.showScheduleNotification(
           id: 1,
-          title: "Cuaca besok " + ConditionHelper.getDescriptionDaily(weatherForecastModel.daily[1]),
+          title: "Cuaca besok " + (ConditionHelper.getDescriptionDaily(weatherForecastModel.daily![1]) ?? ''),
       body: "Temperatur nya " + weatherForecastModel.current.temp.toStringAsFixed(1) +
       "°C",
       hour: 20,

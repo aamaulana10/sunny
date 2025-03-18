@@ -1,14 +1,13 @@
-
 import 'package:sunny/core/config/helper/convertHelper.dart';
 
 class WeatherForecastModel {
-  double lat;
-  double lon;
-  String timezone;
-  int timezoneOffset;
-  Current current;
-  List<Hourly> hourly;
-  List<Daily> daily;
+  double? lat;
+  double? lon;
+  String? timezone;
+  int? timezoneOffset;
+  Current? current;
+  List<Hourly>? hourly;
+  List<Daily>? daily;
 
   WeatherForecastModel(
       {this.lat,
@@ -27,16 +26,10 @@ class WeatherForecastModel {
     current =
         json['current'] != null ? new Current.fromJson(json['current']) : null;
     if (json['hourly'] != null) {
-      hourly = new List<Hourly>();
-      json['hourly'].forEach((v) {
-        hourly.add(new Hourly.fromJson(v));
-      });
+      hourly = new List<Hourly>.from(json['hourly'].map((v) => new Hourly.fromJson(v)));
     }
     if (json['daily'] != null) {
-      daily = new List<Daily>();
-      json['daily'].forEach((v) {
-        daily.add(new Daily.fromJson(v));
-      });
+      daily = List<Daily>.from(json['daily'].map((v) => Daily.fromJson(v)));
     }
   }
 
@@ -47,32 +40,32 @@ class WeatherForecastModel {
     data['timezone'] = this.timezone;
     data['timezone_offset'] = this.timezoneOffset;
     if (this.current != null) {
-      data['current'] = this.current.toJson();
+      data['current'] = this.current!.toJson();
     }
     if (this.hourly != null) {
-      data['hourly'] = this.hourly.map((v) => v.toJson()).toList();
+      data['hourly'] = this.hourly!.map((v) => v.toJson()).toList();
     }
     if (this.daily != null) {
-      data['daily'] = this.daily.map((v) => v.toJson()).toList();
+      data['daily'] = this.daily!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Current {
-  int dt;
-  int sunrise;
-  int sunset;
-  double temp;
-  double feelsLike;
-  int pressure;
-  int humidity;
-  double dewPoint;
-  int clouds;
-  int visibility;
-  double windSpeed;
-  int windDeg;
-  List<Weather> weather;
+  int? dt;
+  int? sunrise;
+  int? sunset;
+  double? temp;
+  double? feelsLike;
+  int? pressure;
+  int? humidity;
+  double? dewPoint;
+  int? clouds;
+  int? visibility;
+  double? windSpeed;
+  int? windDeg;
+  List<Weather>? weather;
 
   Current(
       {this.dt,
@@ -103,9 +96,9 @@ class Current {
     windSpeed = ConvertHelper.checkDouble(json['wind_speed']);
     windDeg = json['wind_deg'];
     if (json['weather'] != null) {
-      weather = new List<Weather>();
+      weather = [];
       json['weather'].forEach((v) {
-        weather.add(new Weather.fromJson(v));
+        weather!.add(new Weather.fromJson(v));
       });
     }
   }
@@ -125,17 +118,17 @@ class Current {
     data['wind_speed'] = this.windSpeed;
     data['wind_deg'] = this.windDeg;
     if (this.weather != null) {
-      data['weather'] = this.weather.map((v) => v.toJson()).toList();
+      data['weather'] = this.weather!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Weather {
-  int id;
-  String main;
-  String description;
-  String icon;
+  int? id;
+  String? main;
+  String? description;
+  String? icon;
 
   Weather({this.id, this.main, this.description, this.icon});
 
@@ -157,19 +150,19 @@ class Weather {
 }
 
 class Hourly {
-  int dt;
-  double temp;
-  double feelsLike;
-  int pressure;
-  int humidity;
-  double dewPoint;
-  int clouds;
-  int visibility;
-  double windSpeed;
-  int windDeg;
-  double windGust;
-  List<Weather> weather;
-  Rain rain;
+  int? dt;
+  double? temp;
+  double? feelsLike;
+  int? pressure;
+  int? humidity;
+  double? dewPoint;
+  int? clouds;
+  int? visibility;
+  double? windSpeed;
+  int? windDeg;
+  double? windGust;
+  List<Weather>? weather;
+  Rain? rain;
 
   Hourly(
       {this.dt,
@@ -199,10 +192,7 @@ class Hourly {
     windDeg = json['wind_deg'];
     windGust = ConvertHelper.checkDouble(json['wind_gust']);
     if (json['weather'] != null) {
-      weather = new List<Weather>();
-      json['weather'].forEach((v) {
-        weather.add(new Weather.fromJson(v));
-      });
+      weather = List<Weather>.from(json['weather'].map((v) => Weather.fromJson(v)));
     }
     rain = json['rain'] != null ? new Rain.fromJson(json['rain']) : null;
   }
@@ -217,14 +207,14 @@ class Hourly {
     data['dew_point'] = this.dewPoint;
     data['clouds'] = this.clouds;
     data['visibility'] = this.visibility;
-    data['wind_speed'] = ConvertHelper.checkDouble(this.windSpeed);
+    data['wind_speed'] = this.windSpeed;
     data['wind_deg'] = this.windDeg;
     data['wind_gust'] = this.windGust;
     if (this.weather != null) {
-      data['weather'] = this.weather.map((v) => v.toJson()).toList();
+      data['weather'] = this.weather!.map((v) => v.toJson()).toList();
     }
     if (this.rain != null) {
-      data['rain'] = this.rain.toJson();
+      data['rain'] = this.rain!.toJson();
     }
     return data;
   }
@@ -232,7 +222,7 @@ class Hourly {
 }
 
 class Rain {
-  double d1h;
+  double? d1h;
 
   Rain({this.d1h});
 
@@ -248,21 +238,21 @@ class Rain {
 }
 
 class Daily {
-  int dt;
-  int sunrise;
-  int sunset;
-  int moonrise;
-  int moonset;
-  double moonPhase;
-  DailyTemp temp;
-  int pressure;
-  int humidity;
-  int visibility;
-  double windSpeed;
-  int windDeg;
-  double windGust;
-  List<Weather> weather;
-  int clouds;
+  int? dt;
+  int? sunrise;
+  int? sunset;
+  int? moonrise;
+  int? moonset;
+  double? moonPhase;
+  DailyTemp? temp;
+  int? pressure;
+  int? humidity;
+  int? visibility;
+  double? windSpeed;
+  int? windDeg;
+  double? windGust;
+  List<Weather>? weather;
+  int? clouds;
 
   Daily(
       {this.dt,
@@ -296,10 +286,7 @@ class Daily {
     windDeg = json['wind_deg'];
     windGust = ConvertHelper.checkDouble(json['wind_gust']);
     if (json['weather'] != null) {
-      weather = new List<Weather>();
-      json['weather'].forEach((v) {
-        weather.add(new Weather.fromJson(v));
-      });
+      weather = List<Weather>.from(json['weather'].map((v) => Weather.fromJson(v)));
     }
     clouds = json['clouds'];
   }
@@ -313,7 +300,7 @@ class Daily {
     data['moonset'] = this.moonset;
     data['moon_phase'] = this.moonPhase;
     if (this.temp != null) {
-      data['temp'] = this.temp.toJson();
+      data['temp'] = this.temp!.toJson();
     }
     data['pressure'] = this.pressure;
     data['humidity'] = this.humidity;
@@ -322,7 +309,7 @@ class Daily {
     data['wind_deg'] = this.windDeg;
     data['wind_gust'] = this.windGust;
     if (this.weather != null) {
-      data['weather'] = this.weather.map((v) => v.toJson()).toList();
+      data['weather'] = this.weather!.map((v) => v.toJson()).toList();
     }
     data['clouds'] = this.clouds;
     return data;
@@ -330,12 +317,12 @@ class Daily {
 }
 
 class DailyTemp {
-  double day;
-  double min;
-  double max;
-  double night;
-  double eve;
-  double morn;
+  double? day;
+  double? min;
+  double? max;
+  double? night;
+  double? eve;
+  double? morn;
 
   DailyTemp({this.day, this.min, this.max, this.night, this.eve, this.morn});
 

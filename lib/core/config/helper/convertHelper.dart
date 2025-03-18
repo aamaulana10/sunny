@@ -31,9 +31,9 @@ class ConvertHelper {
     return date;
   }
 
-  static String milisToFullDate(int milis) {
+  static String milisToFullDate(int? milis) {
 
-    var dateTime = DateTime.fromMillisecondsSinceEpoch(milis * 1000);
+    var dateTime = DateTime.fromMillisecondsSinceEpoch((milis ?? 0) * 1000);
 
     var date = DateFormat("EEEE, dd MMMM yyyy", "id_ID").format(dateTime);
 

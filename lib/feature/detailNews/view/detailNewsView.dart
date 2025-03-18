@@ -9,7 +9,7 @@ class DetailNewsView extends StatefulWidget {
 
   String url;
 
-  DetailNewsView({this.url});
+  DetailNewsView({required this.url});
 
   @override
   _DetailNewsViewState createState() => _DetailNewsViewState();
@@ -19,7 +19,7 @@ class _DetailNewsViewState extends State<DetailNewsView> {
 
   final GlobalKey webViewKey = GlobalKey();
 
-  InAppWebViewController webViewController;
+  late InAppWebViewController webViewController;
   InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
       android: AndroidInAppWebViewOptions(
         useHybridComposition: true,
@@ -28,8 +28,8 @@ class _DetailNewsViewState extends State<DetailNewsView> {
         allowsInlineMediaPlayback: true,
       ));
 
-  PullToRefreshController pullToRefreshController;
-  ContextMenu contextMenu;
+  late PullToRefreshController pullToRefreshController;
+  late ContextMenu contextMenu;
   double progress = 0;
 
   @override
@@ -73,7 +73,7 @@ class _DetailNewsViewState extends State<DetailNewsView> {
               // contextMenu: contextMenu,
               initialUrlRequest:
               URLRequest(
-                url: Uri.parse(widget.url),
+                url: WebUri.uri(Uri.parse(widget.url)),
               ),
               // initialFile: "assets/index.html",
               initialUserScripts: UnmodifiableListView<UserScript>([]),

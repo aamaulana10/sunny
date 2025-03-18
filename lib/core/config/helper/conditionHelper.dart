@@ -4,7 +4,7 @@ import 'package:sunny/core/model/weatherForecastModel.dart';
 
 class ConditionHelper {
 
-    static Map<String, String> getCondition(String condition) {
+    static Map<String, String> getCondition(String? condition) {
 
       var data = {};
 
@@ -274,33 +274,33 @@ class ConditionHelper {
       return HashMap.from(data);
     }
 
-    static String getDescription(Current weatherForecastCurrent) {
+    static String? getDescription(Current weatherForecastCurrent) {
 
-      return getCondition(weatherForecastCurrent.weather[0].icon)["description"];
+      return getCondition(weatherForecastCurrent.weather?[0].icon)["description"];
     }
 
-    static String getDescriptionHourly(Hourly weatherForecastHourly) {
+    static String? getDescriptionHourly(Hourly weatherForecastHourly) {
 
-      return getCondition(weatherForecastHourly.weather[0].icon)["description"];
+      return getCondition(weatherForecastHourly.weather?[0].icon)["description"];
     }
 
-    static String getDescriptionDaily(Daily weatherForecastDaily) {
+    static String? getDescriptionDaily(Daily weatherForecastDaily) {
 
-      return getCondition(weatherForecastDaily.weather[0].icon)["description"];
+      return getCondition(weatherForecastDaily.weather?[0].icon)["description"];
     }
 
-    static String getIcon(Current weatherForecastCurrent) {
+    static String? getIcon(Current weatherForecastCurrent) {
 
-      return getCondition(weatherForecastCurrent.weather[0].icon)["icon"];
+      return getCondition(weatherForecastCurrent.weather?[0].icon)["icon"];
     }
 
-    static String getIconHourly(Hourly weatherForecastHourly) {
+    static String? getIconHourly(Hourly weatherForecastHourly) {
 
-      return getCondition(weatherForecastHourly.weather[0].icon)["icon"];
+      return getCondition(weatherForecastHourly.weather?[0].icon)["icon"];
     }
 
-    static String getIconDaily(Daily weatherForecastDaily) {
+    static String? getIconDaily(Daily weatherForecastDaily) {
 
-      return getCondition(weatherForecastDaily.weather[0].icon)["icon"];
+      return getCondition(weatherForecastDaily.weather?[0].icon)["icon"];
     }
 }

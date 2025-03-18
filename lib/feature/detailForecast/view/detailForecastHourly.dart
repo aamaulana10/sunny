@@ -11,7 +11,7 @@ class DetailForecastHourly extends StatefulWidget {
   Hourly weatherHourly;
   String address;
 
-  DetailForecastHourly({this.weatherHourly, this.address});
+  DetailForecastHourly({required this.weatherHourly, required this.address});
 
   @override
   _DetailForecastHourlyState createState() => _DetailForecastHourlyState();
@@ -105,7 +105,7 @@ class _DetailForecastHourlyState extends State<DetailForecastHourly> {
                     bottom: BorderSide(width: 1, color: Color(0XFF313131))
                   )
                 ),
-                child: Text("Jam " + ConvertHelper.milisToHour(widget.weatherHourly.dt), style: TextStyle(
+                child: Text("Jam " + ConvertHelper.milisToHour(widget.weatherHourly.dt!), style: TextStyle(
                   color: ColorConfig.textColorLight,
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -118,7 +118,7 @@ class _DetailForecastHourlyState extends State<DetailForecastHourly> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image(image: AssetImage(ConditionHelper.getIconHourly(widget.weatherHourly)),
+                    Image(image: AssetImage(ConditionHelper.getIconHourly(widget.weatherHourly) ?? ''),
                     height: 90,
                       width: 90,
                     ),
@@ -138,7 +138,7 @@ class _DetailForecastHourlyState extends State<DetailForecastHourly> {
                                 width: 33,
                               ),
                               Text(
-                                  widget.weatherHourly.temp.toStringAsFixed(1) +
+                                  widget.weatherHourly.temp!.toStringAsFixed(1) +
                                       "°C",
                                   style: TextStyle(
                                     fontSize: 32,
@@ -151,7 +151,7 @@ class _DetailForecastHourlyState extends State<DetailForecastHourly> {
                         ),
                         Container(
                           margin: EdgeInsets.only(top: 8),
-                          child: Text(ConditionHelper.getDescriptionHourly(widget.weatherHourly), style: TextStyle(
+                          child: Text(ConditionHelper.getDescriptionHourly(widget.weatherHourly) ?? '', style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
@@ -163,15 +163,15 @@ class _DetailForecastHourlyState extends State<DetailForecastHourly> {
                   ],
                 ),
               ),
-              itemList("Temperatur", widget.weatherHourly.temp.toStringAsFixed(1) + "°C"),
-              itemList("Kelembapan", widget.weatherHourly.humidity.toStringAsFixed(0) + "%"),
+              itemList("Temperatur", widget.weatherHourly.temp!.toStringAsFixed(1) + "°C"),
+              itemList("Kelembapan", widget.weatherHourly.humidity!.toStringAsFixed(0) + "%"),
               itemList("Arah Angin", widget.weatherHourly.windDeg.toString() + "°"),
-              itemList("Kecepatan Angin", ConvertHelper.mToKmPerHour(widget.weatherHourly.windSpeed) + " km/j"),
-              itemList("Hembusan Angin", ConvertHelper.mToKmPerHour(widget.weatherHourly.windGust) + " km/j"),
+              itemList("Kecepatan Angin", ConvertHelper.mToKmPerHour(widget.weatherHourly.windSpeed!) + " km/j"),
+              itemList("Hembusan Angin", ConvertHelper.mToKmPerHour(widget.weatherHourly.windGust!) + " km/j"),
               itemList("Keadaan Mendung", widget.weatherHourly.clouds.toString() + "%"),
               itemList("Tekanan Udara", widget.weatherHourly.pressure.toString() + " hPa"),
               itemList("Jarak Pandang", widget.weatherHourly.visibility == null ? "Tidak diketahui" :
-              ConvertHelper.mToKm(widget.weatherHourly.visibility) + " km"),
+              ConvertHelper.mToKm(widget.weatherHourly.visibility!) + " km"),
             ],
           ),
       ),
