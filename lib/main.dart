@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sunny/feature/mainTabbar/mainTabbar.dart';
+import 'package:sunny/feature/mainTabbar/main_tabbar.dart';
 
-import 'core/config/notification/notificationManager.dart';
+import 'core/config/notification/notification_manager.dart';
 
 void main() async{
 
@@ -23,7 +22,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home: MainTabbar()
+      home: MainTabbar(selectedIndex: 0)
     );
   }
 }

@@ -1,61 +1,36 @@
 name: sunny
-description: A new Flutter project.
-
-publish_to: 'none'
-
-version: 1.0.3
+description: "A new Flutter project."
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+version: 1.0.0+1
 
 environment:
-  sdk: ^3.5.0
-
+  sdk: ^3.7.2
 dependencies:
   flutter:
     sdk: flutter
-
-  cupertino_icons: ^1.0.2
-  http: ^1.2.2
-  intl: ^0.17.0
-  geolocator: ^13.0.2
-  geocoding: ^3.0.0
-  shared_preferences: ^2.0.6
+  cupertino_icons: ^1.0.8
+  http: ^1.6.0
+  intl: ^0.20.2
+  geolocator: ^14.0.2
+  geocoding: ^4.0.0
+  shared_preferences: ^2.5.3
   bubble_bottom_bar: ^2.0.0
-  flutter_local_notifications: ^8.1.1
-  path_provider: ^2.0.2
+  flutter_local_notifications: ^19.5.0
+  path_provider: ^2.1.5
   flutter_native_timezone: ^2.0.0
-  webfeed: ^0.7.0
   flutter_inappwebview: ^6.1.5
-  persistent_bottom_nav_bar: any
+  persistent_bottom_nav_bar: ^6.2.1
   avatar_glow: ^3.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  flutter_lints: ^5.0.0
 flutter:
-
   uses-material-design: true
 
   assets:
-    - asset/image/sunny.png
-    - asset/image/wind.png
-    - asset/image/humidity.png
-    - asset/image/windspeed.png
-    - asset/image/speed.png
-    - asset/image/weatherHeader.png
-    - asset/image/waterpercent.png
-    - asset/image/thermometer.png
-    - asset/image/fluenttemperature.png
-    - asset/image/fluenttemperaturewhite.png
-    - asset/image/brokenclouds.png
-    - asset/image/clearsky.png
-    - asset/image/fewclouds.png
-    - asset/image/mist.png
-    - asset/image/rain.png
-    - asset/image/scatteredclouds.png
-    - asset/image/showerrain.png
-    - asset/image/snow.png
-    - asset/image/thunderstorm.png
-    - asset/image/backgroundSunny.png
+    - asset/image/
 
   fonts:
     - family: NunitoBlack
