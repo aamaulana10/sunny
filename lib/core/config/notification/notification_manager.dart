@@ -3,9 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
-import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 
 class NotificationManager {
   NotificationManager._();
@@ -16,43 +15,110 @@ class NotificationManager {
 
   bool _initialized = false;
 
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   Future<void> init() async {
     print("NotificationManager call init function");
 
     if (!_initialized) {
-      var androidSettings = AndroidInitializationSettings("ic_notif_icon");
+      const androidSettings = AndroidInitializationSettings("ic_notif_icon");
+      const iosSettings = DarwinInitializationSettings(
+        requestAlertPermission: true,
+        requestBadgePermission: true,
+        requestSoundPermission: true,
+      );
 
-      var initSetttings = InitializationSettings(android: androidSettings);
+      const initSettings = InitializationSettings(
+        android: androidSettings,
+        iOS: iosSettings,
+      );
 
-      await flutterLocalNotificationsPlugin.initialize(initSetttings);
+      await flutterLocalNotificationsPlugin.initialize(
+        initSettings,
+        onDidReceiveNotificationResponse: (NotificationResponse response) {
+          // Handle notification tap
+          print("Notification tapped with payload: ${response.payload}");
+        },
+      );
+
+      await _configureLocalTimeZone();
+      _initialized = true;
+    }
+  }
+
+  Future<void> requestPermissions() async {
+    // Android 13+ permission request
+    if (Platform.isAndroid) {
+      final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+          flutterLocalNotificationsPlugin
+              .resolvePlatformSpecificImplementation<
+                AndroidFlutterLocalNotificationsPlugin
+              >();
+
+      final bool? grantedNotificationPermission =
+          await androidImplementation?.requestNotificationsPermission();
+      print("Notification permission granted: $grantedNotificationPermission");
+
+      final bool? grantedExactAlarmPermission =
+          await androidImplementation?.requestExactAlarmsPermission();
+      print("Exact alarm permission granted: $grantedExactAlarmPermission");
     }
 
-    _configureLocalTimeZone();
-
-    _initialized = true;
+    // iOS permission request
+    if (Platform.isIOS) {
+      final bool? result = await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin
+          >()
+          ?.requestPermissions(alert: true, badge: true, sound: true);
+      print("iOS permission granted: $result");
+    }
   }
 
-  void requestPermissions() {
-    flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()?.requestPermissions(
-          alert: true,
-          badge: true,
-          sound: true,
-        );
+  Future<void> showSimpleNotification({
+    required String id,
+    required String title,
+    required String body,
+  }) async {
+    const androidDetails = AndroidNotificationDetails(
+      "sunny_id",
+      "sunny",
+      channelDescription: "sunny notification",
+      priority: Priority.high,
+      importance: Importance.max,
+      styleInformation: DefaultStyleInformation(true, true),
+    );
+
+    const iosDetails = DarwinNotificationDetails();
+
+    const platformDetails = NotificationDetails(
+      android: androidDetails,
+      iOS: iosDetails,
+    );
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      body,
+      platformDetails,
+      payload: body,
+    );
   }
 
-  showSimpleNotification({required String id, required String title, required String body}) async {
-    var androidDetails =
-        AndroidNotificationDetails("sunny_id", "sunny ", channelDescription: "sunny notification", priority: Priority.high, importance: Importance.max, styleInformation: DefaultStyleInformation(true, true));
-    var platformDetails = new NotificationDetails(android: androidDetails);
-    await flutterLocalNotificationsPlugin.show(0, title, body, platformDetails, payload: body);
-  }
+  Future<void> showNotificationWithAttachment({
+    required String id,
+    required String title,
+    required String body,
+    required String imagePath,
+    required String imageDescription,
+  }) async {
+    final attachmentPicturePath = await _downloadAndSaveFileImageNotification(
+      imagePath,
+      imageDescription,
+    );
 
-  showNotificationWithAttachment({required String id, required String title, required String body, required String imagePath, required String imageDescription}) async {
-    var attachmentPicturePath = await _downloadAndSaveFileImageNotification(imagePath, imageDescription);
-
-    var bigPictureStyleInformation = BigPictureStyleInformation(
+    final bigPictureStyleInformation = BigPictureStyleInformation(
       FilePathAndroidBitmap(attachmentPicturePath),
       contentTitle: '<b>$imageDescription</b>',
       htmlFormatContentTitle: true,
@@ -60,23 +126,40 @@ class NotificationManager {
       htmlFormatSummaryText: true,
     );
 
-    var androidDetails = AndroidNotificationDetails("sunny_id", "sunny ", channelDescription: "sunny notification", priority: Priority.high, importance: Importance.max, styleInformation: bigPictureStyleInformation);
-    var platformDetails = new NotificationDetails(android: androidDetails);
-    await flutterLocalNotificationsPlugin.show(0, title, body, platformDetails, payload: body);
+    final androidDetails = AndroidNotificationDetails(
+      "sunny_id",
+      "sunny",
+      channelDescription: "sunny notification",
+      priority: Priority.high,
+      importance: Importance.max,
+      styleInformation: bigPictureStyleInformation,
+    );
+
+    final platformDetails = NotificationDetails(android: androidDetails);
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      body,
+      platformDetails,
+      payload: body,
+    );
   }
 
-  Future<void> showScheduleNotification({required int id, required String title, required String body, required int hour, required String imagePath, required String imageDescription}) async {
-    // var androidChannelSpecifics = AndroidNotificationDetails(
-    //   "sunny_id",
-    //   "sunny ",
-    //   "sunny notification",
-    //   importance: Importance.max,
-    //   priority: Priority.high,
-    // );
+  Future<void> showScheduleNotification({
+    required int id,
+    required String title,
+    required String body,
+    required int hour,
+    required String imagePath,
+    required String imageDescription,
+  }) async {
+    final attachmentPicturePath = await _downloadAndSaveFileImageNotification(
+      imagePath,
+      imageDescription,
+    );
 
-    var attachmentPicturePath = await _downloadAndSaveFileImageNotification(imagePath, imageDescription);
-
-    var bigPictureStyleInformation = BigPictureStyleInformation(
+    final bigPictureStyleInformation = BigPictureStyleInformation(
       FilePathAndroidBitmap(attachmentPicturePath),
       contentTitle: '<b>$imageDescription</b>',
       htmlFormatContentTitle: true,
@@ -84,55 +167,115 @@ class NotificationManager {
       htmlFormatSummaryText: true,
     );
 
-    var androidDetails = AndroidNotificationDetails("sunny_id", "sunny ", channelDescription: "sunny notification", priority: Priority.high, importance: Importance.max, styleInformation: bigPictureStyleInformation);
+    final androidDetails = AndroidNotificationDetails(
+      "sunny_id",
+      "sunny",
+      channelDescription: "sunny notification",
+      priority: Priority.high,
+      importance: Importance.max,
+      styleInformation: bigPictureStyleInformation,
+    );
 
-    var platformDetails = new NotificationDetails(android: androidDetails);
+    final platformDetails = NotificationDetails(android: androidDetails);
+
+    final scheduledTime = _nextInstanceOfHour(hour);
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
+      id,
+      title,
+      body,
+      scheduledTime,
+      platformDetails,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        id,
-        title,
-        body, //null
-        _nextInstanceOfTenAM(hour),
-        platformDetails,
-        matchDateTimeComponents: DateTimeComponents.time);
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
 
-    print("schedule set at ${_nextInstanceOfTenAM(hour).hour}:${_nextInstanceOfTenAM(hour).minute}.${_nextInstanceOfTenAM(hour).second}");
+    print(
+      "Schedule set at ${scheduledTime.hour}:${scheduledTime.minute}.${scheduledTime.second}",
+    );
   }
 
-  tz.TZDateTime _nextInstanceOfTenAM(int hour) {
+  tz.TZDateTime _nextInstanceOfHour(int hour) {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
-    tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, now.year, now.month, now.hour, hour, 00);
+    tz.TZDateTime scheduledDate = tz.TZDateTime(
+      tz.local,
+      now.year,
+      now.month,
+      now.day,
+      hour,
+      0,
+      0,
+    );
+
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
+
     return scheduledDate;
   }
 
   Future<void> _configureLocalTimeZone() async {
     tz.initializeTimeZones();
-    final String timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
 
-    print("local timezone " + timeZoneName);
-    tz.setLocalLocation(tz.getLocation(timeZoneName));
+    // Gunakan timezone lokal dari device
+    final String currentTimeZone = DateTime.now().timeZoneName;
+
+    try {
+      tz.setLocalLocation(tz.getLocation(currentTimeZone));
+      print("Local timezone set to: $currentTimeZone");
+    } catch (e) {
+      // Fallback ke UTC jika timezone tidak ditemukan
+      print("Error setting timezone: $e, using UTC as fallback");
+      tz.setLocalLocation(tz.getLocation('UTC'));
+    }
   }
 
-  _downloadAndSaveFileImageNotification(String url, String fileName) async {
-    var directory = await getApplicationDocumentsDirectory();
-    var filePath = '${directory.path}/$fileName';
-    var response = await http.get(Uri.parse(url));
-    var file = File(filePath);
+  Future<String> _downloadAndSaveFileImageNotification(
+    String url,
+    String fileName,
+  ) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final filePath = '${directory.path}/$fileName';
+    final response = await http.get(Uri.parse(url));
+    final file = File(filePath);
     await file.writeAsBytes(response.bodyBytes);
     return filePath;
   }
 
-  _getImageFileFromAssets(String path) async {
+  Future<File> _getImageFileFromAssets(String path) async {
     final byteData = await rootBundle.load(path);
-
     final file = File('${(await getTemporaryDirectory()).path}/$path');
-
-    await file.writeAsBytes(byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
-
+    await file.writeAsBytes(
+      byteData.buffer.asUint8List(
+        byteData.offsetInBytes,
+        byteData.lengthInBytes,
+      ),
+    );
     return file;
+  }
+
+  // Method tambahan untuk cancel notification
+  Future<void> cancelNotification(int id) async {
+    await flutterLocalNotificationsPlugin.cancel(id);
+  }
+
+  Future<void> cancelAllNotifications() async {
+    await flutterLocalNotificationsPlugin.cancelAll();
+  }
+
+  // Method untuk cek pending notifications
+  Future<List<PendingNotificationRequest>> getPendingNotifications() async {
+    return await flutterLocalNotificationsPlugin.pendingNotificationRequests();
+  }
+
+  // Method untuk cek active notifications
+  Future<List<ActiveNotification>> getActiveNotifications() async {
+    final List<ActiveNotification>? activeNotifications =
+        await flutterLocalNotificationsPlugin
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >()
+            ?.getActiveNotifications();
+    return activeNotifications ?? [];
   }
 }

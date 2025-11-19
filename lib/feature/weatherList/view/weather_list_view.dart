@@ -12,8 +12,10 @@ import 'package:sunny/feature/detailForecast/view/detail_forecast_daily.dart';
 import 'package:sunny/feature/detailForecast/view/detail_forecast_hourly.dart';
 
 class WeatherListView extends StatefulWidget {
+  const WeatherListView({super.key});
+
   @override
-  _WeatherListViewState createState() => _WeatherListViewState();
+  State<WeatherListView> createState() => _WeatherListViewState();
 }
 
 class _WeatherListViewState extends State<WeatherListView> {

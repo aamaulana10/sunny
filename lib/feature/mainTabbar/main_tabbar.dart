@@ -1,121 +1,93 @@
-import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:sunny/core/config/color/app_colors.dart';
 import 'package:sunny/feature/home/view/home_view.dart';
 import 'package:sunny/feature/search/view/search_view.dart';
 import 'package:sunny/feature/weatherList/view/weather_list_view.dart';
 
-// ignore: must_be_immutable
 class MainTabbar extends StatefulWidget {
-  int selectedIndex;
+  final int selectedIndex;
 
-  MainTabbar({super.key, required this.selectedIndex});
+  const MainTabbar({super.key, required this.selectedIndex});
 
   @override
-  _MainTabbarState createState() => _MainTabbarState();
+  State<MainTabbar> createState() => _MainTabbarState();
 }
 
 class _MainTabbarState extends State<MainTabbar> {
-  var screen = [HomeView(), SearchView(), WeatherListView()];
+  final List<Widget> _screens = [
+    const HomeView(),
+    const SearchView(),
+    const WeatherListView(),
+  ];
 
-  var crntIndex = 0;
+  late int _currentIndex;
 
-  void _onSelectedTab(value) {
+  void _onSelectedTab(int value) {
     setState(() {
-      crntIndex = value;
+      _currentIndex = value;
     });
   }
 
   @override
   void initState() {
-    if (widget.selectedIndex != null) {
-      _onSelectedTab(widget.selectedIndex);
-    }
-
     super.initState();
+    _currentIndex = widget.selectedIndex;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: screen[crntIndex],
-      bottomNavigationBar: BubbleBottomBar(
-        hasNotch: true,
-        backgroundColor: AppColors.darkBackgroundColor,
-        opacity: .2,
-        currentIndex: crntIndex,
-        onTap: (e) => {_onSelectedTab(e)},
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(16),
-        ), //border radius doesn't work when the notch is enabled.
-        elevation: 8,
-        items: <BubbleBottomBarItem>[
-          BubbleBottomBarItem(
-            backgroundColor: AppColors.mainColor,
-            icon: Icon(Icons.home, color: AppColors.textColorLight),
-            activeIcon: Icon(Icons.home, color: AppColors.mainColor),
-            title: Text(
-              "Beranda",
-              style: TextStyle(
-                color: AppColors.mainColor,
-                fontFamily: 'NunitoRegular',
-                fontSize: 12,
-              ),
+      body: IndexedStack(index: _currentIndex, children: _screens),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, -2),
             ),
-          ),
-          BubbleBottomBarItem(
-            backgroundColor: AppColors.mainColor,
-            icon: Icon(Icons.search, color: AppColors.textColorLight),
-            activeIcon: Icon(Icons.search, color: AppColors.mainColor),
-            title: Text(
-              "Cari Lokasi",
-              style: TextStyle(
-                color: AppColors.mainColor,
-                fontFamily: 'NunitoRegular',
-                fontSize: 12,
-              ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+          child: BottomNavigationBar(
+            backgroundColor: AppColors.darkBackgroundColor,
+            elevation: 0,
+            type: BottomNavigationBarType.fixed,
+            currentIndex: _currentIndex,
+            onTap: _onSelectedTab,
+            selectedItemColor: AppColors.mainColor,
+            unselectedItemColor: AppColors.textColorLight,
+            showUnselectedLabels: true,
+            showSelectedLabels: true,
+            selectedFontSize: 12,
+            unselectedFontSize: 12,
+            selectedLabelStyle: const TextStyle(
+              fontFamily: 'NunitoRegular',
+              fontWeight: FontWeight.w600,
             ),
-          ),
-          BubbleBottomBarItem(
-            backgroundColor: AppColors.mainColor,
-            icon: Icon(Icons.wb_sunny_sharp, color: AppColors.textColorLight),
-            activeIcon: Icon(Icons.wb_sunny_sharp, color: AppColors.mainColor),
-            title: Text(
-              "Cuaca",
-              style: TextStyle(
-                color: AppColors.mainColor,
-                fontFamily: 'NunitoRegular',
-                fontSize: 12,
+            unselectedLabelStyle: const TextStyle(fontFamily: 'NunitoRegular'),
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home_outlined),
+                activeIcon: Icon(Icons.home),
+                label: 'Beranda',
               ),
-            ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.search_outlined),
+                activeIcon: Icon(Icons.search),
+                label: 'Cari Lokasi',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.wb_sunny_outlined),
+                activeIcon: Icon(Icons.wb_sunny_sharp),
+                label: 'Cuaca',
+              ),
+            ],
           ),
-        ],
+        ),
       ),
-      // bottomNavigationBar : BottomNavigationBar(
-      //   backgroundColor: AppColors.darkBackgroundColor,
-      //   elevation: 5,
-      //   type: BottomNavigationBarType.fixed,
-      //   items: [
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.home),
-      //       label: 'Beranda',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.search),
-      //       label: 'Cari Lokasi',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.wb_sunny_sharp),
-      //       label: 'Cuaca',
-      //     ),
-      //   ],
-      //   currentIndex: crntIndex,
-      //   unselectedItemColor: AppColors.textColorLight,
-      //   selectedItemColor: AppColors.mainColor,
-      //   showUnselectedLabels: true,
-      //   showSelectedLabels: true,
-      //   onTap: (e) => {this._onSelectedTab(e)},
-      // ),
     );
   }
 }
