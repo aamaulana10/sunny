@@ -1,64 +1,40 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
-import 'package:sunny/core/config/network/api_config.dart';
-import 'package:sunny/core/model/weather_forecast_model.dart';
-import 'package:sunny/core/model/weather_model.dart';
+import 'package:sunny/core/model/weather_full_model.dart';
 
-class HomeService {
+class WeatherService {
+  static const geocodingUrl = "https://geocoding-api.open-meteo.com/v1/search";
+  static const weatherUrl = "https://api.open-meteo.com/v1/forecast";
 
-  /// service ini untuk apaa
-  Future<WeatherMainModel> getCurrentWeatherByCity(String city) {
-    
-    var url = "${ApiConfig.baseUrl}weather?q=$city&appid=${ApiConfig.apiKey}";
+  /// Search city → get coordinates → fetch weather
+  Future<WeatherFullModel> getWeatherByCity(String city) async {
+    final geoRes = await http.get(Uri.parse("$geocodingUrl?name=$city"));
 
-    print(url);
+    final geoData = jsonDecode(geoRes.body);
 
-      return http.get(Uri.parse(url))
-          .then((response) {
+    if (geoData['results'] == null || geoData['results'].isEmpty) {
+      throw Exception("City not found");
+    }
 
-        final data = json.decode(response.body) ;
+    final lat = geoData['results'][0]['latitude'];
+    final lon = geoData['results'][0]['longitude'];
 
-        var weather = WeatherMainModel.fromJson(data);
-
-        return weather;
-
-      });
-
+    return getWeatherByLatLong(lat.toString(), lon.toString());
   }
 
-  Future<WeatherForecastModel> getCurrentWeatherByLatLong(String latitude, String longitude) {
+  /// Main Weather API (current + hourly + daily)
+  Future<WeatherFullModel> getWeatherByLatLong(String lat, String lon) async {
+    final url =
+        "$weatherUrl?latitude=$lat&longitude=$lon"
+        "&current_weather=true"
+        "&hourly=temperature_2m,relative_humidity_2m,weathercode"
+        "&daily=weathercode,temperature_2m_max,temperature_2m_min"
+        "&timezone=auto";
 
-    var url = "${ApiConfig.baseUrl}onecall?&units=metric&exclude=minutely&appid=${ApiConfig.apiKey}&lat=$latitude&lon=$longitude&lang=en";
+    final res = await http.get(Uri.parse(url));
 
-    print(url);
+    final data = jsonDecode(res.body);
 
-    return http.get(Uri.parse(url))
-        .then((response) {
-
-      final data = json.decode(response.body) ;
-
-      var forecast = new WeatherForecastModel();
-
-      forecast = WeatherForecastModel.fromJson(data);
-
-      return forecast;
-
-    });
+    return WeatherFullModel.fromJson(data);
   }
-
-  // Future<RssFeed> getNewsFromRss() async{
-
-  //     var response = await http.get(Uri.parse("https://www.antaranews.com/rss/warta-bumi.xml"));
-
-  //     if(response.body.isNotEmpty) {
-
-  //         return RssFeed.parse(response.body);
-
-  //     }else {
-
-  //       throw Exception("error parse rss");
-  //     }
-  // }
-
 }

@@ -1,20 +1,17 @@
 import 'package:intl/intl.dart';
 
 class ConvertHelper {
-
   static double checkDouble(dynamic value) {
     if (value is String) {
       return double.parse(value);
     } else if (value is int) {
       return double.parse(value.toString());
-    }
-    else {
+    } else {
       return value;
     }
   }
 
   static String milisToDay(int milis) {
-
     var dateTime = DateTime.fromMillisecondsSinceEpoch(milis * 1000);
 
     var day = DateFormat("EEEE", "id_ID").format(dateTime);
@@ -23,7 +20,6 @@ class ConvertHelper {
   }
 
   static String milisToDate(int milis) {
-
     var dateTime = DateTime.fromMillisecondsSinceEpoch(milis * 1000);
 
     var date = DateFormat("dd MMMM yyyy", "id_ID").format(dateTime);
@@ -32,7 +28,6 @@ class ConvertHelper {
   }
 
   static String milisToFullDate(int? milis) {
-
     var dateTime = DateTime.fromMillisecondsSinceEpoch((milis ?? 0) * 1000);
 
     var date = DateFormat("EEEE, dd MMMM yyyy", "id_ID").format(dateTime);
@@ -48,6 +43,15 @@ class ConvertHelper {
     var currentDate = dateFormat.format(fixedValue);
 
     return currentDate;
+  }
+
+  static String formatHourIso(String iso) {
+    try {
+      final dt = DateTime.parse(iso);
+      return "${dt.hour.toString().padLeft(2, '0')}:00";
+    } catch (_) {
+      return "--:--";
+    }
   }
 
   static String milToKmPerHour(double value) {
