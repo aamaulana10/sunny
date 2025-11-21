@@ -54,6 +54,15 @@ class ConvertHelper {
     }
   }
 
+  static String formatTimeIso(String iso) {
+    try {
+      final dt = DateTime.parse(iso);
+      return DateFormat('HH:mm').format(dt);
+    } catch (_) {
+      return "--:--";
+    }
+  }
+
   static String milToKmPerHour(double value) {
     if (value != null) {
       var fixedValue = value * 1.609;

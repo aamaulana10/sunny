@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sunny/feature/home/page.dart';
-import 'package:sunny/feature/search/view/search_view.dart';
+import 'package:sunny/feature/search/search_view.dart';
 import 'package:sunny/feature/weatherList/view/weather_list_view.dart';
 
 class MainTabController extends GetxController {
@@ -18,7 +18,7 @@ class MainTabController extends GetxController {
 
     switch (index) {
       case 0:
-        screen = HomeView();
+        screen = HomePage();
         break;
       case 1:
         screen = const SearchView();
@@ -27,7 +27,7 @@ class MainTabController extends GetxController {
         screen = const WeatherListView();
         break;
       default:
-        screen = HomeView();
+        screen = HomePage();
     }
 
     _cachedScreens[index] = screen;

@@ -6,10 +6,10 @@ import 'package:sunny/feature/home/widget/home_header.dart';
 import 'package:sunny/feature/home/widget/home_today.dart';
 import 'package:sunny/feature/home/widget/home_weather.dart';
 
-class HomeView extends StatelessWidget {
+class HomePage extends StatelessWidget {
   final controller = Get.find<HomeController>();
 
-  HomeView({super.key});
+  HomePage({super.key});
 
   // void gotoDetail(Hourly weatherHourly) {
   //   print("detail view");

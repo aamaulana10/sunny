@@ -86,4 +86,16 @@ class ConditionHelper {
   static String? getIcon(int? code) {
     return getCondition(code)["icon"];
   }
+
+  static String getMoodMessage(int? code) {
+    if (code == null) return "Tetap semangat!";
+    if (code == 0) return "Langit cerah! Cocok untuk aktivitas luar 😊";
+    if (code == 1 || code == 2) return "Berawan tipis, tetap nyaman buat jalan santai.";
+    if (code == 3) return "Mendung, mungkin lebih nyaman di dalam ruangan.";
+    if (code == 45 || code == 48) return "Berkabut, hati-hati saat berkendara.";
+    if ([51, 53, 55].contains(code)) return "Gerimis, siapkan jaket tipis ya.";
+    if ([61, 63, 65, 80, 81, 82].contains(code)) return "Hujan, payungmu jangan lupa! ☔";
+    if ([95, 96, 99].contains(code)) return "Badai petir, aman di rumah lebih baik.";
+    return "Cuaca berubah-ubah, tetap jaga kesehatan!";
+  }
 }

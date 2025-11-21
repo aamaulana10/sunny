@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart' as geo;
-import 'package:intl/date_symbol_data_local.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:sunny/core/config/color/app_colors.dart';
 import 'package:sunny/core/config/helper/condition_helper.dart';
 import 'package:sunny/core/config/helper/convert_helper.dart';
-import 'package:sunny/core/model/weather_full_model.dart';
-import 'package:sunny/core/service/weather_service.dart';
-import 'package:sunny/feature/detailForecast/view/detail_forecast_daily.dart';
-import 'package:sunny/feature/detailForecast/view/detail_forecast_hourly.dart';
+import 'package:sunny/feature/home/controller.dart';
 
 class WeatherListView extends StatefulWidget {
   const WeatherListView({super.key});
@@ -19,515 +14,311 @@ class WeatherListView extends StatefulWidget {
 }
 
 class _WeatherListViewState extends State<WeatherListView> {
-  // WeatherService weatherService = WeatherService();
-  // bool isLoading = true;
-  // WeatherFullModel weather = WeatherFullModel();
-
-  // var address = "";
-
-  // void gotoDetailHourly(Hourly weatherHourly) {
-  //   print("detail view");
-
-  //   Future.delayed(Duration(milliseconds: 500)).then((value) {
-  //     Navigator.of(context).push(
-  //       MaterialPageRoute(
-  //         builder:
-  //             (context) => DetailForecastHourly(
-  //               weatherHourly: weatherHourly,
-  //               address: address,
-  //             ),
-  //       ),
-  //     );
-  //   });
-  // }
-
-  // void gotoDetailDaily(Daily weatherDaily) {
-  //   print("detail view");
-
-  //   Future.delayed(Duration(milliseconds: 500)).then((value) {
-  //     Navigator.of(context).push(
-  //       MaterialPageRoute(
-  //         builder:
-  //             (context) => DetailForecastDaily(
-  //               weatherDaily: weatherDaily,
-  //               address: address,
-  //             ),
-  //       ),
-  //     );
-  //   });
-  // }
-
-  // void getCurrentLocation() async {
-  //   var position = await Geolocator.getCurrentPosition(
-  //     desiredAccuracy: LocationAccuracy.high,
-  //   );
-
-  //   var lastPosition = await Geolocator.getLastKnownPosition();
-  //   print(lastPosition);
-
-  //   print("$position.latitude, $position.longitude");
-
-  //   if (position.latitude != null || position.longitude != null) {
-  //     _getAddressFromLatLng(position.latitude, position.longitude);
-  //     getForecast(position.latitude.toString(), position.longitude.toString());
-  //   } else {
-  //     getCurrentLocation();
-  //   }
-  // }
-
-  // _getAddressFromLatLng(double latitude, double longitude) async {
-  //   try {
-  //     List<geo.Placemark> placemarks = await geo.placemarkFromCoordinates(
-  //       latitude,
-  //       longitude,
-  //     );
-
-  //     geo.Placemark place = placemarks[0];
-
-  //     print("${place.locality}, ${place.postalCode}, ${place.country}");
-
-  //     if (place.locality != "") {
-  //       setState(() {
-  //         address = "${place.locality}, ${place.country}";
-  //       });
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
-
-  // void getForecast(String latitude, String longitude) {
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-
-  //   weatherService.getCurrentWeatherByLatLong(latitude, longitude).then((
-  //     value,
-  //   ) {
-  //     print(value);
-
-  //     setState(() {
-  //       weatherForecastModel = value;
-  //     });
-
-  //     if (value.hourly != null) {
-  //       setState(() {
-  //         isLoading = false;
-  //       });
-  //     }
-  //   });
-  // }
-
-  // @override
-  // void initState() {
-  //   initializeDateFormatting();
-
-  //   getCurrentLocation();
-
-  //   super.initState();
-  // }
-
-  // Widget header() {
-  //   var dateFormat = new DateFormat('EEEE, dd MMMM yyyy', "id_ID");
-
-  //   var currentDate = dateFormat.format(DateTime.now());
-
-  //   return Container(
-  //     margin: EdgeInsets.only(left: 16, right: 16),
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.center,
-  //       children: [
-  //         Container(
-  //           height: 130,
-  //           decoration: BoxDecoration(
-  //             image: DecorationImage(
-  //               image: AssetImage("asset/image/weatherHeader.png"),
-  //               fit: BoxFit.fill,
-  //             ),
-  //             borderRadius: BorderRadius.circular(15),
-  //           ),
-  //           child: Row(
-  //             children: [
-  //               Expanded(
-  //                 child: Container(
-  //                   margin: EdgeInsets.only(
-  //                     left: 8,
-  //                     right: 16,
-  //                     top: 16,
-  //                     bottom: 16,
-  //                   ),
-  //                   child: Column(
-  //                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  //                     crossAxisAlignment: CrossAxisAlignment.start,
-  //                     children: [
-  //                       Padding(
-  //                         padding: EdgeInsets.only(left: 10),
-  //                         child: Text(
-  //                           currentDate,
-  //                           style: TextStyle(
-  //                             color: AppColors.textColorLight,
-  //                             fontSize: 16,
-  //                             fontFamily: 'NunitoSemiBold',
-  //                           ),
-  //                         ),
-  //                       ),
-  //                       Row(
-  //                         crossAxisAlignment: CrossAxisAlignment.center,
-  //                         mainAxisAlignment: MainAxisAlignment.start,
-  //                         children: [
-  //                           Image(
-  //                             image: AssetImage(
-  //                               "asset/image/fluenttemperaturewhite.png",
-  //                             ),
-  //                             height: 33,
-  //                             width: 33,
-  //                           ),
-  //                           Text(
-  //                             weatherForecastModel.current != null
-  //                                 ? "${weatherForecastModel.current?.temp?.toStringAsFixed(1)}°C"
-  //                                 : "",
-  //                             style: TextStyle(
-  //                               fontSize: 32,
-  //                               fontWeight: FontWeight.bold,
-  //                               color: AppColors.textColorLight,
-  //                               fontFamily: 'NunitoBold',
-  //                             ),
-  //                           ),
-  //                         ],
-  //                       ),
-  //                       Padding(
-  //                         padding: EdgeInsets.only(left: 12),
-  //                         child: Text(
-  //                           ConditionHelper.getDescription(
-  //                                 weatherForecastModel.current!,
-  //                               ) ??
-  //                               "",
-  //                           style: TextStyle(
-  //                             color: AppColors.textColorLight,
-  //                             fontSize: 14,
-  //                             fontWeight: FontWeight.normal,
-  //                             fontFamily: 'NunitoSemiBold',
-  //                           ),
-  //                         ),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ),
-  //               ),
-  //               Container(
-  //                 margin: EdgeInsets.only(right: 8),
-  //                 width: 80,
-  //                 child: Image(
-  //                   image: AssetImage(
-  //                     ConditionHelper.getIcon(weatherForecastModel.current!) ??
-  //                         "asset/image/sunny.png",
-  //                   ),
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //         weatherForecastModel.hourly != null
-  //             ? Container(
-  //               height: 130,
-  //               margin: EdgeInsets.only(top: 16, right: 8),
-  //               child: ListView.builder(
-  //                 scrollDirection: Axis.horizontal,
-  //                 itemCount: weatherForecastModel.hourly!.length,
-  //                 itemBuilder: (context, index) {
-  //                   return Container(
-  //                     margin: EdgeInsets.only(left: 4, right: 4),
-  //                     decoration: BoxDecoration(
-  //                       borderRadius: BorderRadius.circular(10),
-  //                       color: AppColors.colorWidget,
-  //                     ),
-  //                     width: 90,
-  //                     child: Material(
-  //                       color: Colors.transparent,
-  //                       child: InkWell(
-  //                         highlightColor: AppColors.mainColor.withOpacity(.2),
-  //                         splashColor: AppColors.mainColor.withOpacity(.2),
-  //                         onTap:
-  //                             () => {
-  //                               this.gotoDetailHourly(
-  //                                 weatherForecastModel.hourly![index],
-  //                               ),
-  //                             },
-  //                         child: Container(
-  //                           padding: EdgeInsets.only(
-  //                             left: 8,
-  //                             right: 8,
-  //                             bottom: 4,
-  //                           ),
-  //                           margin: EdgeInsets.only(left: 8, right: 8),
-  //                           child: Column(
-  //                             mainAxisAlignment: MainAxisAlignment.start,
-  //                             crossAxisAlignment: CrossAxisAlignment.center,
-  //                             children: [
-  //                               Container(
-  //                                 margin: EdgeInsets.only(top: 8),
-  //                                 height: 53,
-  //                                 width: 53,
-  //                                 child: Image(
-  //                                   image: AssetImage(
-  //                                     ConditionHelper.getIconHourly(
-  //                                           weatherForecastModel.hourly![index],
-  //                                         ) ??
-  //                                         "asset/image/fluenttemperature.png",
-  //                                   ),
-  //                                   // image: AssetImage(
-  //                                   //     "asset/image/thunderstorm.png"),
-  //                                 ),
-  //                               ),
-  //                               Container(
-  //                                 margin: EdgeInsets.only(top: 8),
-  //                                 child: Row(
-  //                                   mainAxisAlignment: MainAxisAlignment.center,
-  //                                   crossAxisAlignment:
-  //                                       CrossAxisAlignment.center,
-  //                                   children: [
-  //                                     Icon(
-  //                                       Icons.access_time_rounded,
-  //                                       color: AppColors.mainColor,
-  //                                       size: 10,
-  //                                     ),
-  //                                     Padding(
-  //                                       padding: EdgeInsets.only(left: 4),
-  //                                       child: Text(
-  //                                         ConvertHelper.milisToHour(
-  //                                           weatherForecastModel
-  //                                                   .hourly?[index]
-  //                                                   .dt ??
-  //                                               0,
-  //                                         ),
-  //                                         textAlign: TextAlign.center,
-  //                                         style: TextStyle(
-  //                                           fontSize: 10,
-  //                                           color: AppColors.textColorLight,
-  //                                           fontFamily: 'NunitoRegular',
-  //                                         ),
-  //                                       ),
-  //                                     ),
-  //                                   ],
-  //                                 ),
-  //                               ),
-  //                               Container(
-  //                                 margin: EdgeInsets.only(top: 16),
-  //                                 child: Text(
-  //                                   weatherForecastModel.hourly?[index].temp
-  //                                           ?.toStringAsFixed(1) ??
-  //                                       "0"
-  //                                           "°C",
-  //                                   textAlign: TextAlign.center,
-  //                                   style: TextStyle(
-  //                                     fontSize: 14,
-  //                                     fontWeight: FontWeight.bold,
-  //                                     color: AppColors.textColorLight,
-  //                                     fontFamily: 'NunitoBold',
-  //                                   ),
-  //                                 ),
-  //                               ),
-  //                             ],
-  //                           ),
-  //                         ),
-  //                       ),
-  //                     ),
-  //                   );
-  //                 },
-  //               ),
-  //             )
-  //             : Container(),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Widget nextForecaseList() {
-  //   double listHeight =
-  //       40 +
-  //       (weatherForecastModel.daily != null
-  //           ? weatherForecastModel.daily?.length.toDouble() ?? 0 * 100
-  //           : 1000.toDouble());
-
-  //   if (weatherForecastModel.daily != null) {
-  //     return Container(
-  //       height: listHeight,
-  //       child: Column(
-  //         children: [
-  //           Container(
-  //             margin: EdgeInsets.only(top: 32, right: 16, left: 16),
-  //             child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //               children: [
-  //                 Text(
-  //                   "Perkiraan Cuaca Selanjutnya",
-  //                   style: TextStyle(
-  //                     color: AppColors.textLabelDark,
-  //                     fontSize: 16,
-  //                     fontWeight: FontWeight.bold,
-  //                     fontFamily: 'NunitoBold',
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //           weatherForecastModel.daily != null
-  //               ? Expanded(
-  //                 child: Container(
-  //                   margin: EdgeInsets.only(left: 8, right: 8, top: 8),
-  //                   child: ListView.builder(
-  //                     physics: NeverScrollableScrollPhysics(),
-  //                     scrollDirection: Axis.vertical,
-  //                     itemCount: weatherForecastModel.daily?.length ?? 0,
-  //                     itemBuilder: (context, index) {
-  //                       return Container(
-  //                         decoration: BoxDecoration(
-  //                           border: Border(
-  //                             bottom: BorderSide(
-  //                               width: 1,
-  //                               color: Color(0XFF313131),
-  //                             ),
-  //                           ),
-  //                         ),
-  //                         margin: EdgeInsets.only(left: 8, right: 8, bottom: 8),
-  //                         child: InkWell(
-  //                           onTap:
-  //                               () => {
-  //                                 this.gotoDetailDaily(
-  //                                   weatherForecastModel.daily![index],
-  //                                 ),
-  //                               },
-  //                           highlightColor: AppColors.mainColor.withOpacity(.2),
-  //                           splashColor: AppColors.mainColor.withOpacity(.2),
-  //                           child: Container(
-  //                             padding: EdgeInsets.only(top: 8, bottom: 16),
-  //                             child: Row(
-  //                               children: [
-  //                                 Column(
-  //                                   crossAxisAlignment:
-  //                                       CrossAxisAlignment.start,
-  //                                   mainAxisAlignment: MainAxisAlignment.center,
-  //                                   children: [
-  //                                     Text(
-  //                                       ConvertHelper.milisToDay(
-  //                                         weatherForecastModel
-  //                                                 .daily?[index]
-  //                                                 .dt ??
-  //                                             0,
-  //                                       ),
-  //                                       style: TextStyle(
-  //                                         color: AppColors.textLabelDark,
-  //                                         fontWeight: FontWeight.bold,
-  //                                         fontSize: 14,
-  //                                         fontFamily: 'NunitoBold',
-  //                                       ),
-  //                                     ),
-  //                                     Container(
-  //                                       margin: EdgeInsets.only(top: 8),
-  //                                       child: Text(
-  //                                         ConvertHelper.milisToDate(
-  //                                           weatherForecastModel
-  //                                                   .daily?[index]
-  //                                                   .dt ??
-  //                                               0,
-  //                                         ),
-  //                                         style: TextStyle(
-  //                                           color: AppColors.textColorLight,
-  //                                           fontSize: 12,
-  //                                           fontFamily: 'NunitoRegular',
-  //                                         ),
-  //                                       ),
-  //                                     ),
-  //                                   ],
-  //                                 ),
-  //                                 Expanded(
-  //                                   child: Row(
-  //                                     crossAxisAlignment:
-  //                                         CrossAxisAlignment.center,
-  //                                     mainAxisAlignment:
-  //                                         MainAxisAlignment.center,
-  //                                     children: [
-  //                                       Image(
-  //                                         image: AssetImage(
-  //                                           "asset/image/fluenttemperature.png",
-  //                                         ),
-  //                                         height: 26,
-  //                                         width: 26,
-  //                                       ),
-  //                                       Text(
-  //                                         weatherForecastModel
-  //                                                 .daily?[index]
-  //                                                 .temp
-  //                                                 ?.max
-  //                                                 ?.toStringAsFixed(1) ??
-  //                                             "0.0"
-  //                                                 "°C",
-  //                                         textAlign: TextAlign.center,
-  //                                         style: TextStyle(
-  //                                           fontWeight: FontWeight.bold,
-  //                                           fontSize: 28,
-  //                                           color: AppColors.textLabelDark,
-  //                                           fontFamily: 'NunitoBold',
-  //                                         ),
-  //                                       ),
-  //                                     ],
-  //                                   ),
-  //                                 ),
-  //                                 Image(
-  //                                   image: AssetImage(
-  //                                     ConditionHelper.getIconDaily(
-  //                                           weatherForecastModel.daily![index],
-  //                                         ) ??
-  //                                         "asset/image/fluenttemperature.png",
-  //                                   ),
-  //                                   width: 53,
-  //                                   height: 53,
-  //                                   fit: BoxFit.cover,
-  //                                 ),
-  //                               ],
-  //                             ),
-  //                           ),
-  //                         ),
-  //                       );
-  //                     },
-  //                   ),
-  //                 ),
-  //               )
-  //               : Expanded(child: Container()),
-  //         ],
-  //       ),
-  //     );
-  //   } else {
-  //     return Container(
-  //       height: 200,
-  //       child: Center(
-  //         child: CircularProgressIndicator(
-  //           valueColor: AlwaysStoppedAnimation<Color>(AppColors.mainColor),
-  //         ),
-  //       ),
-  //     );
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
+    final home = Get.find<HomeController>();
     return Scaffold(
       backgroundColor: AppColors.darkBackgroundColor,
       body: SafeArea(
-        child: Container(
-          padding: EdgeInsets.only(top: 16),
-          child: RefreshIndicator(
-            color: AppColors.mainColor,
-            onRefresh: () {
-              return Future.delayed(Duration(seconds: 1), () {
-                // getCurrentLocation();
-              });
-            },
-            child: SingleChildScrollView(
-              // child: Column(children: [header(), nextForecaseList()]),
-            ),
-          ),
+        child: RefreshIndicator(
+          color: AppColors.mainColor,
+          onRefresh: () async {
+            await home.getCurrentLocation();
+          },
+          child: Obx(() {
+            if (home.isLoading.isTrue) {
+              return SizedBox(
+                height: 200,
+                child: Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.0,
+                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.mainColor),
+                  ),
+                ),
+              );
+            }
+            final weather = home.weather.value;
+            if (weather == null) return Container();
+            final hourly = weather.hourly;
+            final daily = weather.daily;
+            return SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              child: Padding(
+                padding: EdgeInsets.only(top: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        "Per Jam",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'NunitoBold',
+                          color: AppColors.textLabelDark,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 140,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: hourly.temperature.length >= 12 ? 12 : hourly.temperature.length,
+                        itemBuilder: (context, index) {
+                          final temp = hourly.temperature[index];
+                          final code = hourly.weatherCode[index];
+                          final time = hourly.time[index];
+                          final rain = hourly.precipitationProbability.isNotEmpty ? hourly.precipitationProbability[index] : 0;
+                          return Container(
+                            margin: EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+                            width: 90,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: AppColors.colorWidget,
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(8),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    ConditionHelper.getIcon(code) ?? 'asset/image/fluenttemperature.png',
+                                    height: 40,
+                                    width: 40,
+                                  ),
+                                  SizedBox(height: 6),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.access_time_rounded, size: 10, color: AppColors.mainColor),
+                                      SizedBox(width: 4),
+                                      Text(
+                                        ConvertHelper.formatHourIso(time),
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: AppColors.textColorLight,
+                                          fontFamily: 'NunitoRegular',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text(
+                                    "${temp.toStringAsFixed(1)}°C",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.textColorLight,
+                                      fontFamily: 'NunitoBold',
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    "Hujan ${rain}%",
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: AppColors.textColorLight,
+                                      fontFamily: 'NunitoRegular',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
+                      child: Text(
+                        "7 Hari",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'NunitoBold',
+                          color: AppColors.textLabelDark,
+                        ),
+                      ),
+                    ),
+                    ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: daily.time.length,
+                      itemBuilder: (context, index) {
+                        final dt = DateTime.tryParse(daily.time[index]);
+                        final dayText = dt != null ? DateFormat('EEEE', 'id_ID').format(dt) : daily.time[index];
+                        final dateText = dt != null ? DateFormat('MMM, dd', 'id_ID').format(dt) : '';
+                        final code = daily.weatherCode[index];
+                        final tMax = daily.temperatureMax[index];
+                        final tMin = daily.temperatureMin[index];
+                        final uv = daily.uvIndexMax.isNotEmpty ? daily.uvIndexMax[index] : 0;
+                        final sunrise = daily.sunrise.isNotEmpty ? daily.sunrise[index] : '';
+                        final sunset = daily.sunset.isNotEmpty ? daily.sunset[index] : '';
+                        return InkWell(
+                          onTap: () { _showDailyDetail(context, daily, index, hourly); },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border(bottom: BorderSide(width: 1, color: Color(0XFF313131))),
+                            ),
+                            margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                            padding: EdgeInsets.symmetric(vertical: 12),
+                            child: Row(
+                              children: [
+                              SizedBox(
+                                width: 80,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      dayText,
+                                      style: TextStyle(
+                                        color: AppColors.textColorLight,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'NunitoBold',
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      dateText,
+                                      style: TextStyle(
+                                        color: AppColors.textColorLight,
+                                        fontSize: 12,
+                                        fontFamily: 'NunitoRegular',
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image(
+                                      image: AssetImage("asset/image/fluenttemperature.png"),
+                                      height: 24,
+                                      width: 24,
+                                    ),
+                                    SizedBox(width: 6),
+                                    Text(
+                                      "${tMax.toStringAsFixed(1)}°C / ${tMin.toStringAsFixed(1)}°C",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                        color: AppColors.textColorLight,
+                                        fontFamily: 'NunitoBold',
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Image(
+                                    image: AssetImage(ConditionHelper.getIcon(code) ?? "asset/image/clearsky.png"),
+                                    width: 40,
+                                    height: 40,
+                                  ),
+                                  SizedBox(height: 6),
+                                  Text(
+                                    "UV ${uv.toStringAsFixed(1)}",
+                                    style: TextStyle(
+                                      color: AppColors.textLabelDark,
+                                      fontSize: 12,
+                                      fontFamily: 'NunitoRegular',
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    "${ConvertHelper.formatTimeIso(sunrise)} / ${ConvertHelper.formatTimeIso(sunset)}",
+                                    style: TextStyle(
+                                      color: AppColors.textLabelDark,
+                                      fontSize: 12,
+                                      fontFamily: 'NunitoRegular',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ));
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }),
         ),
+      ),
+    );
+  }
+
+  void _showDailyDetail(BuildContext context, dynamic daily, int index, dynamic hourly) {
+    final code = daily.weatherCode[index];
+    final day = daily.time[index];
+    final tMax = daily.temperatureMax[index];
+    final tMin = daily.temperatureMin[index];
+    final uv = daily.uvIndexMax.isNotEmpty ? daily.uvIndexMax[index] : 0;
+    final sunrise = daily.sunrise.isNotEmpty ? daily.sunrise[index] : '';
+    final sunset = daily.sunset.isNotEmpty ? daily.sunset[index] : '';
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.colorWidget,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+      builder: (_) {
+        return Padding(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Image.asset(ConditionHelper.getIcon(code) ?? 'asset/image/clearsky.png', width: 40, height: 40),
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(DateFormat('EEEE, dd MMM', 'id_ID').format(DateTime.parse(day)), style: TextStyle(color: AppColors.textColorLight, fontFamily: 'NunitoBold', fontSize: 16)),
+                        SizedBox(height: 4),
+                        Text("${tMax.toStringAsFixed(1)}°C / ${tMin.toStringAsFixed(1)}°C", style: TextStyle(color: AppColors.textColorLight, fontFamily: 'NunitoBold', fontSize: 14)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _chip("UV", uv.toStringAsFixed(1)),
+                  _chip("Sunrise", ConvertHelper.formatTimeIso(sunrise)),
+                  _chip("Sunset", ConvertHelper.formatTimeIso(sunset)),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _chip(String label, String value) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(color: AppColors.darkBackgroundColor, borderRadius: BorderRadius.circular(12)),
+      child: Row(
+        children: [
+          Text(label, style: TextStyle(color: AppColors.textLabelDark, fontFamily: 'NunitoRegular', fontSize: 12)),
+          SizedBox(width: 8),
+          Text(value, style: TextStyle(color: AppColors.textColorLight, fontFamily: 'NunitoBold', fontSize: 12)),
+        ],
       ),
     );
   }

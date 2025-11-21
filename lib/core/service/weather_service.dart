@@ -27,8 +27,9 @@ class WeatherService {
     final url =
         "$weatherUrl?latitude=$lat&longitude=$lon"
         "&current_weather=true"
-        "&hourly=temperature_2m,relative_humidity_2m,weathercode"
-        "&daily=weathercode,temperature_2m_max,temperature_2m_min"
+        "&hourly=temperature_2m,relative_humidity_2m,weathercode,precipitation_probability,precipitation,uv_index,windspeed_10m"
+        "&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max"
+        "&windspeed_unit=kmh"
         "&timezone=auto";
 
     final res = await http.get(Uri.parse(url));

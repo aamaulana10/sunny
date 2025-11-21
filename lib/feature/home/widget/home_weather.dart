@@ -36,8 +36,16 @@ class HomeWeatherWidget extends StatelessWidget {
       final temp = current.temperature;
       final wind = current.windSpeed;
       final humidity = weather.hourly.humidity.first;
+      final rainProb =
+          weather.hourly.precipitationProbability.isNotEmpty
+              ? weather.hourly.precipitationProbability.first
+              : 0;
+      final uvMax = daily.uvIndexMax.isNotEmpty ? daily.uvIndexMax.first : 0;
+      final sunrise = daily.sunrise.isNotEmpty ? daily.sunrise.first : '';
+      final sunset = daily.sunset.isNotEmpty ? daily.sunset.first : '';
 
       final condition = ConditionHelper.getCondition(current.weatherCode);
+      final mood = ConditionHelper.getMoodMessage(current.weatherCode);
 
       return Column(
         children: [
@@ -45,7 +53,7 @@ class HomeWeatherWidget extends StatelessWidget {
           Container(
             margin: EdgeInsets.only(top: 16),
             child: AvatarGlow(
-              glowColor: AppColors.mainColor,
+              glowColor: _themeColor(current.weatherCode),
               duration: Duration(milliseconds: 3000),
               repeat: true,
               animate: true,
@@ -87,20 +95,43 @@ class HomeWeatherWidget extends StatelessWidget {
           /// DESCRIPTION
           Container(
             margin: EdgeInsets.only(left: 16, right: 16, top: 8),
-            child: Text(
-              condition["description"] ?? '',
-              style: TextStyle(
-                fontSize: 14,
-                color: AppColors.textLabelDark,
-                fontFamily: 'NunitoSemiBold',
-              ),
+            child: Column(
+              children: [
+                Text(
+                  condition["description"] ?? '',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: AppColors.textLabelDark,
+                    fontFamily: 'NunitoSemiBold',
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  mood,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textLabelDark,
+                    fontFamily: 'NunitoRegular',
+                  ),
+                ),
+              ],
             ),
           ),
 
           /// FORECAST / WIND
-          controller.isForecast.isTrue
-              ? _buildDailyForecast(daily)
-              : _buildWindHumidity(wind, humidity),
+          AnimatedSwitcher(
+            duration: Duration(milliseconds: 300),
+            child:
+                controller.isForecast.isTrue
+                    ? _buildDailyForecast(daily)
+                    : Column(
+                      children: [
+                        _buildWindHumidity(wind, humidity),
+                        _buildRainUv(rainProb, uvMax),
+                        _buildSunriseSunset(sunrise, sunset),
+                      ],
+                    ),
+          ),
         ],
       );
     });
@@ -206,6 +237,70 @@ class HomeWeatherWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildRainUv(int rainProb, num uvMax) {
+    return Container(
+      margin: EdgeInsets.only(left: 8, right: 8, top: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _infoItem(
+            "Peluang Hujan",
+            "asset/image/showerrain.png",
+            "asset/image/showerrain.png",
+            "$rainProb%",
+          ),
+          Container(
+            width: 1,
+            height: 40,
+            margin: EdgeInsets.symmetric(horizontal: 16),
+            color: AppColors.colorGrey,
+          ),
+          _infoItem(
+            "UV Index",
+            "asset/image/sunny.png",
+            "asset/image/sunny.png",
+            uvMax.toStringAsFixed(1),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSunriseSunset(String sunrise, String sunset) {
+    return Container(
+      margin: EdgeInsets.only(left: 16, right: 16, top: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "Sunrise ${ConvertHelper.formatTimeIso(sunrise)}",
+            style: TextStyle(
+              color: AppColors.textLabelDark,
+              fontFamily: 'NunitoRegular',
+            ),
+          ),
+          SizedBox(width: 16),
+          Text(
+            "Sunset ${ConvertHelper.formatTimeIso(sunset)}",
+            style: TextStyle(
+              color: AppColors.textLabelDark,
+              fontFamily: 'NunitoRegular',
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Color _themeColor(int code) {
+    if (code == 0) return Colors.amberAccent;
+    if (code == 1 || code == 2) return Colors.blueAccent;
+    if (code == 3) return Colors.blueGrey;
+    if ([61, 63, 65, 80, 81, 82].contains(code)) return Colors.lightBlueAccent;
+    if ([95, 96, 99].contains(code)) return Colors.deepPurpleAccent;
+    return AppColors.mainColor;
   }
 
   Widget _infoItem(
