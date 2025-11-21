@@ -57,6 +57,7 @@ class CurrentWeather {
 class HourlyWeather {
   final List<String> time;
   final List<double> temperature;
+  final List<double> apparentTemperature;
   final List<int> humidity;
   final List<int> weatherCode;
   final List<int> precipitationProbability;
@@ -67,6 +68,7 @@ class HourlyWeather {
   HourlyWeather({
     required this.time,
     required this.temperature,
+    required this.apparentTemperature,
     required this.humidity,
     required this.weatherCode,
     required this.precipitationProbability,
@@ -80,6 +82,9 @@ class HourlyWeather {
       time: List<String>.from(json['time'] ?? []),
       temperature: List<double>.from(
         (json['temperature_2m'] ?? []).map((e) => e.toDouble()),
+      ),
+      apparentTemperature: List<double>.from(
+        (json['apparent_temperature'] ?? []).map((e) => e.toDouble()),
       ),
       humidity: List<int>.from(json['relative_humidity_2m'] ?? []),
       weatherCode: List<int>.from(json['weathercode'] ?? []),
@@ -100,6 +105,7 @@ class HourlyWeather {
   Map<String, dynamic> toJson() => {
         'time': time,
         'temperature_2m': temperature,
+        'apparent_temperature': apparentTemperature,
         'relative_humidity_2m': humidity,
         'weathercode': weatherCode,
         'precipitation_probability': precipitationProbability,

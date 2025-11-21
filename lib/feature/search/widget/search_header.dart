@@ -40,11 +40,11 @@ class SearchHeaderWidget extends StatelessWidget {
                           );
                         }
                       },
-                      style:  TextStyle(
+                      style: TextStyle(
                         color: AppColors.textColorLight,
                         fontFamily: 'NunitoRegular',
                       ),
-                      decoration:  InputDecoration(
+                      decoration: InputDecoration(
                         prefixIcon: Icon(
                           Icons.search,
                           color: Colors.white,
@@ -66,10 +66,43 @@ class SearchHeaderWidget extends StatelessWidget {
             ),
           ),
 
-          // Current Location Label
+          // Suggested Cities
+          Container(
+            margin: const EdgeInsets.only(top: 12, left: 16, right: 16),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final s in [
+                  "Jakarta",
+                  "Bandung",
+                  "Surabaya",
+                  "Yogyakarta",
+                ])
+                  _chip(context, s, () => controller.getCurrentWeather(s)),
+              ],
+            ),
+          ),
+
+          // Recent Searches
+          Obx(
+            () => Container(
+              margin: const EdgeInsets.only(top: 12, left: 16, right: 16),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final s in controller.recentSearches)
+                    _chip(context, s, () => controller.getCurrentWeather(s)),
+                ],
+              ),
+            ),
+          ),
+
+          // Current Location
           Container(
             margin: const EdgeInsets.only(top: 16, left: 16, right: 16),
-            child:  Text(
+            child: Text(
               "Lokasi Saat ini",
               style: TextStyle(
                 color: AppColors.textLabelDark,
@@ -79,34 +112,56 @@ class SearchHeaderWidget extends StatelessWidget {
             ),
           ),
 
-          // Current Location Address
-          Obx(() => InkWell(
-                onTap: () {
-                  if (controller.cityFromAddress.value.isNotEmpty) {
-                    controller.getCurrentWeather(
-                      controller.cityFromAddress.value,
-                    );
-                  }
-                },
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin: const EdgeInsets.only(
-                    top: 16,
-                    left: 16,
-                    right: 16,
-                    bottom: 16,
-                  ),
-                  child: Text(
-                    controller.address.value,
-                    style:  TextStyle(
-                      color: AppColors.textLabelDark,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: 'NunitoRegular',
-                    ),
+          Obx(
+            () => InkWell(
+              onTap: () {
+                if (controller.cityFromAddress.value.isNotEmpty) {
+                  controller.getCurrentWeather(
+                    controller.cityFromAddress.value,
+                  );
+                }
+              },
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                margin: const EdgeInsets.only(
+                  top: 16,
+                  left: 16,
+                  right: 16,
+                  bottom: 16,
+                ),
+                child: Text(
+                  controller.address.value,
+                  style: TextStyle(
+                    color: AppColors.textLabelDark,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'NunitoRegular',
                   ),
                 ),
-              )),
+              ),
+            ),
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _chip(BuildContext context, String label, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: AppColors.colorWidget,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: AppColors.textColorLight,
+            fontFamily: 'NunitoRegular',
+            fontSize: 12,
+          ),
+        ),
       ),
     );
   }

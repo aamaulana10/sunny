@@ -133,20 +133,98 @@ class _SettingViewState extends State<SettingView> {
           ),
           Container(
             height: 80,
-            child: InkWell(
-              onTap: () => {this.saveLocation()},
-              child: Row(
-                children: [
-                  Icon(Icons.lock, color: Colors.white),
-                  Container(
+            child: Row(
+              children: [
+                Icon(Icons.beach_access, color: Colors.white),
+                Expanded(
+                  child: Container(
                     margin: EdgeInsets.only(left: 8),
                     child: Text(
-                      "Simpan Lokasimu",
+                      "Heat Alert",
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
-                ],
-              ),
+                ),
+                FutureBuilder<SharedPreferences>(
+                  future: SharedPreferences.getInstance(),
+                  builder: (context, snap) {
+                    final prefs = snap.data;
+                    final val = prefs?.getBool('notif_heat') ?? true;
+                    return Switch(
+                      value: val,
+                      onChanged: (e) async {
+                        final p = await SharedPreferences.getInstance();
+                        await p.setBool('notif_heat', e);
+                        setState(() {});
+                      },
+                    );
+                  },
+                )
+              ],
+            ),
+          ),
+          Container(
+            height: 80,
+            child: Row(
+              children: [
+                Icon(Icons.umbrella, color: Colors.white),
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.only(left: 8),
+                    child: Text(
+                      "Rain Alert",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+                FutureBuilder<SharedPreferences>(
+                  future: SharedPreferences.getInstance(),
+                  builder: (context, snap) {
+                    final prefs = snap.data;
+                    final val = prefs?.getBool('notif_rain') ?? true;
+                    return Switch(
+                      value: val,
+                      onChanged: (e) async {
+                        final p = await SharedPreferences.getInstance();
+                        await p.setBool('notif_rain', e);
+                        setState(() {});
+                      },
+                    );
+                  },
+                )
+              ],
+            ),
+          ),
+          Container(
+            height: 80,
+            child: Row(
+              children: [
+                Icon(Icons.wb_sunny, color: Colors.white),
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.only(left: 8),
+                    child: Text(
+                      "Daily Summary",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+                FutureBuilder<SharedPreferences>(
+                  future: SharedPreferences.getInstance(),
+                  builder: (context, snap) {
+                    final prefs = snap.data;
+                    final val = prefs?.getBool('notif_daily') ?? true;
+                    return Switch(
+                      value: val,
+                      onChanged: (e) async {
+                        final p = await SharedPreferences.getInstance();
+                        await p.setBool('notif_daily', e);
+                        setState(() {});
+                      },
+                    );
+                  },
+                )
+              ],
             ),
           ),
           Container(

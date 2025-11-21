@@ -114,9 +114,18 @@ class HomeController extends GetxController {
       weather.value = data;
       await _cacheWeather(latitude, longitude, data);
       await _updateStreak();
+      await _maybeNotify(data);
     } catch (e) {
       await _loadCached(latitude, longitude);
-      Get.snackbar("Error", "Gagal mendapatkan cuaca");
+      if (weather.value != null) {
+        Get.snackbar(
+          "Offline",
+          "You're offline — showing last saved data",
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      } else {
+        Get.snackbar("Error", "Gagal mendapatkan cuaca");
+      }
     }
   }
 
@@ -171,5 +180,36 @@ class HomeController extends GetxController {
     await prefs.setInt("daily_streak", current);
     await prefs.setString("last_streak_date", today.toIso8601String());
     streak.value = current;
+  }
+
+  Future<void> _maybeNotify(WeatherFullModel data) async {
+    final prefs = await SharedPreferences.getInstance();
+    final rainEnabled = prefs.getBool('notif_rain') ?? true;
+    final heatEnabled = prefs.getBool('notif_heat') ?? true;
+    final dailyEnabled = prefs.getBool('notif_daily') ?? true;
+
+    final rainProb =
+        data.hourly.precipitationProbability.isNotEmpty
+            ? data.hourly.precipitationProbability.first
+            : 0;
+    final temp = data.current.temperature;
+
+    if (rainEnabled && rainProb >= 60) {
+      Get.snackbar(
+        'Rain Alert',
+        'Bawa payung bro, bakal hujan bentar lagi 😭',
+        snackPosition: SnackPosition.TOP,
+      );
+    }
+    if (heatEnabled && temp >= 32) {
+      Get.snackbar(
+        'Heat Alert',
+        'UV tinggi — sunscreen dulu ya!',
+        snackPosition: SnackPosition.TOP,
+      );
+    }
+    if (dailyEnabled) {
+      // simple reminder badge via snackbar; schedule can be added via NotificationManager
+    }
   }
 }

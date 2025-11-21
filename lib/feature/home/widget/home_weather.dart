@@ -5,7 +5,10 @@ import 'package:sunny/core/config/color/app_colors.dart';
 import 'package:sunny/core/config/helper/condition_helper.dart';
 import 'package:sunny/core/config/helper/convert_helper.dart';
 import 'package:sunny/core/model/weather_full_model.dart';
+import 'package:sunny/feature/common/mascot_widget.dart';
 import 'package:sunny/feature/home/controller.dart';
+import 'package:sunny/feature/share/share_card_view.dart';
+import 'package:sunny/feature/wallpaper/wallpaper_generator_view.dart';
 
 class HomeWeatherWidget extends StatelessWidget {
   final HomeController controller;
@@ -36,6 +39,10 @@ class HomeWeatherWidget extends StatelessWidget {
       final temp = current.temperature;
       final wind = current.windSpeed;
       final humidity = weather.hourly.humidity.first;
+      final feelsLike =
+          weather.hourly.apparentTemperature.isNotEmpty
+              ? weather.hourly.apparentTemperature.first
+              : temp;
       final rainProb =
           weather.hourly.precipitationProbability.isNotEmpty
               ? weather.hourly.precipitationProbability.first
@@ -47,90 +54,134 @@ class HomeWeatherWidget extends StatelessWidget {
       final condition = ConditionHelper.getCondition(current.weatherCode);
       final mood = ConditionHelper.getMoodMessage(current.weatherCode);
 
-      return Column(
+      return Stack(
         children: [
-          /// ICON
-          Container(
-            margin: EdgeInsets.only(top: 16),
-            child: AvatarGlow(
-              glowColor: _themeColor(current.weatherCode),
-              duration: Duration(milliseconds: 3000),
-              repeat: true,
-              animate: true,
-              child: Image(
-                height: 200,
-                width: 200,
-                image: AssetImage(
-                  condition["icon"] ?? "asset/image/clearsky.png",
+          Column(
+            children: [
+              /// ICON + Mascot
+              Container(
+                margin: EdgeInsets.only(top: 16),
+                child: AvatarGlow(
+                  glowColor: _themeColor(current.weatherCode),
+                  duration: Duration(milliseconds: 3000),
+                  repeat: true,
+                  animate: true,
+                  child: MascotWidget(code: current.weatherCode),
                 ),
               ),
-            ),
-          ),
 
-          /// TEMP
-          Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.only(left: 16, right: 16, top: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image(
-                  image: AssetImage("asset/image/fluenttemperature.png"),
-                  height: 36,
-                  width: 36,
-                ),
-                Text(
-                  "${temp.toStringAsFixed(1)}°C",
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textLabelDark,
-                    fontFamily: 'NunitoBold',
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          /// DESCRIPTION
-          Container(
-            margin: EdgeInsets.only(left: 16, right: 16, top: 8),
-            child: Column(
-              children: [
-                Text(
-                  condition["description"] ?? '',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: AppColors.textLabelDark,
-                    fontFamily: 'NunitoSemiBold',
-                  ),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  mood,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textLabelDark,
-                    fontFamily: 'NunitoRegular',
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          /// FORECAST / WIND
-          AnimatedSwitcher(
-            duration: Duration(milliseconds: 300),
-            child:
-                controller.isForecast.isTrue
-                    ? _buildDailyForecast(daily)
-                    : Column(
-                      children: [
-                        _buildWindHumidity(wind, humidity),
-                        _buildRainUv(rainProb, uvMax),
-                        _buildSunriseSunset(sunrise, sunset),
-                      ],
+              /// TEMP
+              Container(
+                alignment: Alignment.center,
+                margin: EdgeInsets.only(left: 16, right: 16, top: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image(
+                      image: AssetImage("asset/image/fluenttemperature.png"),
+                      height: 36,
+                      width: 36,
                     ),
+                    Text(
+                      "${temp.toStringAsFixed(1)}°C",
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textLabelDark,
+                        fontFamily: 'NunitoBold',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              /// DESCRIPTION
+              Container(
+                margin: EdgeInsets.only(left: 16, right: 16, top: 8),
+                child: Column(
+                  children: [
+                    Text(
+                      condition["description"] ?? '',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: AppColors.textLabelDark,
+                        fontFamily: 'NunitoSemiBold',
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      mood,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textLabelDark,
+                        fontFamily: 'NunitoRegular',
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      ConditionHelper.getInsight(
+                        code: current.weatherCode,
+                        uv: uvMax,
+                        rainProb: rainProb,
+                        wind: wind,
+                      ),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textLabelDark,
+                        fontFamily: 'NunitoRegular',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              /// QUICK STATS
+              _buildQuickStats(feelsLike, uvMax, wind, humidity),
+
+              /// ACTIONS
+              Container(
+                margin: EdgeInsets.only(top: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Get.to(() => ShareCardView());
+                      },
+                      child: Text(
+                        'Bagikan',
+                        style: TextStyle(color: AppColors.mainColor),
+                      ),
+                    ),
+                    SizedBox(width: 16),
+                    TextButton(
+                      onPressed: () {
+                        Get.to(() => WallpaperGeneratorView());
+                      },
+                      child: Text(
+                        'Wallpaper',
+                        style: TextStyle(color: AppColors.mainColor),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              /// FORECAST / WIND
+              AnimatedSwitcher(
+                duration: Duration(milliseconds: 300),
+                child:
+                    controller.isForecast.isTrue
+                        ? _buildDailyForecast(daily)
+                        : Column(
+                          children: [
+                            _buildWindHumidity(wind, humidity),
+                            _buildRainUv(rainProb, uvMax),
+                            _buildSunriseSunset(sunrise, sunset),
+                          ],
+                        ),
+              ),
+            ],
           ),
         ],
       );
@@ -213,27 +264,17 @@ class HomeWeatherWidget extends StatelessWidget {
   Widget _buildWindHumidity(double wind, int humidity) {
     return Container(
       margin: EdgeInsets.only(left: 8, right: 8, top: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        spacing: 16,
+        runSpacing: 12,
         children: [
           _infoItem(
             "Kecepatan Angin",
             "asset/image/windspeed.png",
-            "asset/image/speed.png",
-            "$wind km/j",
+            "${wind.toStringAsFixed(1)} km/j",
           ),
-          Container(
-            width: 1,
-            height: 40,
-            margin: EdgeInsets.symmetric(horizontal: 16),
-            color: AppColors.colorGrey,
-          ),
-          _infoItem(
-            "Kelembapan",
-            "asset/image/humidity.png",
-            "asset/image/waterpercent.png",
-            "$humidity%",
-          ),
+          _infoItem("Kelembapan", "asset/image/humidity.png", "$humidity%"),
         ],
       ),
     );
@@ -242,24 +283,18 @@ class HomeWeatherWidget extends StatelessWidget {
   Widget _buildRainUv(int rainProb, num uvMax) {
     return Container(
       margin: EdgeInsets.only(left: 8, right: 8, top: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        spacing: 16,
+        runSpacing: 12,
         children: [
           _infoItem(
             "Peluang Hujan",
             "asset/image/showerrain.png",
-            "asset/image/showerrain.png",
             "$rainProb%",
-          ),
-          Container(
-            width: 1,
-            height: 40,
-            margin: EdgeInsets.symmetric(horizontal: 16),
-            color: AppColors.colorGrey,
           ),
           _infoItem(
             "UV Index",
-            "asset/image/sunny.png",
             "asset/image/sunny.png",
             uvMax.toStringAsFixed(1),
           ),
@@ -303,17 +338,13 @@ class HomeWeatherWidget extends StatelessWidget {
     return AppColors.mainColor;
   }
 
-  Widget _infoItem(
-    String label,
-    String iconBig,
-    String iconSmall,
-    String value,
-  ) {
+  Widget _infoItem(String label, String icon, String value) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
           margin: EdgeInsets.only(right: 8),
-          child: Image(image: AssetImage(iconBig), height: 40, width: 40),
+          child: Image(image: AssetImage(icon), height: 24, width: 24),
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -326,24 +357,43 @@ class HomeWeatherWidget extends StatelessWidget {
                 fontFamily: 'NunitoRegular',
               ),
             ),
-            Row(
-              children: [
-                Image(image: AssetImage(iconSmall), height: 20, width: 20),
-                SizedBox(width: 4),
-                Text(
-                  value,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textColorLight,
-                    fontFamily: 'NunitoBold',
-                  ),
-                ),
-              ],
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textColorLight,
+                fontFamily: 'NunitoBold',
+              ),
             ),
           ],
         ),
       ],
+    );
+  }
+
+  Widget _buildQuickStats(double feelsLike, num uv, double wind, int humidity) {
+    return Container(
+      margin: EdgeInsets.only(left: 8, right: 8, top: 16),
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        spacing: 16,
+        runSpacing: 12,
+        children: [
+          _infoItem(
+            "Feels-like",
+            "asset/image/fluenttemperature.png",
+            "${feelsLike.toStringAsFixed(1)}°C",
+          ),
+          _infoItem("UV", "asset/image/sunny.png", uv.toStringAsFixed(1)),
+          _infoItem(
+            "Angin",
+            "asset/image/windspeed.png",
+            "${wind.toStringAsFixed(1)} km/j",
+          ),
+          _infoItem("Lembap", "asset/image/humidity.png", "$humidity%"),
+        ],
+      ),
     );
   }
 }

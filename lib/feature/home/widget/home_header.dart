@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:sunny/core/config/color/app_colors.dart';
+import 'package:sunny/core/config/helper/condition_helper.dart';
 import 'package:sunny/feature/home/controller.dart';
 
 class HomeHeaderWidget extends StatelessWidget {
@@ -71,7 +72,7 @@ class HomeHeaderWidget extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        " hari",
+                        " hari • ${ConditionHelper.getBadge(controller.streak.value)}",
                         style: TextStyle(
                           color: AppColors.textLabelDark,
                           fontFamily: 'NunitoSemiBold',

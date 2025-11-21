@@ -56,6 +56,7 @@ class HomeTodayWidget extends StatelessWidget {
               ? SizedBox(
                 height: 160,
                 child: ListView.builder(
+                  physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   itemCount: 5, // show 5 hours
                   itemBuilder: (context, index) {

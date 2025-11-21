@@ -14,7 +14,6 @@ class WeatherListView extends StatefulWidget {
 }
 
 class _WeatherListViewState extends State<WeatherListView> {
-
   @override
   Widget build(BuildContext context) {
     final home = Get.find<HomeController>();
@@ -33,7 +32,9 @@ class _WeatherListViewState extends State<WeatherListView> {
                 child: Center(
                   child: CircularProgressIndicator(
                     strokeWidth: 2.0,
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.mainColor),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      AppColors.mainColor,
+                    ),
                   ),
                 ),
               );
@@ -64,15 +65,25 @@ class _WeatherListViewState extends State<WeatherListView> {
                     SizedBox(
                       height: 140,
                       child: ListView.builder(
+                        physics: const BouncingScrollPhysics(),
                         scrollDirection: Axis.horizontal,
-                        itemCount: hourly.temperature.length >= 12 ? 12 : hourly.temperature.length,
+                        itemCount:
+                            hourly.temperature.length >= 12
+                                ? 12
+                                : hourly.temperature.length,
                         itemBuilder: (context, index) {
                           final temp = hourly.temperature[index];
                           final code = hourly.weatherCode[index];
                           final time = hourly.time[index];
-                          final rain = hourly.precipitationProbability.isNotEmpty ? hourly.precipitationProbability[index] : 0;
+                          final rain =
+                              hourly.precipitationProbability.isNotEmpty
+                                  ? hourly.precipitationProbability[index]
+                                  : 0;
                           return Container(
-                            margin: EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+                            margin: EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 8,
+                            ),
                             width: 90,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
@@ -84,7 +95,8 @@ class _WeatherListViewState extends State<WeatherListView> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Image.asset(
-                                    ConditionHelper.getIcon(code) ?? 'asset/image/fluenttemperature.png',
+                                    ConditionHelper.getIcon(code) ??
+                                        'asset/image/fluenttemperature.png',
                                     height: 40,
                                     width: 40,
                                   ),
@@ -92,7 +104,11 @@ class _WeatherListViewState extends State<WeatherListView> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Icon(Icons.access_time_rounded, size: 10, color: AppColors.mainColor),
+                                      Icon(
+                                        Icons.access_time_rounded,
+                                        size: 10,
+                                        color: AppColors.mainColor,
+                                      ),
                                       SizedBox(width: 4),
                                       Text(
                                         ConvertHelper.formatHourIso(time),
@@ -148,103 +164,133 @@ class _WeatherListViewState extends State<WeatherListView> {
                       itemCount: daily.time.length,
                       itemBuilder: (context, index) {
                         final dt = DateTime.tryParse(daily.time[index]);
-                        final dayText = dt != null ? DateFormat('EEEE', 'id_ID').format(dt) : daily.time[index];
-                        final dateText = dt != null ? DateFormat('MMM, dd', 'id_ID').format(dt) : '';
+                        final dayText =
+                            dt != null
+                                ? DateFormat('EEEE', 'id_ID').format(dt)
+                                : daily.time[index];
+                        final dateText =
+                            dt != null
+                                ? DateFormat('MMM, dd', 'id_ID').format(dt)
+                                : '';
                         final code = daily.weatherCode[index];
                         final tMax = daily.temperatureMax[index];
                         final tMin = daily.temperatureMin[index];
-                        final uv = daily.uvIndexMax.isNotEmpty ? daily.uvIndexMax[index] : 0;
-                        final sunrise = daily.sunrise.isNotEmpty ? daily.sunrise[index] : '';
-                        final sunset = daily.sunset.isNotEmpty ? daily.sunset[index] : '';
+                        final uv =
+                            daily.uvIndexMax.isNotEmpty
+                                ? daily.uvIndexMax[index]
+                                : 0;
+                        final sunrise =
+                            daily.sunrise.isNotEmpty
+                                ? daily.sunrise[index]
+                                : '';
+                        final sunset =
+                            daily.sunset.isNotEmpty ? daily.sunset[index] : '';
                         return InkWell(
-                          onTap: () { _showDailyDetail(context, daily, index, hourly); },
+                          onTap: () {
+                            _showDailyDetail(context, daily, index, hourly);
+                          },
                           child: Container(
                             decoration: BoxDecoration(
-                              border: Border(bottom: BorderSide(width: 1, color: Color(0XFF313131))),
+                              border: Border(
+                                bottom: BorderSide(
+                                  width: 1,
+                                  color: Color(0XFF313131),
+                                ),
+                              ),
                             ),
-                            margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                            margin: EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 8,
+                            ),
                             padding: EdgeInsets.symmetric(vertical: 12),
                             child: Row(
                               children: [
-                              SizedBox(
-                                width: 80,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                SizedBox(
+                                  width: 80,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        dayText,
+                                        style: TextStyle(
+                                          color: AppColors.textColorLight,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'NunitoBold',
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      SizedBox(height: 4),
+                                      Text(
+                                        dateText,
+                                        style: TextStyle(
+                                          color: AppColors.textColorLight,
+                                          fontSize: 12,
+                                          fontFamily: 'NunitoRegular',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image(
+                                        image: AssetImage(
+                                          "asset/image/fluenttemperature.png",
+                                        ),
+                                        height: 24,
+                                        width: 24,
+                                      ),
+                                      SizedBox(width: 6),
+                                      Text(
+                                        "${tMax.toStringAsFixed(1)}°C / ${tMin.toStringAsFixed(1)}°C",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                          color: AppColors.textColorLight,
+                                          fontFamily: 'NunitoBold',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
+                                    Image(
+                                      image: AssetImage(
+                                        ConditionHelper.getIcon(code) ??
+                                            "asset/image/clearsky.png",
+                                      ),
+                                      width: 40,
+                                      height: 40,
+                                    ),
+                                    SizedBox(height: 6),
                                     Text(
-                                      dayText,
+                                      "UV ${uv.toStringAsFixed(1)}",
                                       style: TextStyle(
-                                        color: AppColors.textColorLight,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'NunitoBold',
-                                        fontSize: 14,
+                                        color: AppColors.textLabelDark,
+                                        fontSize: 12,
+                                        fontFamily: 'NunitoRegular',
                                       ),
                                     ),
                                     SizedBox(height: 4),
                                     Text(
-                                      dateText,
+                                      "${ConvertHelper.formatTimeIso(sunrise)} / ${ConvertHelper.formatTimeIso(sunset)}",
                                       style: TextStyle(
-                                        color: AppColors.textColorLight,
+                                        color: AppColors.textLabelDark,
                                         fontSize: 12,
                                         fontFamily: 'NunitoRegular',
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                              Expanded(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image(
-                                      image: AssetImage("asset/image/fluenttemperature.png"),
-                                      height: 24,
-                                      width: 24,
-                                    ),
-                                    SizedBox(width: 6),
-                                    Text(
-                                      "${tMax.toStringAsFixed(1)}°C / ${tMin.toStringAsFixed(1)}°C",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                        color: AppColors.textColorLight,
-                                        fontFamily: 'NunitoBold',
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Image(
-                                    image: AssetImage(ConditionHelper.getIcon(code) ?? "asset/image/clearsky.png"),
-                                    width: 40,
-                                    height: 40,
-                                  ),
-                                  SizedBox(height: 6),
-                                  Text(
-                                    "UV ${uv.toStringAsFixed(1)}",
-                                    style: TextStyle(
-                                      color: AppColors.textLabelDark,
-                                      fontSize: 12,
-                                      fontFamily: 'NunitoRegular',
-                                    ),
-                                  ),
-                                  SizedBox(height: 4),
-                                  Text(
-                                    "${ConvertHelper.formatTimeIso(sunrise)} / ${ConvertHelper.formatTimeIso(sunset)}",
-                                    style: TextStyle(
-                                      color: AppColors.textLabelDark,
-                                      fontSize: 12,
-                                      fontFamily: 'NunitoRegular',
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ));
+                        );
                       },
                     ),
                   ],
@@ -257,7 +303,12 @@ class _WeatherListViewState extends State<WeatherListView> {
     );
   }
 
-  void _showDailyDetail(BuildContext context, dynamic daily, int index, dynamic hourly) {
+  void _showDailyDetail(
+    BuildContext context,
+    dynamic daily,
+    int index,
+    dynamic hourly,
+  ) {
     final code = daily.weatherCode[index];
     final day = daily.time[index];
     final tMax = daily.temperatureMax[index];
@@ -269,7 +320,9 @@ class _WeatherListViewState extends State<WeatherListView> {
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.colorWidget,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
       builder: (_) {
         return Padding(
           padding: EdgeInsets.all(16),
@@ -279,15 +332,36 @@ class _WeatherListViewState extends State<WeatherListView> {
             children: [
               Row(
                 children: [
-                  Image.asset(ConditionHelper.getIcon(code) ?? 'asset/image/clearsky.png', width: 40, height: 40),
+                  Image.asset(
+                    ConditionHelper.getIcon(code) ?? 'asset/image/clearsky.png',
+                    width: 40,
+                    height: 40,
+                  ),
                   SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(DateFormat('EEEE, dd MMM', 'id_ID').format(DateTime.parse(day)), style: TextStyle(color: AppColors.textColorLight, fontFamily: 'NunitoBold', fontSize: 16)),
+                        Text(
+                          DateFormat(
+                            'EEEE, dd MMM',
+                            'id_ID',
+                          ).format(DateTime.parse(day)),
+                          style: TextStyle(
+                            color: AppColors.textColorLight,
+                            fontFamily: 'NunitoBold',
+                            fontSize: 16,
+                          ),
+                        ),
                         SizedBox(height: 4),
-                        Text("${tMax.toStringAsFixed(1)}°C / ${tMin.toStringAsFixed(1)}°C", style: TextStyle(color: AppColors.textColorLight, fontFamily: 'NunitoBold', fontSize: 14)),
+                        Text(
+                          "${tMax.toStringAsFixed(1)}°C / ${tMin.toStringAsFixed(1)}°C",
+                          style: TextStyle(
+                            color: AppColors.textColorLight,
+                            fontFamily: 'NunitoBold',
+                            fontSize: 14,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -312,12 +386,29 @@ class _WeatherListViewState extends State<WeatherListView> {
   Widget _chip(String label, String value) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(color: AppColors.darkBackgroundColor, borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(
+        color: AppColors.darkBackgroundColor,
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: Row(
         children: [
-          Text(label, style: TextStyle(color: AppColors.textLabelDark, fontFamily: 'NunitoRegular', fontSize: 12)),
+          Text(
+            label,
+            style: TextStyle(
+              color: AppColors.textLabelDark,
+              fontFamily: 'NunitoRegular',
+              fontSize: 12,
+            ),
+          ),
           SizedBox(width: 8),
-          Text(value, style: TextStyle(color: AppColors.textColorLight, fontFamily: 'NunitoBold', fontSize: 12)),
+          Text(
+            value,
+            style: TextStyle(
+              color: AppColors.textColorLight,
+              fontFamily: 'NunitoBold',
+              fontSize: 12,
+            ),
+          ),
         ],
       ),
     );

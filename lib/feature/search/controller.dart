@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart' as geo;
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sunny/core/config/color/app_colors.dart';
 import 'package:sunny/core/model/weather_full_model.dart';
 import 'package:sunny/core/service/weather_service.dart';
@@ -16,11 +17,29 @@ class SearchViewController extends GetxController {
   RxString address = "Mendapatkan Lokasimu".obs;
   RxString cityFromAddress = "".obs;
   RxString locationInput = "".obs;
+  RxList<String> recentSearches = <String>[].obs;
 
   @override
   void onInit() {
     super.onInit();
     getCurrentLocation();
+    _loadRecents();
+  }
+
+  Future<void> _loadRecents() async {
+    final prefs = await SharedPreferences.getInstance();
+    final list = prefs.getStringList('recent_searches') ?? [];
+    recentSearches.assignAll(list);
+  }
+
+  Future<void> _addRecent(String city) async {
+    final prefs = await SharedPreferences.getInstance();
+    final list = prefs.getStringList('recent_searches') ?? [];
+    list.remove(city);
+    list.insert(0, city);
+    final trimmed = list.length > 5 ? list.sublist(0, 5) : list;
+    await prefs.setStringList('recent_searches', trimmed);
+    recentSearches.assignAll(trimmed);
   }
 
   void setInputLocation(String location) {
@@ -166,6 +185,7 @@ class SearchViewController extends GetxController {
       address.value = city;
 
       await getForecast(lat, lon);
+      await _addRecent(city);
 
       isLoading.value = false;
     } catch (e) {
