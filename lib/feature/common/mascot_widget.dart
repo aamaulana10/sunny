@@ -36,10 +36,12 @@ class _MascotWidgetState extends State<MascotWidget>
 
   String _mascotAsset(int code) {
     if (code == 0) return "asset/image/clearsky.png"; // sunglasses vibe
-    if ([61, 63, 65, 80, 81, 82].contains(code))
+    if ([61, 63, 65, 80, 81, 82].contains(code)) {
       return "asset/image/showerrain.png"; // umbrella vibe
-    if ([1, 2, 3].contains(code))
+    }
+    if ([1, 2, 3].contains(code)) {
       return "asset/image/brokenclouds.png"; // sleepy vibe
+    }
     if ([95, 96, 99].contains(code)) return "asset/image/thunderstorm.png";
     return ConditionHelper.getIcon(code) ?? "asset/image/clearsky.png";
   }

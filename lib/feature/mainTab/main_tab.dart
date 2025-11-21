@@ -53,6 +53,11 @@ class MainTab extends StatelessWidget {
                   activeIcon: Icon(Icons.wb_sunny_sharp),
                   label: 'Cuaca',
                 ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.settings_outlined),
+                  activeIcon: Icon(Icons.settings),
+                  label: 'Pengaturan',
+                ),
               ],
             ),
           ),

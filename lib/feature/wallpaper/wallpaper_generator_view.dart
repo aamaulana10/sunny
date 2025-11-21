@@ -6,8 +6,8 @@ import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sunny/core/config/color/app_colors.dart';
-import 'package:sunny/feature/common/dynamic_weather_background.dart';
-import 'package:sunny/feature/home/controller.dart';
+
+
 
 class WallpaperGeneratorView extends StatelessWidget {
   WallpaperGeneratorView({super.key});
@@ -29,8 +29,7 @@ class WallpaperGeneratorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = Get.find<HomeController>();
-    final code = c.weather.value?.current.weatherCode ?? 0;
+
 
     return Scaffold(
       backgroundColor: AppColors.darkBackgroundColor,
@@ -40,20 +39,15 @@ class WallpaperGeneratorView extends StatelessWidget {
       ),
       body: RepaintBoundary(
         key: _key,
-        child: Stack(
-          children: [
-            DynamicWeatherBackground(code: code),
-            Center(
-              child: Text(
-                "Sunny",
-                style: TextStyle(
-                  color: Colors.white.withOpacity(.9),
-                  fontSize: 48,
-                  fontFamily: 'NunitoBold',
-                ),
-              ),
+        child: Center(
+          child: Text(
+            "Sunny",
+            style: TextStyle(
+              color: Colors.white.withOpacity(.9),
+              fontSize: 48,
+              fontFamily: 'NunitoBold',
             ),
-          ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(

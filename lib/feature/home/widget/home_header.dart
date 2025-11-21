@@ -54,38 +54,39 @@ class HomeHeaderWidget extends StatelessWidget {
                 color: AppColors.colorWidget,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Obx(() => Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "🔥 Streak: ",
-                        style: TextStyle(
-                          color: AppColors.textLabelDark,
-                          fontFamily: 'NunitoSemiBold',
-                        ),
+              child: Obx(
+                () => Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "🔥 Streak: ",
+                      style: TextStyle(
+                        color: AppColors.textLabelDark,
+                        fontFamily: 'NunitoSemiBold',
                       ),
-                      Text(
-                        controller.streak.value.toString(),
-                        style: TextStyle(
-                          color: AppColors.textColorLight,
-                          fontFamily: 'NunitoBold',
-                        ),
+                    ),
+                    Text(
+                      controller.streak.value.toString(),
+                      style: TextStyle(
+                        color: AppColors.textColorLight,
+                        fontFamily: 'NunitoBold',
                       ),
-                      Text(
-                        " hari • ${ConditionHelper.getBadge(controller.streak.value)}",
-                        style: TextStyle(
-                          color: AppColors.textLabelDark,
-                          fontFamily: 'NunitoSemiBold',
-                        ),
+                    ),
+                    Text(
+                      " hari • ${ConditionHelper.getBadge(controller.streak.value)}",
+                      style: TextStyle(
+                        color: AppColors.textLabelDark,
+                        fontFamily: 'NunitoSemiBold',
                       ),
-                    ],
-                  )),
+                    ),
+                  ],
+                ),
+              ),
             ),
             Container(
               margin: EdgeInsets.only(left: 8, right: 8, top: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
                     margin: EdgeInsets.only(right: 8),

@@ -6,6 +6,7 @@ import 'package:sunny/core/config/helper/condition_helper.dart';
 import 'package:sunny/core/config/helper/convert_helper.dart';
 import 'package:sunny/core/model/weather_full_model.dart';
 import 'package:sunny/feature/common/mascot_widget.dart';
+import 'package:sunny/feature/common/glass_card.dart';
 import 'package:sunny/feature/home/controller.dart';
 import 'package:sunny/feature/share/share_card_view.dart';
 import 'package:sunny/feature/wallpaper/wallpaper_generator_view.dart';
@@ -339,36 +340,38 @@ class HomeWeatherWidget extends StatelessWidget {
   }
 
   Widget _infoItem(String label, String icon, String value) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          margin: EdgeInsets.only(right: 8),
-          child: Image(image: AssetImage(icon), height: 24, width: 24),
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                color: AppColors.textColorLight,
-                fontSize: 12,
-                fontFamily: 'NunitoRegular',
+    return GlassCard(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            margin: EdgeInsets.only(right: 8),
+            child: Image(image: AssetImage(icon), height: 24, width: 24),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  color: AppColors.textColorLight,
+                  fontSize: 12,
+                  fontFamily: 'NunitoRegular',
+                ),
               ),
-            ),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textColorLight,
-                fontFamily: 'NunitoBold',
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textColorLight,
+                  fontFamily: 'NunitoBold',
+                ),
               ),
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 

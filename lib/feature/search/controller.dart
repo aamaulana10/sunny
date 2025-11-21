@@ -60,9 +60,14 @@ class SearchViewController extends GetxController {
         address.value = "Lokasi tidak aktif";
         isLoading.value = false;
         Get.snackbar(
-          "Error",
+          "Lokasi Tidak Aktif",
           "Mohon aktifkan layanan lokasi",
           snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppColors.colorWidget,
+          colorText: AppColors.textColorLight,
+          margin: const EdgeInsets.all(12),
+          borderRadius: 12,
+          icon: const Icon(Icons.location_off, color: Colors.orangeAccent),
         );
         return;
       }
@@ -75,9 +80,14 @@ class SearchViewController extends GetxController {
           address.value = "Akses lokasi ditolak";
           isLoading.value = false;
           Get.snackbar(
-            "Error",
+            "Izin Diperlukan",
             "Izin akses lokasi diperlukan",
             snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppColors.colorWidget,
+            colorText: AppColors.textColorLight,
+            margin: const EdgeInsets.all(12),
+            borderRadius: 12,
+            icon: const Icon(Icons.lock_open, color: Colors.lightBlueAccent),
           );
           return;
         }
@@ -87,9 +97,14 @@ class SearchViewController extends GetxController {
         address.value = "Izin lokasi ditolak permanen";
         isLoading.value = false;
         Get.snackbar(
-          "Error",
+          "Izin Ditolak Permanen",
           "Mohon aktifkan izin lokasi di pengaturan",
           snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppColors.colorWidget,
+          colorText: AppColors.textColorLight,
+          margin: const EdgeInsets.all(12),
+          borderRadius: 12,
+          icon: const Icon(Icons.settings, color: Colors.orangeAccent),
         );
         return;
       }

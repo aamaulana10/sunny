@@ -176,7 +176,10 @@ class NotificationManager {
       styleInformation: bigPictureStyleInformation,
     );
 
-    final platformDetails = NotificationDetails(android: androidDetails);
+    final platformDetails = NotificationDetails(
+      android: androidDetails,
+      iOS: const DarwinNotificationDetails(),
+    );
 
     final scheduledTime = _nextInstanceOfHour(hour);
 
@@ -193,6 +196,41 @@ class NotificationManager {
     print(
       "Schedule set at ${scheduledTime.hour}:${scheduledTime.minute}.${scheduledTime.second}",
     );
+  }
+
+  Future<void> showScheduleSimpleNotification({
+    required int id,
+    required String title,
+    required String body,
+    required int hour,
+  }) async {
+    final androidDetails = AndroidNotificationDetails(
+      "sunny_id",
+      "sunny",
+      channelDescription: "sunny notification",
+      priority: Priority.high,
+      importance: Importance.max,
+      styleInformation: const DefaultStyleInformation(true, true),
+    );
+
+    final platformDetails = NotificationDetails(
+      android: androidDetails,
+      iOS: const DarwinNotificationDetails(),
+    );
+
+    final scheduledTime = _nextInstanceOfHour(hour);
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      id,
+      title,
+      body,
+      scheduledTime,
+      platformDetails,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
+
+    print("Simple schedule set at ${scheduledTime.toLocal()}");
   }
 
   tz.TZDateTime _nextInstanceOfHour(int hour) {

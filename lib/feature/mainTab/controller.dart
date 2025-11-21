@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:sunny/feature/home/page.dart';
 import 'package:sunny/feature/search/search_view.dart';
 import 'package:sunny/feature/weatherList/view/weather_list_view.dart';
+import 'package:sunny/feature/setting/view/setting_view.dart';
 
 class MainTabController extends GetxController {
   final currentIndex = 0.obs;
@@ -25,6 +26,9 @@ class MainTabController extends GetxController {
         break;
       case 2:
         screen = const WeatherListView();
+        break;
+      case 3:
+        screen = SettingView();
         break;
       default:
         screen = HomePage();

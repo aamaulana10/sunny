@@ -6,6 +6,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sunny/core/config/color/app_colors.dart';
+import 'package:sunny/core/config/helper/condition_helper.dart';
+import 'package:sunny/core/config/notification/notification_manager.dart';
 import 'package:sunny/core/model/weather_full_model.dart';
 import 'package:sunny/core/service/weather_service.dart';
 
@@ -80,7 +83,17 @@ class HomeController extends GetxController {
   void _failLocation(String msg, String desc) {
     address.value = msg;
     isLoading.value = false;
-    Get.snackbar("Error", desc, snackPosition: SnackPosition.BOTTOM);
+    Get.snackbar(
+      "Error",
+      desc,
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: AppColors.colorWidget,
+      colorText: AppColors.textColorLight,
+      margin: const EdgeInsets.all(12),
+      borderRadius: 12,
+      icon: const Icon(Icons.error_outline, color: Colors.redAccent),
+      duration: const Duration(seconds: 3),
+    );
   }
 
   Future<void> _getAddressFromLatLng(double latitude, double longitude) async {
@@ -115,16 +128,31 @@ class HomeController extends GetxController {
       await _cacheWeather(latitude, longitude, data);
       await _updateStreak();
       await _maybeNotify(data);
+      await _scheduleFirstTime(data);
     } catch (e) {
       await _loadCached(latitude, longitude);
       if (weather.value != null) {
         Get.snackbar(
           "Offline",
-          "You're offline — showing last saved data",
+          "You're offline — menampilkan data tersimpan",
           snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppColors.colorWidget,
+          colorText: AppColors.textColorLight,
+          margin: const EdgeInsets.all(12),
+          borderRadius: 12,
+          icon: const Icon(Icons.cloud_off, color: Colors.orangeAccent),
         );
       } else {
-        Get.snackbar("Error", "Gagal mendapatkan cuaca");
+        Get.snackbar(
+          "Error",
+          "Gagal mendapatkan cuaca",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppColors.colorWidget,
+          colorText: AppColors.textColorLight,
+          margin: const EdgeInsets.all(12),
+          borderRadius: 12,
+          icon: const Icon(Icons.error_outline, color: Colors.redAccent),
+        );
       }
     }
   }
@@ -199,6 +227,11 @@ class HomeController extends GetxController {
         'Rain Alert',
         'Bawa payung bro, bakal hujan bentar lagi 😭',
         snackPosition: SnackPosition.TOP,
+        backgroundColor: AppColors.colorWidget,
+        colorText: AppColors.textColorLight,
+        margin: const EdgeInsets.all(12),
+        borderRadius: 12,
+        icon: const Icon(Icons.umbrella, color: Colors.lightBlueAccent),
       );
     }
     if (heatEnabled && temp >= 32) {
@@ -206,10 +239,63 @@ class HomeController extends GetxController {
         'Heat Alert',
         'UV tinggi — sunscreen dulu ya!',
         snackPosition: SnackPosition.TOP,
+        backgroundColor: AppColors.colorWidget,
+        colorText: AppColors.textColorLight,
+        margin: const EdgeInsets.all(12),
+        borderRadius: 12,
+        icon: const Icon(Icons.wb_sunny_outlined, color: Colors.amber),
       );
     }
     if (dailyEnabled) {
-      // simple reminder badge via snackbar; schedule can be added via NotificationManager
+      // can be scheduled via _scheduleFirstTime
     }
+  }
+
+  Future<void> _scheduleFirstTime(WeatherFullModel data) async {
+    final prefs = await SharedPreferences.getInstance();
+    final scheduled = prefs.getBool('notif_scheduled') ?? false;
+    if (scheduled) return;
+
+    final nm = NotificationManager();
+    await nm.init();
+    await nm.requestPermissions();
+
+    final morningHour = prefs.getInt('notif_hour_morning') ?? 10;
+    final eveningHour = prefs.getInt('notif_hour_evening') ?? 20;
+
+    final todayTitle =
+        "Cuaca hari ini ${ConditionHelper.getDescription(data.current.weatherCode) ?? ''}";
+    final todayBody =
+        "Temperaturnya ${data.current.temperature.toStringAsFixed(1)}°C";
+
+    await nm.showScheduleSimpleNotification(
+      id: 100,
+      title: todayTitle,
+      body: todayBody,
+      hour: morningHour,
+    );
+
+    if (data.daily.time.length > 1) {
+      final codeTomorrow = data.daily.weatherCode[1];
+      final tomorrowTitle =
+          "Cuaca besok ${ConditionHelper.getDescription(codeTomorrow) ?? ''}";
+      final tomorrowBody =
+          "Maks ${data.daily.temperatureMax[1].toStringAsFixed(1)}°C / Min ${data.daily.temperatureMin[1].toStringAsFixed(1)}°C";
+      await nm.showScheduleSimpleNotification(
+        id: 101,
+        title: tomorrowTitle,
+        body: tomorrowBody,
+        hour: eveningHour,
+      );
+    }
+
+    await prefs.setBool('notif_scheduled', true);
+  }
+
+  Future<void> scheduleNotificationsNow() async {
+    if (weather.value == null) return;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('notif_scheduled', false);
+    await _scheduleFirstTime(weather.value!);
   }
 }

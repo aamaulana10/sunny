@@ -55,21 +55,14 @@ class HomePage extends StatelessWidget {
       backgroundColor: AppColors.darkBackgroundColor,
       body: RefreshIndicator(
         color: AppColors.mainColor,
-        onRefresh: () {
-          return Future.delayed(Duration(milliseconds: 500), () {
-            controller.getCurrentLocation();
-          });
-        },
-        child: SingleChildScrollView(
+        onRefresh: () async { await controller.getCurrentLocation(); },
+        child: CustomScrollView(
           physics: AlwaysScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              HomeHeaderWidget(controller: controller),
-              HomeWeatherWidget(controller: controller),
-              HomeTodayWidget(controller: controller),
-              // newsContainer(),
-            ],
-          ),
+          slivers: [
+            SliverToBoxAdapter(child: HomeHeaderWidget(controller: controller)),
+            SliverToBoxAdapter(child: HomeWeatherWidget(controller: controller)),
+            SliverToBoxAdapter(child: HomeTodayWidget(controller: controller)),
+          ],
         ),
       ),
     );
