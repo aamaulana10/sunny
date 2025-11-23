@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:sunny/core/config/color/app_colors.dart';
-import 'package:sunny/core/config/helper/condition_helper.dart';
+import 'package:sunny/core/shared/theme/color/app_colors.dart';
+import 'package:sunny/core/utils/helper/condition_helper.dart';
 import 'package:sunny/feature/search/controller.dart';
 
 class NextForecastList extends StatelessWidget {

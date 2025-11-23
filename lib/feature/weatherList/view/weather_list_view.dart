@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:sunny/core/config/color/app_colors.dart';
-import 'package:sunny/core/config/helper/condition_helper.dart';
-import 'package:sunny/core/config/helper/convert_helper.dart';
+import 'package:sunny/core/shared/theme/color/app_colors.dart';
+import 'package:sunny/core/utils/helper/condition_helper.dart';
+import 'package:sunny/core/utils/helper/convert_helper.dart';
 import 'package:sunny/feature/home/controller.dart';
 
-class WeatherListView extends StatefulWidget {
-  const WeatherListView({super.key});
+class WeatherListPage extends StatefulWidget {
+  const WeatherListPage({super.key});
 
   @override
-  State<WeatherListView> createState() => _WeatherListViewState();
+  State<WeatherListPage> createState() => _WeatherListPageState();
 }
 
-class _WeatherListViewState extends State<WeatherListView> {
+class _WeatherListPageState extends State<WeatherListPage> {
   @override
   Widget build(BuildContext context) {
     final home = Get.find<HomeController>();

@@ -3,6 +3,7 @@ import 'package:sunny/feature/home/binding.dart';
 import 'package:sunny/feature/mainTab/binding.dart';
 import 'package:sunny/feature/mainTab/main_tab.dart';
 import 'package:sunny/feature/search/binding.dart';
+import 'package:sunny/feature/setting/bindings.dart';
 
 class AppRoutes {
   static const mainTab = '/main-tab';
@@ -11,7 +12,7 @@ class AppRoutes {
     GetPage(
       name: '/',
       page: () => const MainTab(),
-      bindings: [MainTabBinding(), HomeBinding(), SearchBinding()],
+      bindings: [MainTabBinding(), HomeBinding(), SearchBinding(), SettingBinding()],
       transition: Transition.fadeIn,
     ),
   ];

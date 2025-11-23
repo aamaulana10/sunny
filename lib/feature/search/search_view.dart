@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sunny/core/config/color/app_colors.dart';
+import 'package:sunny/core/shared/theme/color/app_colors.dart';
 import 'package:sunny/feature/search/controller.dart';
 import 'package:sunny/feature/search/widget/forecast_list.dart';
 import 'package:sunny/feature/search/widget/search_header.dart';
 import 'package:sunny/feature/search/widget/weather_column_widget.dart';
 
-class SearchView extends StatelessWidget {
-  const SearchView({super.key});
+class SearchPage extends StatelessWidget {
+  const SearchPage({super.key});
 
   void _gotoDetailDaily(BuildContext context, int index) {
     final controller = Get.find<SearchViewController>();

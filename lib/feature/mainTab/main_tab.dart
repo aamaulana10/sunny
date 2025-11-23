@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sunny/core/config/color/app_colors.dart';
+import 'package:sunny/core/shared/theme/color/app_colors.dart';
 import 'package:sunny/feature/mainTab/controller.dart';
 
 class MainTab extends StatelessWidget {

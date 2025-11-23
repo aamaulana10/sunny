@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sunny/core/config/color/app_colors.dart';
+import 'package:sunny/core/shared/theme/color/app_colors.dart';
 
 
 

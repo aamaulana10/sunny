@@ -3,9 +3,9 @@ import 'package:geocoding/geocoding.dart' as geo;
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sunny/core/config/color/app_colors.dart';
-import 'package:sunny/core/model/weather_full_model.dart';
-import 'package:sunny/core/service/weather_service.dart';
+import 'package:sunny/core/shared/theme/color/app_colors.dart';
+import 'package:sunny/feature/weather/model/weather_full_model.dart';
+import 'package:sunny/feature/weather/repository.dart';
 
 class SearchViewController extends GetxController {
   final WeatherService weatherService = WeatherService();

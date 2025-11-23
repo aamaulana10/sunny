@@ -6,11 +6,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sunny/core/config/color/app_colors.dart';
-import 'package:sunny/core/config/helper/condition_helper.dart';
-import 'package:sunny/core/config/notification/notification_manager.dart';
-import 'package:sunny/core/model/weather_full_model.dart';
-import 'package:sunny/core/service/weather_service.dart';
+import 'package:sunny/core/shared/theme/color/app_colors.dart';
+import 'package:sunny/core/utils/helper/condition_helper.dart';
+import 'package:sunny/core/service/notification/notification_manager.dart';
+import 'package:sunny/feature/weather/model/weather_full_model.dart';
+import 'package:sunny/feature/weather/repository.dart';
 
 class HomeController extends GetxController {
   final WeatherService weatherService = WeatherService();
@@ -130,13 +130,14 @@ class HomeController extends GetxController {
       await _maybeNotify(data);
       await _scheduleFirstTime(data);
     } catch (e) {
+      debugPrint('error ${e.toString()}');
       await _loadCached(latitude, longitude);
       if (weather.value != null) {
         Get.snackbar(
           "Offline",
           "You're offline — menampilkan data tersimpan",
           snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: AppColors.colorWidget,
+          backgroundColor: AppColors.darkBackgroundColor,
           colorText: AppColors.textColorLight,
           margin: const EdgeInsets.all(12),
           borderRadius: 12,

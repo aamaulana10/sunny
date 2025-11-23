@@ -1,6 +1,6 @@
 // lib/feature/common/mascot_widget.dart
 import 'package:flutter/material.dart';
-import 'package:sunny/core/config/helper/condition_helper.dart';
+import 'package:sunny/core/utils/helper/condition_helper.dart';
 
 class MascotWidget extends StatefulWidget {
   final int code;

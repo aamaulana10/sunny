@@ -1,16 +1,14 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:sunny/core/model/weather_full_model.dart';
+import 'package:sunny/core/network/network_client.dart';
+import 'package:sunny/feature/weather/model/weather_full_model.dart';
 
 class WeatherService {
+  final NetworkClient client = NetworkClient();
   static const geocodingUrl = "https://geocoding-api.open-meteo.com/v1/search";
   static const weatherUrl = "https://api.open-meteo.com/v1/forecast";
 
   /// Search city → get coordinates → fetch weather
   Future<WeatherFullModel> getWeatherByCity(String city) async {
-    final geoRes = await http.get(Uri.parse("$geocodingUrl?name=$city"));
-
-    final geoData = jsonDecode(geoRes.body);
+    final geoData = await client.get("$geocodingUrl?name=$city");
 
     if (geoData['results'] == null || geoData['results'].isEmpty) {
       throw Exception("City not found");
@@ -32,10 +30,8 @@ class WeatherService {
         "&windspeed_unit=kmh"
         "&timezone=auto";
 
-    final res = await http.get(Uri.parse(url));
+    final res = await client.get(url);
 
-    final data = jsonDecode(res.body);
-
-    return WeatherFullModel.fromJson(data);
+    return WeatherFullModel.fromJson(res);
   }
 }

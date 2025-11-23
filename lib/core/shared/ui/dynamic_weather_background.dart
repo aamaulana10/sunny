@@ -1,6 +1,6 @@
 // lib/feature/common/dynamic_weather_background.dart
 import 'package:flutter/material.dart';
-import 'package:sunny/core/config/color/app_colors.dart';
+import 'package:sunny/core/shared/theme/color/app_colors.dart';
 
 class DynamicWeatherBackground extends StatefulWidget {
   final int code;

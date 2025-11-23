@@ -1,138 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
-import 'package:sunny/core/config/color/app_colors.dart';
-import 'package:sunny/feature/home/controller.dart';
+import 'package:sunny/core/shared/theme/color/app_colors.dart';
+import 'package:sunny/feature/setting/controller.dart';
 
-class SettingView extends StatefulWidget {
-  @override
-  _SettingViewState createState() => _SettingViewState();
-}
-
-class _SettingViewState extends State<SettingView> {
-  bool isDarkMode = false;
-  int _morningHour = 10;
-  int _eveningHour = 20;
-
-  void usingFingerPrint() {
-    print("finger print");
-  }
-
-  void setSwitchDarkMode(bool e) async {
-    setState(() {
-      isDarkMode = e;
-    });
-
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-
-    preferences.setBool("isDarkMode", isDarkMode);
-
-    print(isDarkMode);
-  }
-
-  void checkDarkMode() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-
-    var darkMode = preferences.getBool("isDarkMode");
-
-    print(darkMode);
-
-    setState(() {
-      isDarkMode = darkMode ?? false;
-    });
-  }
-
-  void usingDarkMode() async {
-    print("dark mode");
-    setState(() {
-      isDarkMode = !isDarkMode;
-    });
-
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-
-    preferences.setBool("isDarkMode", isDarkMode);
-
-    var aa = preferences.getBool("isDarkMode");
-
-    print(aa);
-  }
-
-  void saveLocation() {
-    print("dark mode");
-  }
-
-  void exitApp() {
-    print("dark mode");
-  }
-
-  @override
-  void initState() {
-    checkDarkMode();
-    _loadHours();
-    super.initState();
-  }
-
-  Future<void> _loadHours() async {
-    final p = await SharedPreferences.getInstance();
-    setState(() {
-      _morningHour = p.getInt('notif_hour_morning') ?? 10;
-      _eveningHour = p.getInt('notif_hour_evening') ?? 20;
-    });
-  }
-
-  Future<void> _pickHour({required bool morning}) async {
-    final initial = TimeOfDay(
-      hour: morning ? _morningHour : _eveningHour,
-      minute: 0,
-    );
-    final res = await showTimePicker(context: context, initialTime: initial);
-    if (res != null) {
-      final p = await SharedPreferences.getInstance();
-      if (morning) {
-        await p.setInt('notif_hour_morning', res.hour);
-        setState(() {
-          _morningHour = res.hour;
-        });
-      } else {
-        await p.setInt('notif_hour_evening', res.hour);
-        setState(() {
-          _eveningHour = res.hour;
-        });
-      }
-    }
-  }
-
-  Future<void> _rescheduleNow() async {
-    final p = await SharedPreferences.getInstance();
-    await p.setBool('notif_scheduled', false);
-    try {
-      final hc = Get.find<HomeController>();
-      await hc.scheduleNotificationsNow();
-      Get.snackbar(
-        'Notifikasi',
-        'Jadwal notifikasi diperbarui',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.colorWidget,
-        colorText: AppColors.textColorLight,
-        margin: const EdgeInsets.all(12),
-        borderRadius: 12,
-        icon: const Icon(Icons.schedule, color: Colors.lightBlueAccent),
-      );
-    } catch (_) {
-      Get.snackbar(
-        'Notifikasi',
-        'Jadwal akan di-set pada fetch berikutnya',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.colorWidget,
-        colorText: AppColors.textColorLight,
-        margin: const EdgeInsets.all(12),
-        borderRadius: 12,
-        icon: const Icon(Icons.info_outline, color: Colors.orangeAccent),
-      );
-    }
-  }
+class SettingPage extends StatelessWidget {
+  const SettingPage({super.key});
 
   Widget settingList() {
+    final controller = Get.find<SettingController>();
+
     return Container(
       margin: EdgeInsets.only(left: 8, right: 8),
       padding: EdgeInsets.only(left: 8, right: 8),
@@ -142,14 +19,14 @@ class _SettingViewState extends State<SettingView> {
             margin: EdgeInsets.only(top: 24),
             height: 80,
             child: InkWell(
-              onTap: () => {this.usingFingerPrint()},
+              onTap: () => {controller.testNotification()},
               child: Row(
                 children: [
                   Icon(Icons.fingerprint, color: Colors.white),
                   Container(
                     margin: EdgeInsets.only(left: 8),
                     child: Text(
-                      "Gunakan FingerPrint untuk membuka",
+                      "Test notification",
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
@@ -157,10 +34,10 @@ class _SettingViewState extends State<SettingView> {
               ),
             ),
           ),
-          Container(
+          SizedBox(
             height: 80,
             child: InkWell(
-              onTap: () => {this.usingDarkMode()},
+              onTap: () => {controller.usingDarkMode()},
               child: Row(
                 children: [
                   Icon(Icons.nightlight_round, color: Colors.white),
@@ -173,18 +50,18 @@ class _SettingViewState extends State<SettingView> {
                       ),
                     ),
                   ),
-                  Container(
+                  SizedBox(
                     width: 70,
                     child: Switch(
-                      value: isDarkMode,
-                      onChanged: (e) => {this.setSwitchDarkMode(e)},
+                      value: controller.isDarkMode.value,
+                      onChanged: (e) => {controller.setSwitchDarkMode(e)},
                     ),
                   ),
                 ],
               ),
             ),
           ),
-          Container(
+          SizedBox(
             height: 80,
             child: Row(
               children: [
@@ -208,7 +85,6 @@ class _SettingViewState extends State<SettingView> {
                       onChanged: (e) async {
                         final p = await SharedPreferences.getInstance();
                         await p.setBool('notif_heat', e);
-                        setState(() {});
                       },
                     );
                   },
@@ -216,7 +92,7 @@ class _SettingViewState extends State<SettingView> {
               ],
             ),
           ),
-          Container(
+          SizedBox(
             height: 80,
             child: Row(
               children: [
@@ -240,7 +116,6 @@ class _SettingViewState extends State<SettingView> {
                       onChanged: (e) async {
                         final p = await SharedPreferences.getInstance();
                         await p.setBool('notif_rain', e);
-                        setState(() {});
                       },
                     );
                   },
@@ -248,7 +123,7 @@ class _SettingViewState extends State<SettingView> {
               ],
             ),
           ),
-          Container(
+          SizedBox(
             height: 80,
             child: Row(
               children: [
@@ -272,7 +147,6 @@ class _SettingViewState extends State<SettingView> {
                       onChanged: (e) async {
                         final p = await SharedPreferences.getInstance();
                         await p.setBool('notif_daily', e);
-                        setState(() {});
                       },
                     );
                   },
@@ -280,7 +154,7 @@ class _SettingViewState extends State<SettingView> {
               ],
             ),
           ),
-          Container(
+          SizedBox(
             height: 80,
             child: Row(
               children: [
@@ -289,13 +163,13 @@ class _SettingViewState extends State<SettingView> {
                   child: Container(
                     margin: EdgeInsets.only(left: 8),
                     child: Text(
-                      "Ringkasan Pagi: $_morningHour:00",
+                      "Ringkasan Pagi: ${controller.morningHour.value}:00",
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ),
                 TextButton(
-                  onPressed: () => _pickHour(morning: true),
+                  onPressed: () => controller.pickHour(morning: true),
                   child: Text(
                     'Ubah',
                     style: TextStyle(color: AppColors.mainColor),
@@ -304,7 +178,7 @@ class _SettingViewState extends State<SettingView> {
               ],
             ),
           ),
-          Container(
+          SizedBox(
             height: 80,
             child: Row(
               children: [
@@ -313,13 +187,13 @@ class _SettingViewState extends State<SettingView> {
                   child: Container(
                     margin: EdgeInsets.only(left: 8),
                     child: Text(
-                      "Ringkasan Malam: $_eveningHour:00",
+                      "Ringkasan Malam: ${controller.eveningHour.value}:00",
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ),
                 TextButton(
-                  onPressed: () => _pickHour(morning: false),
+                  onPressed: () => controller.pickHour(morning: false),
                   child: Text(
                     'Ubah',
                     style: TextStyle(color: AppColors.mainColor),
@@ -335,14 +209,14 @@ class _SettingViewState extends State<SettingView> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.mainColor,
               ),
-              onPressed: _rescheduleNow,
+              onPressed: controller.rescheduleNow,
               child: Text('Jadwalkan Ulang Sekarang'),
             ),
           ),
-          Container(
+          SizedBox(
             height: 80,
             child: InkWell(
-              onTap: () => {this.exitApp()},
+              onTap: () => {controller.exitApp()},
               child: Row(
                 children: [
                   Icon(Icons.exit_to_app, color: Colors.white),

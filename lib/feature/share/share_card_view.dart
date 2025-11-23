@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:get/get.dart';
-import 'package:sunny/core/config/color/app_colors.dart';
-import 'package:sunny/core/config/helper/condition_helper.dart';
+import 'package:sunny/core/shared/theme/color/app_colors.dart';
+import 'package:sunny/core/utils/helper/condition_helper.dart';
 import 'package:sunny/feature/home/controller.dart';
 
 class ShareCardView extends StatelessWidget {
