@@ -1,16 +1,16 @@
-class WeatherFullModel {
+class WeatherModel {
   final CurrentWeather current;
   final HourlyWeather hourly;
   final DailyWeather daily;
 
-  WeatherFullModel({
+  WeatherModel({
     required this.current,
     required this.hourly,
     required this.daily,
   });
 
-  factory WeatherFullModel.fromJson(Map<String, dynamic> json) {
-    return WeatherFullModel(
+  factory WeatherModel.fromJson(Map<String, dynamic> json) {
+    return WeatherModel(
       current: CurrentWeather.fromJson(json['current_weather']),
       hourly: HourlyWeather.fromJson(json['hourly']),
       daily: DailyWeather.fromJson(json['daily']),
@@ -18,10 +18,10 @@ class WeatherFullModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'current_weather': current.toJson(),
-        'hourly': hourly.toJson(),
-        'daily': daily.toJson(),
-      };
+    'current_weather': current.toJson(),
+    'hourly': hourly.toJson(),
+    'daily': daily.toJson(),
+  };
 }
 
 class CurrentWeather {
@@ -47,11 +47,11 @@ class CurrentWeather {
   }
 
   Map<String, dynamic> toJson() => {
-        'temperature': temperature,
-        'windspeed': windSpeed,
-        'weathercode': weatherCode,
-        'winddirection': windDirection,
-      };
+    'temperature': temperature,
+    'windspeed': windSpeed,
+    'weathercode': weatherCode,
+    'winddirection': windDirection,
+  };
 }
 
 class HourlyWeather {
@@ -88,8 +88,9 @@ class HourlyWeather {
       ),
       humidity: List<int>.from(json['relative_humidity_2m'] ?? []),
       weatherCode: List<int>.from(json['weathercode'] ?? []),
-      precipitationProbability:
-          List<int>.from(json['precipitation_probability'] ?? []),
+      precipitationProbability: List<int>.from(
+        json['precipitation_probability'] ?? [],
+      ),
       precipitation: List<double>.from(
         (json['precipitation'] ?? []).map((e) => e.toDouble()),
       ),
@@ -103,16 +104,16 @@ class HourlyWeather {
   }
 
   Map<String, dynamic> toJson() => {
-        'time': time,
-        'temperature_2m': temperature,
-        'apparent_temperature': apparentTemperature,
-        'relative_humidity_2m': humidity,
-        'weathercode': weatherCode,
-        'precipitation_probability': precipitationProbability,
-        'precipitation': precipitation,
-        'uv_index': uvIndex,
-        'windspeed_10m': windspeed,
-      };
+    'time': time,
+    'temperature_2m': temperature,
+    'apparent_temperature': apparentTemperature,
+    'relative_humidity_2m': humidity,
+    'weathercode': weatherCode,
+    'precipitation_probability': precipitationProbability,
+    'precipitation': precipitation,
+    'uv_index': uvIndex,
+    'windspeed_10m': windspeed,
+  };
 }
 
 class DailyWeather {
@@ -153,12 +154,12 @@ class DailyWeather {
   }
 
   Map<String, dynamic> toJson() => {
-        'time': time,
-        'weathercode': weatherCode,
-        'temperature_2m_max': temperatureMax,
-        'temperature_2m_min': temperatureMin,
-        'sunrise': sunrise,
-        'sunset': sunset,
-        'uv_index_max': uvIndexMax,
-      };
+    'time': time,
+    'weathercode': weatherCode,
+    'temperature_2m_max': temperatureMax,
+    'temperature_2m_min': temperatureMin,
+    'sunrise': sunrise,
+    'sunset': sunset,
+    'uv_index_max': uvIndexMax,
+  };
 }

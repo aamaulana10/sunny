@@ -7,7 +7,7 @@ import 'package:sunny/feature/home/controller.dart';
 
 class SettingController extends GetxController {
   late final SharedPreferences preferences;
-  final notificationManager = NotificationManager();
+  final notificationManager = NotificationManager.instance;
 
   RxBool isDarkMode = false.obs;
   RxInt morningHour = 10.obs;
@@ -27,10 +27,21 @@ class SettingController extends GetxController {
 
   Future<void> testNotification() async {
     try {
-      notificationManager.showSimpleNotification(
-        id: 'sunny',
-        title: 'title',
+      notificationManager.showNow(title: 'title', body: 'body');
+    } catch (e) {
+      debugPrint('error notification ${e.toString()}');
+      Get.snackbar("Title", "Message");
+    }
+  }
+
+  Future<void> testScheduleNotification() async {
+    try {
+      notificationManager.scheduleDaily(
+        id: 1,
+        title: 'ini scheduled alert',
         body: 'body',
+        hour: 21,
+        minute: 17,
       );
     } catch (e) {
       debugPrint('error notification ${e.toString()}');

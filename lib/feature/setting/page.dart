@@ -34,6 +34,25 @@ class SettingPage extends StatelessWidget {
               ),
             ),
           ),
+          Container(
+            margin: EdgeInsets.only(top: 24),
+            height: 80,
+            child: InkWell(
+              onTap: () => {controller.testScheduleNotification()},
+              child: Row(
+                children: [
+                  Icon(Icons.fingerprint, color: Colors.white),
+                  Container(
+                    margin: EdgeInsets.only(left: 8),
+                    child: Text(
+                      "Test scheduled notification",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
           SizedBox(
             height: 80,
             child: InkWell(

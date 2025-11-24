@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sunny/core/route/app_route.dart';
 import 'package:sunny/core/shared/theme/color/app_colors.dart';
 import 'package:sunny/feature/search/controller.dart';
 import 'package:sunny/feature/search/widget/forecast_list.dart';
@@ -8,29 +9,6 @@ import 'package:sunny/feature/search/widget/weather_column_widget.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
-
-  void _gotoDetailDaily(BuildContext context, int index) {
-    final controller = Get.find<SearchViewController>();
-    final weather = controller.weather.value;
-
-    if (weather?.daily != null) {
-      // TODO: Navigate to detail page
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => DetailForecastDaily(
-      //       date: weather.daily!.time[index],
-      //       tempMax: weather.daily!.temperatureMax[index],
-      //       tempMin: weather.daily!.temperatureMin[index],
-      //       weatherCode: weather.daily!.weathercode[index],
-      //       address: controller.address.value,
-      //     ),
-      //   ),
-      // );
-
-      debugPrint("Navigate to detail for index: $index");
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +43,12 @@ class SearchPage extends StatelessWidget {
 
                 // Show forecast list if searching
                 return NextForecastList(
-                  onTapItem: (index) => _gotoDetailDaily(context, index),
+                  onTapItem: (index) {
+                    Get.toNamed(
+                      AppRoutes.weatherDetail,
+                      arguments: controller.weather.value,
+                    );
+                  },
                 );
               }),
             ),

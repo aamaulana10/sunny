@@ -1,5 +1,5 @@
 import 'package:sunny/core/network/network_client.dart';
-import 'package:sunny/feature/weather/model/weather_full_model.dart';
+import 'package:sunny/feature/weather/model/weather_model.dart';
 
 class WeatherService {
   final NetworkClient client = NetworkClient();
@@ -7,7 +7,7 @@ class WeatherService {
   static const weatherUrl = "https://api.open-meteo.com/v1/forecast";
 
   /// Search city → get coordinates → fetch weather
-  Future<WeatherFullModel> getWeatherByCity(String city) async {
+  Future<WeatherModel> getWeatherByCity(String city) async {
     final geoData = await client.get("$geocodingUrl?name=$city");
 
     if (geoData['results'] == null || geoData['results'].isEmpty) {
@@ -21,7 +21,7 @@ class WeatherService {
   }
 
   /// Main Weather API (current + hourly + daily)
-  Future<WeatherFullModel> getWeatherByLatLong(String lat, String lon) async {
+  Future<WeatherModel> getWeatherByLatLong(String lat, String lon) async {
     final url =
         "$weatherUrl?latitude=$lat&longitude=$lon"
         "&current_weather=true"
@@ -32,6 +32,6 @@ class WeatherService {
 
     final res = await client.get(url);
 
-    return WeatherFullModel.fromJson(res);
+    return WeatherModel.fromJson(res);
   }
 }

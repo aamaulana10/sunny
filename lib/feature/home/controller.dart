@@ -9,13 +9,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sunny/core/shared/theme/color/app_colors.dart';
 import 'package:sunny/core/utils/helper/condition_helper.dart';
 import 'package:sunny/core/service/notification/notification_manager.dart';
-import 'package:sunny/feature/weather/model/weather_full_model.dart';
+import 'package:sunny/feature/weather/model/weather_model.dart';
 import 'package:sunny/feature/weather/repository.dart';
 
 class HomeController extends GetxController {
   final WeatherService weatherService = WeatherService();
 
-  Rxn<WeatherFullModel> weather = Rxn<WeatherFullModel>();
+  Rxn<WeatherModel> weather = Rxn<WeatherModel>();
   RxBool isLoading = true.obs;
   RxString address = "Mendapatkan Lokasimu".obs;
   RxBool isForecast = true.obs;
@@ -161,7 +161,7 @@ class HomeController extends GetxController {
   Future<void> _cacheWeather(
     String latitude,
     String longitude,
-    WeatherFullModel data,
+    WeatherModel data,
   ) async {
     final prefs = await SharedPreferences.getInstance();
     final key = "cache_weather_${latitude}_$longitude";
@@ -179,7 +179,7 @@ class HomeController extends GetxController {
     if (cached != null) {
       try {
         final map = jsonDecode(cached) as Map<String, dynamic>;
-        weather.value = WeatherFullModel.fromJson(map);
+        weather.value = WeatherModel.fromJson(map);
       } catch (_) {}
     }
   }
@@ -211,7 +211,7 @@ class HomeController extends GetxController {
     streak.value = current;
   }
 
-  Future<void> _maybeNotify(WeatherFullModel data) async {
+  Future<void> _maybeNotify(WeatherModel data) async {
     final prefs = await SharedPreferences.getInstance();
     final rainEnabled = prefs.getBool('notif_rain') ?? true;
     final heatEnabled = prefs.getBool('notif_heat') ?? true;
@@ -252,14 +252,10 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> _scheduleFirstTime(WeatherFullModel data) async {
+  Future<void> _scheduleFirstTime(WeatherModel data) async {
     final prefs = await SharedPreferences.getInstance();
     final scheduled = prefs.getBool('notif_scheduled') ?? false;
     if (scheduled) return;
-
-    final nm = NotificationManager();
-    await nm.init();
-    await nm.requestPermissions();
 
     final morningHour = prefs.getInt('notif_hour_morning') ?? 10;
     final eveningHour = prefs.getInt('notif_hour_evening') ?? 20;
@@ -269,11 +265,12 @@ class HomeController extends GetxController {
     final todayBody =
         "Temperaturnya ${data.current.temperature.toStringAsFixed(1)}°C";
 
-    await nm.showScheduleSimpleNotification(
+    await NotificationManager.instance.scheduleDaily(
       id: 100,
       title: todayTitle,
       body: todayBody,
       hour: morningHour,
+      minute: 00
     );
 
     if (data.daily.time.length > 1) {
@@ -282,11 +279,12 @@ class HomeController extends GetxController {
           "Cuaca besok ${ConditionHelper.getDescription(codeTomorrow) ?? ''}";
       final tomorrowBody =
           "Maks ${data.daily.temperatureMax[1].toStringAsFixed(1)}°C / Min ${data.daily.temperatureMin[1].toStringAsFixed(1)}°C";
-      await nm.showScheduleSimpleNotification(
+      await NotificationManager.instance.scheduleDaily(
         id: 101,
         title: tomorrowTitle,
         body: tomorrowBody,
         hour: eveningHour,
+        minute: 00
       );
     }
 

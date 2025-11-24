@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:sunny/core/shared/theme/color/app_colors.dart';
 import 'package:sunny/core/utils/helper/condition_helper.dart';
 import 'package:sunny/core/utils/helper/convert_helper.dart';
-import 'package:sunny/feature/weather/model/weather_full_model.dart';
+import 'package:sunny/feature/weather/model/weather_model.dart';
 import 'package:sunny/core/shared/ui/mascot_widget.dart';
 import 'package:sunny/core/shared/ui/glass_card.dart';
 import 'package:sunny/feature/home/controller.dart';
