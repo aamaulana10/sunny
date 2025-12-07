@@ -38,7 +38,7 @@ class ConvertHelper {
   static String milisToHour(int milis) {
     var fixedValue = DateTime.fromMillisecondsSinceEpoch(milis * 1000);
 
-    var dateFormat = new DateFormat('HH.mm');
+    var dateFormat = DateFormat('HH.mm');
 
     var currentDate = dateFormat.format(fixedValue);
 
@@ -64,42 +64,26 @@ class ConvertHelper {
   }
 
   static String milToKmPerHour(double value) {
-    if (value != null) {
-      var fixedValue = value * 1.609;
+    var fixedValue = value * 1.609;
 
-      return fixedValue.toStringAsFixed(1);
-    } else {
-      return "0";
+    return fixedValue.toStringAsFixed(1);
     }
-  }
 
   static String mToKmPerHour(double value) {
-    if (value != null) {
-      var fixedValue = value * 3.6;
+    var fixedValue = value * 3.6;
 
-      return fixedValue.toStringAsFixed(1);
-    } else {
-      return "0";
+    return fixedValue.toStringAsFixed(1);
     }
-  }
 
   static String mToKm(int value) {
-    if (value != null) {
-      var fixedValue = value / 1000;
+    var fixedValue = value / 1000;
 
-      return fixedValue.toStringAsFixed(0);
-    } else {
-      return "0";
+    return fixedValue.toStringAsFixed(0);
     }
-  }
 
   static String kelvinToCelcius(double temp) {
-    if (temp != null) {
-      var fixedvalue = temp - 273.15;
+    var fixedvalue = temp - 273.15;
 
-      return fixedvalue.toStringAsFixed(1);
-    } else {
-      return "0";
+    return fixedvalue.toStringAsFixed(1);
     }
-  }
 }

@@ -71,8 +71,8 @@ class NextForecastList extends StatelessWidget {
                     onTapItem!(index);
                   }
                 },
-                highlightColor: AppColors.mainColor.withOpacity(.2),
-                splashColor: AppColors.mainColor.withOpacity(.2),
+                highlightColor: AppColors.mainColor.withValues(alpha: 0.2),
+                splashColor: AppColors.mainColor.withValues(alpha: 0.2),
                 child: Container(
                   padding: const EdgeInsets.only(top: 8, bottom: 16),
                   child: Row(

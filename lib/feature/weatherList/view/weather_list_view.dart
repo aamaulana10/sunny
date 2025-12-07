@@ -132,7 +132,7 @@ class _WeatherListPageState extends State<WeatherListPage> {
                                   ),
                                   SizedBox(height: 4),
                                   Text(
-                                    "Hujan ${rain}%",
+                                    "Hujan $rain%",
                                     style: TextStyle(
                                       fontSize: 10,
                                       color: AppColors.textColorLight,

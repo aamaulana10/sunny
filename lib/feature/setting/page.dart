@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get/get.dart';
 import 'package:sunny/core/shared/theme/color/app_colors.dart';
 import 'package:sunny/feature/setting/controller.dart';
@@ -15,68 +14,49 @@ class SettingPage extends StatelessWidget {
       padding: EdgeInsets.only(left: 8, right: 8),
       child: ListView(
         children: [
-          Container(
-            margin: EdgeInsets.only(top: 24),
-            height: 80,
-            child: InkWell(
-              onTap: () => {controller.testNotification()},
-              child: Row(
-                children: [
-                  Icon(Icons.fingerprint, color: Colors.white),
-                  Container(
-                    margin: EdgeInsets.only(left: 8),
-                    child: Text(
-                      "Test notification",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 24),
-            height: 80,
-            child: InkWell(
-              onTap: () => {controller.testScheduleNotification()},
-              child: Row(
-                children: [
-                  Icon(Icons.fingerprint, color: Colors.white),
-                  Container(
-                    margin: EdgeInsets.only(left: 8),
-                    child: Text(
-                      "Test scheduled notification",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 80,
-            child: InkWell(
-              onTap: () => {controller.usingDarkMode()},
-              child: Row(
-                children: [
-                  Icon(Icons.nightlight_round, color: Colors.white),
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(left: 8),
-                      child: Text(
-                        "Dark Mode",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 70,
-                    child: Switch(
-                      value: controller.isDarkMode.value,
-                      onChanged: (e) => {controller.setSwitchDarkMode(e)},
-                    ),
-                  ),
-                ],
+          // Padding(
+          //   padding: EdgeInsets.only(top: 24, bottom: 8),
+          //   child: Text(
+          //     'Tampilan',
+          //     style: TextStyle(
+          //       color: AppColors.textColorLight,
+          //       fontSize: 16,
+          //       fontFamily: 'NunitoBold',
+          //     ),
+          //   ),
+          // ),
+          // SizedBox(
+          //   height: 80,
+          //   child: Row(
+          //     children: [
+          //       Icon(Icons.nightlight_round, color: Colors.white),
+          //       Expanded(
+          //         child: Container(
+          //           margin: EdgeInsets.only(left: 8),
+          //           child: Text(
+          //             "Dark Mode",
+          //             style: TextStyle(color: Colors.white),
+          //           ),
+          //         ),
+          //       ),
+          //       SizedBox(
+          //         width: 70,
+          //         child: Switch(
+          //           value: controller.isDarkMode.value,
+          //           onChanged: (e) => controller.setSwitchDarkMode(e),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          Padding(
+            padding: EdgeInsets.only(top: 8, bottom: 8),
+            child: Text(
+              'Notifikasi',
+              style: TextStyle(
+                color: AppColors.textColorLight,
+                fontSize: 16,
+                fontFamily: 'NunitoBold',
               ),
             ),
           ),
@@ -94,19 +74,11 @@ class SettingPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                FutureBuilder<SharedPreferences>(
-                  future: SharedPreferences.getInstance(),
-                  builder: (context, snap) {
-                    final prefs = snap.data;
-                    final val = prefs?.getBool('notif_heat') ?? true;
-                    return Switch(
-                      value: val,
-                      onChanged: (e) async {
-                        final p = await SharedPreferences.getInstance();
-                        await p.setBool('notif_heat', e);
-                      },
-                    );
-                  },
+                Obx(
+                  () => Switch(
+                    value: controller.notifHeat.value,
+                    onChanged: (e) => controller.setNotifHeat(e),
+                  ),
                 ),
               ],
             ),
@@ -125,19 +97,11 @@ class SettingPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                FutureBuilder<SharedPreferences>(
-                  future: SharedPreferences.getInstance(),
-                  builder: (context, snap) {
-                    final prefs = snap.data;
-                    final val = prefs?.getBool('notif_rain') ?? true;
-                    return Switch(
-                      value: val,
-                      onChanged: (e) async {
-                        final p = await SharedPreferences.getInstance();
-                        await p.setBool('notif_rain', e);
-                      },
-                    );
-                  },
+                Obx(
+                  () => Switch(
+                    value: controller.notifRain.value,
+                    onChanged: (e) => controller.setNotifRain(e),
+                  ),
                 ),
               ],
             ),
@@ -156,21 +120,24 @@ class SettingPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                FutureBuilder<SharedPreferences>(
-                  future: SharedPreferences.getInstance(),
-                  builder: (context, snap) {
-                    final prefs = snap.data;
-                    final val = prefs?.getBool('notif_daily') ?? true;
-                    return Switch(
-                      value: val,
-                      onChanged: (e) async {
-                        final p = await SharedPreferences.getInstance();
-                        await p.setBool('notif_daily', e);
-                      },
-                    );
-                  },
+                Obx(
+                  () => Switch(
+                    value: controller.notifDaily.value,
+                    onChanged: (e) => controller.setNotifDaily(e),
+                  ),
                 ),
               ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 8, bottom: 8),
+            child: Text(
+              'Jadwal Ringkasan',
+              style: TextStyle(
+                color: AppColors.textColorLight,
+                fontSize: 16,
+                fontFamily: 'NunitoBold',
+              ),
             ),
           ),
           SizedBox(
@@ -232,24 +199,6 @@ class SettingPage extends StatelessWidget {
               child: Text('Jadwalkan Ulang Sekarang'),
             ),
           ),
-          SizedBox(
-            height: 80,
-            child: InkWell(
-              onTap: () => {controller.exitApp()},
-              child: Row(
-                children: [
-                  Icon(Icons.exit_to_app, color: Colors.white),
-                  Container(
-                    margin: EdgeInsets.only(left: 8),
-                    child: Text(
-                      "Exit app",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
           Container(
             height: 80,
             alignment: Alignment.bottomCenter,
@@ -265,20 +214,29 @@ class SettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Setting",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+    final controller = Get.find<SettingController>();
+    return Obx(() {
+      final isDark = controller.isDarkMode.value;
+      final bg =
+          isDark
+              ? AppColors.darkBackgroundColor
+              : AppColors.lightBackgroundColor;
+      final titleColor = isDark ? Colors.white : Colors.black;
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Setting",
+            style: TextStyle(
+              color: titleColor,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
           ),
+          backgroundColor: bg,
         ),
-        backgroundColor: AppColors.darkBackgroundColor,
-      ),
-      backgroundColor: AppColors.darkBackgroundColor,
-      body: Container(child: settingList()),
-    );
+        backgroundColor: bg,
+        body: Container(child: settingList()),
+      );
+    });
   }
 }

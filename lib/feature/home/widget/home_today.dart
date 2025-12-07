@@ -132,7 +132,7 @@ class HomeTodayWidget extends StatelessWidget {
                                     ),
                                     SizedBox(height: 4),
                                     Text(
-                                      "Hujan ${rainProb}%",
+                                      "Hujan $rainProb%",
                                       style: TextStyle(
                                         fontSize: 10,
                                         color: AppColors.textColorLight,

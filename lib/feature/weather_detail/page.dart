@@ -94,7 +94,7 @@ class _DetailCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -117,7 +117,7 @@ class _DetailCard extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(
                         context,
-                      ).textTheme.bodySmall?.color?.withOpacity(0.6),
+                      ).textTheme.bodySmall?.color?.withValues(alpha: 0.6),
                     ),
                   ),
                   const SizedBox(height: 4),
