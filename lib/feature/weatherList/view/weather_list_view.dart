@@ -46,7 +46,7 @@ class _WeatherListPageState extends State<WeatherListPage> {
             return SingleChildScrollView(
               physics: AlwaysScrollableScrollPhysics(),
               child: Padding(
-                padding: EdgeInsets.only(top: 16),
+                padding: EdgeInsets.only(top: 16, left: 16, right: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
