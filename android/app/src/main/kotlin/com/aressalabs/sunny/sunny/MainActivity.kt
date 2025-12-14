@@ -1,4 +1,4 @@
-package com.aressa.sunny
+package com.aressalabs.sunny.sunny
 
 import io.flutter.embedding.android.FlutterActivity
 

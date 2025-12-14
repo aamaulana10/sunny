@@ -7,7 +7,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await NotificationManager.instance.init();
-  await NotificationManager.instance.requestPermissions();
 
   runApp(MyApp());
+
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    NotificationManager.instance.requestPermissions();
+  });
 }

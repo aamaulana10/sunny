@@ -1,4 +1,5 @@
 import java.util.Properties
+import java.io.FileInputStream
 
 plugins {
     id("com.android.application")
@@ -15,12 +16,20 @@ if (localPropertiesFile.exists()) {
 val flutterVersionCode = localProperties.getProperty("flutter.versionCode")?.toIntOrNull() ?: 1
 val flutterVersionName = localProperties.getProperty("flutter.versionName") ?: "1.0"
 
+// Load keystore properties
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("key.properties")
+if (keystorePropertiesFile.exists()) {
+    FileInputStream(keystorePropertiesFile).use { fis ->
+        keystoreProperties.load(fis)
+    }
+}
+
 android {
-    namespace = "com.aressa.sunny" // Sesuaikan dengan package name lu
-    compileSdk = 35 // Update ke 35
+    namespace = "com.aressalabs.sunny.sunny"
+    compileSdk = 35
 
     compileOptions {
-        // ENABLE DESUGARING - INI PENTING!
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -37,21 +46,30 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.aressa.sunny" // Sesuaikan dengan package name lu
-        minSdk = 21 // Minimal SDK 21
-        targetSdk = 35 // Target SDK 35
+        applicationId = "com.aressalabs.sunny.sunny"
+        minSdk = 21
+        targetSdk = 35
         versionCode = flutterVersionCode
         versionName = flutterVersionName
-        
-        // Tambah multiDex jika diperlukan
         multiDexEnabled = true
+    }
+
+    signingConfigs {
+        create("release") {
+            val storeFileProp = keystoreProperties.getProperty("storeFile")
+            if (!storeFileProp.isNullOrBlank()) {
+                storeFile = file(storeFileProp)
+            }
+            storePassword = keystoreProperties.getProperty("storePassword")
+            keyAlias = keystoreProperties.getProperty("keyAlias")
+            keyPassword = keystoreProperties.getProperty("keyPassword")
+        }
     }
 
     buildTypes {
         getByName("release") {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
+            isMinifyEnabled = true
         }
     }
 }
@@ -61,6 +79,5 @@ flutter {
 }
 
 dependencies {
-    // CORE LIBRARY DESUGARING - INI YANG PENTING!
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }

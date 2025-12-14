@@ -6,6 +6,27 @@ import 'package:sunny/feature/setting/controller.dart';
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});
 
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Setting",
+            style: TextStyle(
+              color: AppColors.textColorLight,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          backgroundColor: AppColors.darkBackgroundColor,
+        ),
+        backgroundColor: AppColors.darkBackgroundColor,
+        body: Container(child: settingList()),
+      );
+    });
+  }
+
   Widget settingList() {
     final controller = Get.find<SettingController>();
 
@@ -196,7 +217,10 @@ class SettingPage extends StatelessWidget {
                 backgroundColor: AppColors.mainColor,
               ),
               onPressed: controller.rescheduleNow,
-              child: Text('Jadwalkan Ulang Sekarang'),
+              child: Text(
+                'Jadwalkan Ulang Sekarang',
+                style: TextStyle(color: AppColors.textColorDark),
+              ),
             ),
           ),
           Container(
@@ -210,33 +234,5 @@ class SettingPage extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = Get.find<SettingController>();
-    return Obx(() {
-      final isDark = controller.isDarkMode.value;
-      final bg =
-          isDark
-              ? AppColors.darkBackgroundColor
-              : AppColors.lightBackgroundColor;
-      final titleColor = isDark ? Colors.white : Colors.black;
-      return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Setting",
-            style: TextStyle(
-              color: titleColor,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          backgroundColor: bg,
-        ),
-        backgroundColor: bg,
-        body: Container(child: settingList()),
-      );
-    });
   }
 }

@@ -46,7 +46,6 @@ class NotificationManager {
               >();
 
       await android?.requestNotificationsPermission();
-      await android?.requestExactAlarmsPermission();
     }
 
     if (Platform.isIOS) {
@@ -82,18 +81,31 @@ class NotificationManager {
     final details = await _buildNotificationDetails(imageUrl: imageUrl);
     final scheduledTime = _getNextHourTime(hour, minute);
 
-    await _plugin.zonedSchedule(
-      id,
-      title,
-      body,
-      scheduledTime,
-      details,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.time,
-    );
+    try {
+      await _plugin.zonedSchedule(
+        id,
+        title,
+        body,
+        scheduledTime,
+        details,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        matchDateTimeComponents: DateTimeComponents.time,
+      );
+    } catch (e) {
+      await _plugin.zonedSchedule(
+        id,
+        title,
+        body,
+        scheduledTime,
+        details,
+        androidScheduleMode: AndroidScheduleMode.inexact,
+        matchDateTimeComponents: DateTimeComponents.time,
+      );
+      debugPrint("\u26a0\ufe0f Exact alarm not permitted; using inexact schedule. Reason: $e");
+    }
 
     debugPrint(
-      "📅 Scheduled for ${scheduledTime.hour}:${scheduledTime.minute} daily",
+      "\ud83d\udcc5 Scheduled for ${scheduledTime.hour}:${scheduledTime.minute} daily",
     );
   }
 
